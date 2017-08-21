@@ -11,7 +11,8 @@ before_deploy:
   - mkdir -p release
   - "GOOS=linux  GOARCH=amd64 go build -o release/powerline-go-linux-amd64"
   - "GOOS=darwin GOARCH=amd64 go build -o release/powerline-go-darwin-amd64"
-  - "GOOS=windows GOARCH=amd64 go build -o release/powerline-go-windows-amd64"
+# Windows doesn't work yet, due to the readonly segment
+#  - "GOOS=windows GOARCH=amd64 go build -o release/powerline-go-windows-amd64"
 
 deploy:
   provider: releases
@@ -20,7 +21,8 @@ deploy:
   file:
     - "release/powerline-go-linux-amd64"
     - "release/powerline-go-darwin-amd64"
-    - "release/powerline-go-windows-amd64"
+# Windows doesn't work yet, due to the readonly segment
+#    - "release/powerline-go-windows-amd64"
   skip_cleanup: true
   on:
     tags: true
