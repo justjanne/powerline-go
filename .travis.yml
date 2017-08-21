@@ -1,4 +1,24 @@
+sudo: false
 language: go
 
 go:
 - 1.6
+before_script:
+  - go get
+
+# before we deploy, we go build for all operating systems we would like to support
+before_deploy:
+  - mkdir -p release
+  - "GOOS=linux  GOARCH=amd64 go build -o release/powerline-go-linux-amd64"
+  - "GOOS=darwin GOARCH=amd64 go build -o release/powerline-go-darwin-amd64"
+
+deploy:
+  provider: releases
+  api_key:
+    secure: "$GITHUB_API_KEY"
+  file:
+    - "release/gucci-v$VERSION-linux-amd64"
+    - "release/gucci-v$VERSION-darwin-amd64"
+  skip_cleanup: true
+  on:
+    tags: true
