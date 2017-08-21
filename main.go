@@ -96,7 +96,7 @@ func main() {
 				"    	(valid choices: bare, bash, zsh)\n"+
 				"       "),
 		Modules: flag.String("modules",
-			"venv,user,ssh,host,cwd,perms,jobs,exit,root",
+			"venv,user,ssh,host,cwd,perms,git,hg,jobs,exit,root",
 			"The list of modules to load. Separate with ','\n"+
 				"    	(valid choices: cwd, exit, git, hg, host, jobs, perms, root, ssh, user, venv)\n"+
 				"       "),
