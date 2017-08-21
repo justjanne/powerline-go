@@ -61,29 +61,47 @@ func getValidCwd() string {
 }
 
 var modules = map[string](func(*powerline)){
-	"venv":   segmentVirtualEnv,
-	"user":   segmentUser,
-	"ssh":    segmentSsh,
-	"host":   segmentHost,
-	"cwd":    segmentCwd,
-	"perms":  segmentPerms,
-	"git":    segmentGit,
-	"hg":     segmentHg,
-	"jobs":   segmentJobs,
-	"exit":   segmentExitCode,
-	"root":   segmentRoot,
+	"cwd":   segmentCwd,
+	"exit":  segmentExitCode,
+	"git":   segmentGit,
+	"hg":    segmentHg,
+	"host":  segmentHost,
+	"jobs":  segmentJobs,
+	"perms": segmentPerms,
+	"root":  segmentRoot,
+	"ssh":   segmentSsh,
+	"user":  segmentUser,
+	"venv":  segmentVirtualEnv,
 }
 
 func main() {
 	args := args{
-		CwdMode:          flag.String("cwd-mode", "fancy", "How to display the current directory"),
-		CwdMaxDepth:      flag.Int("cwd-max-depth", 5, "Maximum number of directories to show in path"),
-		CwdMaxDirSize:    flag.Int("cwd-max-dir-size", -1, "Maximum number of letters displayed for each directory in the path"),
-		ColorizeHostname: flag.Bool("colorize-hostname", false, "Colorize the hostname based on a hash of itself."),
-		Mode:             flag.String("mode", "patched", "The characters used to make separators between segments"),
-		Shell:            flag.String("shell", "bash", "Set this to your shell type"),
-		Modules:          flag.String("modules", "venv,user,ssh,host,cwd,perms,jobs,exit,root", "The list of modules to load"),
-		PrevError:        flag.Int("error", 0, "Exit code of previously executed command"),
+		CwdMode: flag.String("cwd-mode", "fancy",
+			"How to display the current directory\n"+
+				"       "),
+		CwdMaxDepth: flag.Int("cwd-max-depth", 5,
+			"Maximum number of directories to show in path\n"+
+				"       "),
+		CwdMaxDirSize: flag.Int("cwd-max-dir-size", -1,
+			"Maximum number of letters displayed for each directory in the path\n"+
+				"       "),
+		ColorizeHostname: flag.Bool("colorize-hostname", false,
+			"Colorize the hostname based on a hash of itself"),
+		Mode: flag.String("mode", "patched",
+			"The characters used to make separators between segments.\n"+
+				"    	(valid choices: patched, compatible, flat)\n"+
+				"       "),
+		Shell: flag.String("shell", "bash",
+			"Set this to your shell type\n"+
+				"    	(valid choices: bare, bash, zsh)\n"+
+				"       "),
+		Modules: flag.String("modules",
+			"venv,user,ssh,host,cwd,perms,jobs,exit,root",
+			"The list of modules to load. Separate with ','\n"+
+				"    	(valid choices: cwd, exit, git, hg, host, jobs, perms, root, ssh, user, venv)\n"+
+				"       "),
+		PrevError: flag.Int("error", 0,
+			"Exit code of previously executed command"),
 	}
 	flag.Parse()
 	powerline := NewPowerline(args, getValidCwd(), defaultTheme)
