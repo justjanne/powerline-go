@@ -96,19 +96,7 @@ func parseGitStats(status []string) repoStats {
 				switch code {
 				case "??":
 					stats.untracked++
-				case "DD":
-					fallthrough
-				case "AU":
-					fallthrough
-				case "UD":
-					fallthrough
-				case "UA":
-					fallthrough
-				case "DU":
-					fallthrough
-				case "AA":
-					fallthrough
-				case "UU":
+				case "DD", "AU", "UD", "UA", "DU", "AA", "UU":
 					stats.conflicted++
 				default:
 					if code[0] != ' ' {
