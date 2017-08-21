@@ -16,10 +16,13 @@ Ported to golang by @justjanne.
 
 - [Version Control](#version-control)
 - [Setup](#setup)
+  - [Linux x64](#linux-x64)
+  - [Other Platforms](#other-platforms)
   - [All Shells](#all-shells)
   - [Bash](#bash)
   - [ZSH](#zsh)
   - [Fish](#fish)
+- [License](#license)
 
 ## Version Control
 
@@ -55,6 +58,12 @@ setting your $TERM to `xterm-256color`, because that works for me.
     Basically reverse [this
     commit](https://github.com/milkbikis/powerline-shell/commit/2a84ecc) in
     your copy
+
+### Linux x64
+
+I provide precompiled binaries for x64 Linux in the [releases tab](https://github.com/justjanne/powerline-go/releases)
+
+### Other Platforms
 
 - Set your GOPATH (otherwise the package will be installed in $HOME/go/bin/)
 
@@ -154,3 +163,10 @@ end
 You can use the `-modules` argument to define which segments to draw, and in
 which order. Segments can also be repeated. Simply change the argument in your
 shell’s init to customize the prompt.
+
+
+## License
+
+> This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.  
+> This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.  
+> You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.  
