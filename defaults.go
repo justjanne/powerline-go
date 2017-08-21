@@ -18,7 +18,7 @@ var symbolTemplates = map[string]Symbols{
 		RepoBehind:     "\u2B07",
 		RepoStaged:     "\u2714",
 		RepoNotStaged:  "\u270E",
-		RepoUntracked:  "\u2753",
+		RepoUntracked:  "+",
 		RepoConflicted: "\u273C",
 	},
 	"flat": {
