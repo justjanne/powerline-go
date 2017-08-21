@@ -16,7 +16,7 @@ Ported to golang by @justjanne.
 
 - [Version Control](#version-control)
 - [Setup](#setup)
-  - [Linux x64](#linux-x64)
+  - [Precompiled Binaries](#precompiled-binaries)
   - [Other Platforms](#other-platforms)
   - [All Shells](#all-shells)
   - [Bash](#bash)
@@ -55,9 +55,9 @@ or by patching the font you use for your terminal: see
 [powerline-fonts](https://github.com/Lokaltog/powerline-fonts).  
 Alternatively you can use "compatible" or "flat" mode.
 
-### Linux x64
+### Precompiled Binaries
 
-I provide precompiled binaries for x64 Linux in the
+I provide precompiled binaries for x64 Linux and macOS in the
 [releases tab](https://github.com/justjanne/powerline-go/releases)
 
 ### Other Platforms
