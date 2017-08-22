@@ -85,13 +85,13 @@ func (p *powerline) draw() string {
 	}
 	buffer.WriteString(" ")
 
-	s := buffer.String()
+	drawnResult := buffer.String()
 	if *p.args.EastAsianWidth {
-		for _, r := range s {
+		for _, r := range drawnResult {
 			switch width.LookupRune(r).Kind() {
 			case width.Neutral:
 			case width.EastAsianAmbiguous:
-				s += " "
+				drawnResult += " "
 			case width.EastAsianWide:
 			case width.EastAsianNarrow:
 			case width.EastAsianFullwidth:
@@ -99,5 +99,10 @@ func (p *powerline) draw() string {
 			}
 		}
 	}
-	return s
+
+	if *p.args.PromptOnNewLine {
+		drawnResult += "\n"
+	}
+
+	return drawnResult
 }

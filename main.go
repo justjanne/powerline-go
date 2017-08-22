@@ -21,6 +21,7 @@ type args struct {
 	CwdMaxDirSize    *int
 	ColorizeHostname *bool
 	EastAsianWidth   *bool
+	PromptOnNewLine  *bool
 	Mode             *string
 	Shell            *string
 	Modules          *string
@@ -91,6 +92,8 @@ func main() {
 			"Colorize the hostname based on a hash of itself"),
 		EastAsianWidth: flag.Bool("east-asian-width", false,
 			"Use East Asian Ambiguous Widths"),
+		PromptOnNewLine: flag.Bool("newline", false,
+			"Show the prompt on a new line"),
 		Mode: flag.String("mode", "patched",
 			"The characters used to make separators between segments.\n"+
 				"    	(valid choices: patched, compatible, flat)\n"+
