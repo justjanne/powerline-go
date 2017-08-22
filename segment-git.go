@@ -1,12 +1,12 @@
 package main
 
 import (
-	"os"
 	"fmt"
-	"regexp"
+	"os"
 	"os/exec"
-	"strings"
+	"regexp"
 	"strconv"
+	"strings"
 )
 
 type repoStats struct {

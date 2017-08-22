@@ -1,11 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
-	"strings"
 	"strconv"
-	"fmt"
+	"strings"
 )
 
 func segmentJobs(p *powerline) {
@@ -23,7 +23,7 @@ func segmentJobs(p *powerline) {
 
 	if nJobs > 0 {
 		p.appendSegment(segment{
-			content: fmt.Sprintf(" %d ", nJobs),
+			content:    fmt.Sprintf(" %d ", nJobs),
 			foreground: p.theme.JobsFg,
 			background: p.theme.JobsBg,
 		})

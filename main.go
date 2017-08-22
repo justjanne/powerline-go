@@ -62,18 +62,18 @@ func getValidCwd() string {
 }
 
 var modules = map[string](func(*powerline)){
-	"cwd":   segmentCwd,
+	"cwd":    segmentCwd,
 	"docker": segmentDocker,
-	"exit":  segmentExitCode,
-	"git":   segmentGit,
-	"hg":    segmentHg,
-	"host":  segmentHost,
-	"jobs":  segmentJobs,
-	"perms": segmentPerms,
-	"root":  segmentRoot,
-	"ssh":   segmentSsh,
-	"user":  segmentUser,
-	"venv":  segmentVirtualEnv,
+	"exit":   segmentExitCode,
+	"git":    segmentGit,
+	"hg":     segmentHg,
+	"host":   segmentHost,
+	"jobs":   segmentJobs,
+	"perms":  segmentPerms,
+	"root":   segmentRoot,
+	"ssh":    segmentSsh,
+	"user":   segmentUser,
+	"venv":   segmentVirtualEnv,
 }
 
 func main() {

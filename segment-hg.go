@@ -1,9 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"os/exec"
 	"strings"
-	"fmt"
 )
 
 func getHgStatus() (bool, bool, bool) {
@@ -61,7 +61,7 @@ func segmentHg(p *powerline) {
 		}
 
 		p.appendSegment(segment{
-			content: content,
+			content:    content,
 			foreground: foreground,
 			background: background,
 		})
