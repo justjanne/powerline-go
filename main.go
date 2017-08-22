@@ -1,10 +1,10 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"strings"
-	"flag"
 )
 
 type segment struct {
@@ -20,6 +20,7 @@ type args struct {
 	CwdMaxDepth      *int
 	CwdMaxDirSize    *int
 	ColorizeHostname *bool
+	EastAsianWidth   *bool
 	Mode             *string
 	Shell            *string
 	Modules          *string
@@ -87,6 +88,8 @@ func main() {
 				"       "),
 		ColorizeHostname: flag.Bool("colorize-hostname", false,
 			"Colorize the hostname based on a hash of itself"),
+		EastAsianWidth: flag.Bool("east-asian-width", false,
+			"Use East Asian Ambiguous Widths"),
 		Mode: flag.String("mode", "patched",
 			"The characters used to make separators between segments.\n"+
 				"    	(valid choices: patched, compatible, flat)\n"+

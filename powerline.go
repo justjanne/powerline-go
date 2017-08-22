@@ -1,8 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"bytes"
+	"fmt"
+	"golang.org/x/text/width"
 )
 
 type powerline struct {
@@ -77,5 +78,20 @@ func (p *powerline) draw() string {
 		buffer.WriteString(p.reset)
 	}
 	buffer.WriteString(" ")
-	return buffer.String()
+
+	s := buffer.String()
+	if *p.args.EastAsianWidth {
+		for _, r := range s {
+			switch width.LookupRune(r).Kind() {
+			case width.Neutral:
+			case width.EastAsianAmbiguous:
+				s += " "
+			case width.EastAsianWide:
+			case width.EastAsianNarrow:
+			case width.EastAsianFullwidth:
+			case width.EastAsianHalfwidth:
+			}
+		}
+	}
+	return s
 }

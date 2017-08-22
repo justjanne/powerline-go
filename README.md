@@ -90,6 +90,8 @@ Usage of powerline-go:
   -cwd-mode string
         How to display the current directory
         (default "fancy")
+  -east-asian-width
+        Use East Asian Ambiguous Widths
   -error int
         Exit code of previously executed command
   -mode string
