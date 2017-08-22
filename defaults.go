@@ -25,24 +25,24 @@ var symbolTemplates = map[string]Symbols{
 	},
 }
 
-var shellInfos = map[string]ShellInfo {
+var shellInfos = map[string]ShellInfo{
 	"bash": {
-		colorTemplate: "\\[\\e%s\\]",
-		rootIndicator: " \\$ ",
+		colorTemplate:    "\\[\\e%s\\]",
+		rootIndicator:    " \\$ ",
 		escapedBackslash: `\\\\`,
-		escapedDollar: `\$`,
+		escapedDollar:    `\$`,
 	},
 	"zsh": {
-		colorTemplate: "%%{\u001b%s%%}",
-		rootIndicator: " %# ",
+		colorTemplate:    "%%{\u001b%s%%}",
+		rootIndicator:    " %# ",
 		escapedBackslash: `\\`,
-		escapedDollar: `\$`,
+		escapedDollar:    `\$`,
 	},
 	"bare": {
-		colorTemplate: "%s",
-		rootIndicator: " $ ",
+		colorTemplate:    "%s",
+		rootIndicator:    " $ ",
 		escapedBackslash: `\`,
-		escapedDollar: `$`,
+		escapedDollar:    `$`,
 	},
 }
 
@@ -69,6 +69,9 @@ var defaultTheme = Theme{
 
 	SshFg: 254,
 	SshBg: 166, // medium orange
+
+	DockerMachineFg: 177, // light purple
+	DockerMachineBg: 55,  // purple
 
 	RepoCleanFg: 0,   // black
 	RepoCleanBg: 148, // a light green color

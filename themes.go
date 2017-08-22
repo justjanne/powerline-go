@@ -38,6 +38,9 @@ type Theme struct {
 	SshFg uint8
 	SshBg uint8
 
+	DockerMachineFg uint8
+	DockerMachineBg uint8
+
 	RepoCleanFg uint8
 	RepoCleanBg uint8
 	RepoDirtyFg uint8
