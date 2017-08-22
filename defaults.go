@@ -21,8 +21,7 @@ var symbolTemplates = map[string]Symbols{
 		RepoUntracked:  "+",
 		RepoConflicted: "\u273C",
 	},
-	"flat": {
-	},
+	"flat": {},
 }
 
 var shellInfos = map[string]ShellInfo{
@@ -30,18 +29,21 @@ var shellInfos = map[string]ShellInfo{
 		colorTemplate:    "\\[\\e%s\\]",
 		rootIndicator:    " \\$ ",
 		escapedBackslash: `\\\\`,
+		escapedBacktick:  "\\`",
 		escapedDollar:    `\$`,
 	},
 	"zsh": {
 		colorTemplate:    "%%{\u001b%s%%}",
 		rootIndicator:    " %# ",
 		escapedBackslash: `\\`,
+		escapedBacktick:  "\\`",
 		escapedDollar:    `\$`,
 	},
 	"bare": {
-		colorTemplate:    "%s",
+		colorTemplate: "%s",
 		rootIndicator:    " $ ",
 		escapedBackslash: `\`,
+		escapedBacktick:  "`",
 		escapedDollar:    `$`,
 	},
 }

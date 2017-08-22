@@ -57,6 +57,7 @@ func maybeShortenName(p *powerline, pathSegment string) string {
 
 func escapeVariables(p *powerline, pathSegment string) string {
 	pathSegment = strings.Replace(pathSegment, `\`, p.shellInfo.escapedBackslash, -1)
+	pathSegment = strings.Replace(pathSegment, "`", p.shellInfo.escapedBacktick, -1)
 	pathSegment = strings.Replace(pathSegment, `$`, p.shellInfo.escapedDollar, -1)
 	return pathSegment
 }

@@ -10,6 +10,7 @@ type ShellInfo struct {
 	rootIndicator    string
 	colorTemplate    string
 	escapedDollar    string
+	escapedBacktick  string
 	escapedBackslash string
 }
 
