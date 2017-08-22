@@ -83,25 +83,48 @@ func (p *powerline) draw() string {
 		buffer.WriteString(segment.separator)
 		buffer.WriteString(p.reset)
 	}
-	buffer.WriteString(" ")
+	buffer.WriteRune(' ')
 
 	drawnResult := buffer.String()
 	if *p.args.EastAsianWidth {
+		var spaceBuffer bytes.Buffer
 		for _, r := range drawnResult {
 			switch width.LookupRune(r).Kind() {
 			case width.Neutral:
 			case width.EastAsianAmbiguous:
-				drawnResult += " "
+				spaceBuffer.WriteRune(' ')
 			case width.EastAsianWide:
 			case width.EastAsianNarrow:
 			case width.EastAsianFullwidth:
 			case width.EastAsianHalfwidth:
 			}
 		}
+		drawnResult += spaceBuffer.String()
 	}
 
 	if *p.args.PromptOnNewLine {
-		drawnResult += "\n"
+		var nextLineBuffer bytes.Buffer
+		nextLineBuffer.WriteRune('\n')
+
+		var foreground, background uint8
+		if *p.args.PrevError == 0 {
+			foreground = p.theme.CmdPassedFg
+			background = p.theme.CmdPassedBg
+		} else {
+			foreground = p.theme.CmdFailedFg
+			background = p.theme.CmdFailedBg
+		}
+
+		nextLineBuffer.WriteString(p.fgColor(foreground))
+		nextLineBuffer.WriteString(p.bgColor(background))
+		nextLineBuffer.WriteString(p.shellInfo.rootIndicator)
+		nextLineBuffer.WriteString(p.reset)
+		nextLineBuffer.WriteString(p.fgColor(background))
+		nextLineBuffer.WriteString(p.symbolTemplates.Separator)
+		nextLineBuffer.WriteString(p.reset)
+		nextLineBuffer.WriteRune(' ')
+
+		drawnResult += nextLineBuffer.String()
 	}
 
 	return drawnResult
