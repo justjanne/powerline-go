@@ -13,7 +13,7 @@ func segmentUser(p *powerline) {
 		userPrompt = " %n "
 	} else {
 		user, _ := os.LookupEnv("USER")
-		userPrompt = fmt.Sprintf(" %s", user)
+		userPrompt = fmt.Sprintf(" %s ", user)
 	}
 
 	var background uint8

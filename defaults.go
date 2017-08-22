@@ -25,16 +25,25 @@ var symbolTemplates = map[string]Symbols{
 	},
 }
 
-var colorTemplates = map[string]string{
-	"bash": "\\[\\e%s\\]",
-	"zsh":  "%%{\u001b%s%%}",
-	"bare": "%s",
-}
-
-var rootIndicators = map[string]string {
-	"bash": " \\$ ",
-	"zsh": " %# ",
-	"bare": " $ ",
+var shellInfos = map[string]ShellInfo {
+	"bash": {
+		colorTemplate: "\\[\\e%s\\]",
+		rootIndicator: " \\$ ",
+		escapedBackslash: `\\\\`,
+		escapedDollar: `\$`,
+	},
+	"zsh": {
+		colorTemplate: "%%{\u001b%s%%}",
+		rootIndicator: " %# ",
+		escapedBackslash: `\\`,
+		escapedDollar: `\$`,
+	},
+	"bare": {
+		colorTemplate: "%s",
+		rootIndicator: " $ ",
+		escapedBackslash: `\`,
+		escapedDollar: `$`,
+	},
 }
 
 var defaultTheme = Theme{

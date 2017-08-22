@@ -6,12 +6,18 @@ import (
 	"golang.org/x/text/width"
 )
 
+type ShellInfo struct {
+	rootIndicator    string
+	colorTemplate    string
+	escapedDollar    string
+	escapedBackslash string
+}
+
 type powerline struct {
 	args            args
 	cwd             string
 	theme           Theme
-	colorTemplate   string
-	rootIndicator   string
+	shellInfo       ShellInfo
 	reset           string
 	symbolTemplates Symbols
 	Segments        []segment
@@ -22,9 +28,8 @@ func NewPowerline(args args, cwd string, theme Theme) *powerline {
 	p.args = args
 	p.cwd = cwd
 	p.theme = theme
-	p.colorTemplate = colorTemplates[*args.Shell]
-	p.rootIndicator = rootIndicators[*args.Shell]
-	p.reset = fmt.Sprintf(p.colorTemplate, "[0m")
+	p.shellInfo = shellInfos[*args.Shell]
+	p.reset = fmt.Sprintf(p.shellInfo.colorTemplate, "[0m")
 	p.symbolTemplates = symbolTemplates[*args.Mode]
 	p.Segments = make([]segment, 0)
 	return p
@@ -34,7 +39,7 @@ func (p *powerline) color(prefix string, code uint8) string {
 	if code == defaultTheme.Reset {
 		return p.reset
 	} else {
-		return fmt.Sprintf(p.colorTemplate, fmt.Sprintf("[%s;5;%dm", prefix, code))
+		return fmt.Sprintf(p.shellInfo.colorTemplate, fmt.Sprintf("[%s;5;%dm", prefix, code))
 	}
 }
 

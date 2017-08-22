@@ -11,7 +11,7 @@ func segmentRoot(p *powerline) {
 	}
 
 	p.appendSegment(segment{
-		content:    p.rootIndicator,
+		content:    p.shellInfo.rootIndicator,
 		foreground: foreground,
 		background: background,
 	})

@@ -8,31 +8,43 @@ import (
 
 const ellipsis = "\u2026"
 
-func replaceHomeDir(cwd string) string {
-	home, _ := os.LookupEnv("HOME")
-	if strings.HasPrefix(cwd, home) {
-		return "~" + cwd[len(home):]
-	} else {
-		return cwd
-	}
+type pathSegment struct {
+	path     string
+	home     bool
+	root     bool
+	ellipsis bool
 }
 
-func splitPathIntoNames(cwd string) []string {
-	names := strings.Split(cwd, string(os.PathSeparator))
+func cwdToPathSegments(cwd string) []pathSegment {
+	pathSegments := make([]pathSegment, 0)
 
+	home, _ := os.LookupEnv("HOME")
+	if strings.HasPrefix(cwd, home) {
+		pathSegments = append(pathSegments, pathSegment{
+			path: "~",
+			home: true,
+		})
+		cwd = cwd[len(home):]
+	} else if cwd == "/" {
+		pathSegments = append(pathSegments, pathSegment{
+			path: "/",
+			root: true,
+		})
+	}
+
+	cwd = strings.Trim(cwd, "/")
+	names := strings.Split(cwd, "/")
 	if names[0] == "" {
 		names = names[1:]
 	}
 
-	if len(names) > 0 && names[0] == "" {
-		return []string{"/"}
-	} else {
-		return names
+	for _, name := range names {
+		pathSegments = append(pathSegments, pathSegment{
+			path: name,
+		})
 	}
-}
 
-func requiresSpecialHomeDisplay(p *powerline, pathSegment string) bool {
-	return pathSegment == "~" && p.theme.HomeSpecialDisplay
+	return pathSegments
 }
 
 func maybeShortenName(p *powerline, pathSegment string) string {
@@ -43,8 +55,14 @@ func maybeShortenName(p *powerline, pathSegment string) string {
 	}
 }
 
-func getColor(p *powerline, pathSegment string, isLastDir bool) (uint8, uint8) {
-	if requiresSpecialHomeDisplay(p, pathSegment) {
+func escapeVariables(p *powerline, pathSegment string) string {
+	pathSegment = strings.Replace(pathSegment, `\`, p.shellInfo.escapedBackslash, -1)
+	pathSegment = strings.Replace(pathSegment, `$`, p.shellInfo.escapedDollar, -1)
+	return pathSegment
+}
+
+func getColor(p *powerline, pathSegment pathSegment, isLastDir bool) (uint8, uint8) {
+	if pathSegment.home && p.theme.HomeSpecialDisplay {
 		return p.theme.HomeFg, p.theme.HomeBg
 	} else if isLastDir {
 		return p.theme.CwdFg, p.theme.PathBg
@@ -58,46 +76,53 @@ func segmentCwd(p *powerline) {
 	if cwd == "" {
 		cwd, _ = os.LookupEnv("PWD")
 	}
-	cwd = replaceHomeDir(cwd)
 
 	if *p.args.CwdMode == "plain" {
+		home, _ := os.LookupEnv("HOME")
+		if strings.HasPrefix(cwd, home) {
+			cwd = "~" + cwd[len(home):]
+		}
+
 		p.appendSegment(segment{
 			content:    fmt.Sprintf(" %s ", cwd),
 			foreground: p.theme.CwdFg,
 			background: p.theme.PathBg,
 		})
 	} else {
-		names := splitPathIntoNames(cwd)
+		pathSegments := cwdToPathSegments(cwd)
 
 		if *p.args.CwdMode == "dironly" {
-			names = names[len(names)-1:]
+			pathSegments = pathSegments[len(pathSegments)-1:]
 		} else {
 			maxDepth := *p.args.CwdMaxDepth
 			if maxDepth <= 0 {
 				warn("Ignoring -cwd-max-depth argument since it's smaller than or equal to 0")
-			} else if len(names) > maxDepth {
+			} else if len(pathSegments) > maxDepth {
 				var nBefore int
 				if maxDepth > 2 {
 					nBefore = 2
 				} else {
 					nBefore = maxDepth - 1
 				}
-				firstPart := names[:nBefore]
-				secondPart := names[len(names)+nBefore-maxDepth:]
-				names = append(append(firstPart, ellipsis), secondPart...)
+				firstPart := pathSegments[:nBefore]
+				secondPart := pathSegments[len(pathSegments)+nBefore-maxDepth:]
+				pathSegments = append(append(firstPart, pathSegment{
+					path:     ellipsis,
+					ellipsis: true,
+				}), secondPart...)
 			}
 
-			for idx, pathSegment := range names {
-				isLastDir := idx == len(names)-1
+			for idx, pathSegment := range pathSegments {
+				isLastDir := idx == len(pathSegments)-1
 				foreground, background := getColor(p, pathSegment, isLastDir)
 
 				segment := segment{
-					content:    fmt.Sprintf(" %s ", maybeShortenName(p, pathSegment)),
+					content:    fmt.Sprintf(" %s ", escapeVariables(p, maybeShortenName(p, pathSegment.path))),
 					foreground: foreground,
 					background: background,
 				}
 
-				if !requiresSpecialHomeDisplay(p, pathSegment) && !isLastDir {
+				if !(pathSegment.home && p.theme.HomeSpecialDisplay) && !isLastDir {
 					segment.separator = p.symbolTemplates.SeparatorThin
 					segment.separatorForeground = p.theme.SeparatorFg
 				}
