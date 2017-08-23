@@ -23,6 +23,7 @@ type args struct {
 	EastAsianWidth   *bool
 	PromptOnNewLine  *bool
 	Mode             *string
+	Theme            *string
 	Shell            *string
 	Modules          *string
 	PrevError        *int
@@ -99,6 +100,10 @@ func main() {
 			"The characters used to make separators between segments.\n"+
 				"    	(valid choices: patched, compatible, flat)\n"+
 				"       "),
+		Theme: flag.String("theme", "default",
+			"Set this to the theme you want to use\n"+
+				"    	(valid choices: default)\n"+
+				"       "),
 		Shell: flag.String("shell", "bash",
 			"Set this to your shell type\n"+
 				"    	(valid choices: bare, bash, zsh)\n"+
@@ -112,7 +117,7 @@ func main() {
 			"Exit code of previously executed command"),
 	}
 	flag.Parse()
-	powerline := NewPowerline(args, getValidCwd(), defaultTheme)
+	powerline := NewPowerline(args, getValidCwd())
 
 	for _, module := range strings.Split(*powerline.args.Modules, ",") {
 		elem, ok := modules[module]

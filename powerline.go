@@ -24,11 +24,11 @@ type powerline struct {
 	Segments        []segment
 }
 
-func NewPowerline(args args, cwd string, theme Theme) *powerline {
+func NewPowerline(args args, cwd string) *powerline {
 	p := new(powerline)
 	p.args = args
 	p.cwd = cwd
-	p.theme = theme
+	p.theme = themes[*args.Theme]
 	p.shellInfo = shellInfos[*args.Shell]
 	p.reset = fmt.Sprintf(p.shellInfo.colorTemplate, "[0m")
 	p.symbolTemplates = symbolTemplates[*args.Mode]
@@ -37,7 +37,7 @@ func NewPowerline(args args, cwd string, theme Theme) *powerline {
 }
 
 func (p *powerline) color(prefix string, code uint8) string {
-	if code == defaultTheme.Reset {
+	if code == p.theme.Reset {
 		return p.reset
 	} else {
 		return fmt.Sprintf(p.shellInfo.colorTemplate, fmt.Sprintf("[%s;5;%dm", prefix, code))
