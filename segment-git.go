@@ -76,14 +76,21 @@ func parseGitBranchInfo(status []string) map[string]string {
 }
 
 func getGitDetachedBranch(p *powerline) string {
-	command := exec.Command("git", "describe", "--tags", "--always")
+	command := exec.Command("git", "rev-parse", "--short", "HEAD")
 	command.Env = gitProcessEnv()
 	out, err := command.Output()
 	if err != nil {
-		return "Error"
+		command2 := exec.Command("git", "symbolic-ref", "--short", "HEAD")
+		command2.Env = gitProcessEnv()
+		out, err := command2.Output()
+		if err != nil {
+			return "Error"
+		} else {
+			return strings.SplitN(string(out), "\n", 2)[0]
+		}
 	} else {
 		detachedRef := strings.SplitN(string(out), "\n", 2)
-		return fmt.Sprintf("%s %s", p.symbolTemplates.RepoDetached, detachedRef)
+		return fmt.Sprintf("%s %s", p.symbolTemplates.RepoDetached, detachedRef[0])
 	}
 }
 
