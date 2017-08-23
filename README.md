@@ -100,7 +100,7 @@ Usage of powerline-go:
         (default "patched")
   -modules string
         The list of modules to load. Separate with ','
-        (valid choices: cwd, docker, exit, git, hg, host, jobs, perms, root, ssh, user, venv)
+        (valid choices: cwd, docker, exit, git, hg, host, jobs, perms, root, ssh, time, user, venv)
         (default "venv,user,ssh,host,cwd,perms,git,hg,jobs,exit,root")
   -newline
         Show the prompt on a new line

@@ -73,6 +73,7 @@ var modules = map[string](func(*powerline)){
 	"perms":  segmentPerms,
 	"root":   segmentRoot,
 	"ssh":    segmentSsh,
+	"time":   segmentTime,
 	"user":   segmentUser,
 	"venv":   segmentVirtualEnv,
 }
@@ -105,7 +106,7 @@ func main() {
 		Modules: flag.String("modules",
 			"venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root",
 			"The list of modules to load. Separate with ','\n"+
-				"    	(valid choices: cwd, docker, exit, git, hg, host, jobs, perms, root, ssh, user, venv)\n"+
+				"    	(valid choices: cwd, docker, exit, git, hg, host, jobs, perms, root, ssh, time, user, venv)\n"+
 				"       "),
 		PrevError: flag.Int("error", 0,
 			"Exit code of previously executed command"),
