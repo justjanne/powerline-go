@@ -15,13 +15,13 @@ Ported to golang by @justjanne.
 **Table of Contents** 
 
 - [Version Control](#version-control)
-- [Setup](#setup)
+- [Installation](#installation)
   - [Precompiled Binaries](#precompiled-binaries)
   - [Other Platforms](#other-platforms)
-  - [All Shells](#all-shells)
   - [Bash](#bash)
   - [ZSH](#zsh)
   - [Fish](#fish)
+- [Customization](#customization)
 - [License](#license)
 
 ## Version Control
@@ -44,7 +44,7 @@ In addition, git has a few extra symbols:
 
 Each of these will have a number next to it if more than one file matches.
 
-## Setup
+## Installation
 
 `powerline-go` uses ANSI color codes, these should nowadays work everywhere,
 but you may have to set your $TERM to `xterm-256color` for it to work.
@@ -121,10 +121,9 @@ end
 
 ## Customization
 
-### Additional options
-
 There are a few optional arguments which can be seen by running
-`powerline-go -help`.
+`powerline-go -help`. These can be used by changing the command you have set
+in your shell’s init file.
 
 ```
 Usage of powerline-go:
@@ -162,12 +161,6 @@ Usage of powerline-go:
         (valid choices: default)
         (default "default")
 ```
-
-### Adding, Removing and Re-arranging segments
-
-You can use the `-modules` argument to define which segments to draw, and in
-which order. Segments can also be repeated. Simply change the argument in your
-shell’s init to customize the prompt.
 
 
 ## License
