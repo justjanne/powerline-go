@@ -72,48 +72,6 @@ go get github.com/justjanne/powerline-go
 
 - Move it to a convenient place (for example, `~/.powerline/powerline-go`)
 
-### All Shells
-
-There are a few optional arguments which can be seen by running
-`powerline-go -help`.
-
-```
-Usage of powerline-go:
-  -colorize-hostname
-        Colorize the hostname based on a hash of itself
-  -cwd-max-depth int
-        Maximum number of directories to show in path
-        (default 5)
-  -cwd-max-dir-size int
-        Maximum number of letters displayed for each directory in the path
-        (default -1)
-  -cwd-mode string
-        How to display the current directory
-        (default "fancy")
-  -east-asian-width
-        Use East Asian Ambiguous Widths
-  -error int
-        Exit code of previously executed command
-  -mode string
-        The characters used to make separators between segments.
-        (valid choices: patched, compatible, flat)
-        (default "patched")
-  -modules string
-        The list of modules to load. Separate with ','
-        (valid choices: cwd, docker, exit, git, hg, host, jobs, perms, root, ssh, time, user, venv)
-        (default "venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root")
-  -newline
-        Show the prompt on a new line
-  -shell string
-        Set this to your shell type
-        (valid choices: bare, bash, zsh)
-        (default "bash")
-  -theme string
-        Set this to the theme you want to use
-        (valid choices: default)
-        (default "default")
-```
-
 ### Bash
 
 Add the following to your `.bashrc` (or `.profile` on Mac):
@@ -162,6 +120,48 @@ end
 ```
 
 ## Customization
+
+### Additional options
+
+There are a few optional arguments which can be seen by running
+`powerline-go -help`.
+
+```
+Usage of powerline-go:
+  -colorize-hostname
+        Colorize the hostname based on a hash of itself
+  -cwd-max-depth int
+        Maximum number of directories to show in path
+        (default 5)
+  -cwd-max-dir-size int
+        Maximum number of letters displayed for each directory in the path
+        (default -1)
+  -cwd-mode string
+        How to display the current directory
+        (default "fancy")
+  -east-asian-width
+        Use East Asian Ambiguous Widths
+  -error int
+        Exit code of previously executed command
+  -mode string
+        The characters used to make separators between segments.
+        (valid choices: patched, compatible, flat)
+        (default "patched")
+  -modules string
+        The list of modules to load. Separate with ','
+        (valid choices: cwd, docker, exit, git, hg, host, jobs, perms, root, ssh, time, user, venv)
+        (default "venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root")
+  -newline
+        Show the prompt on a new line
+  -shell string
+        Set this to your shell type
+        (valid choices: bare, bash, zsh)
+        (default "bash")
+  -theme string
+        Set this to the theme you want to use
+        (valid choices: default)
+        (default "default")
+```
 
 ### Adding, Removing and Re-arranging segments
 
