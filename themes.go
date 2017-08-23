@@ -24,6 +24,10 @@ type Theme struct {
 	HostnameFg uint8
 	HostnameBg uint8
 
+	// The foreground-background mapping is precomputed and stored in a map for improved performance
+	// The old script used to brute-force this at runtime
+	HostnameColorizedFgMap map[uint8]uint8
+
 	HomeSpecialDisplay bool
 	HomeFg             uint8
 	HomeBg             uint8
