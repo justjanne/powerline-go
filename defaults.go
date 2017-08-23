@@ -106,4 +106,7 @@ var defaultTheme = Theme{
 
 	VirtualEnvFg: 00,
 	VirtualEnvBg: 35, // a mid-tone green
+
+	TimeFg: 15,
+	TimeBg: 236,
 }
