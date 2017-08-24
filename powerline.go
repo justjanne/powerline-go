@@ -74,6 +74,8 @@ func (p *powerline) draw() string {
 	shellMaxLength64, _ := strconv.ParseInt(shellMaxLengthStr, 0, 64)
 	shellMaxLength := int(shellMaxLength64)
 
+	shellMaxLength = shellMaxLength * *p.args.MaxWidthPercentage / 100
+
 	shellActualLength := 0
 	if shellMaxLength > 0 {
 		for _, segment := range p.Segments {

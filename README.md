@@ -142,6 +142,9 @@ Usage of powerline-go:
         Use East Asian Ambiguous Widths
   -error int
         Exit code of previously executed command
+  -max-width int
+        Maximum width of the shell that the prompt may use, in percent.
+        (default 50)
   -mode string
         The characters used to make separators between segments.
         (valid choices: patched, compatible, flat)
@@ -152,6 +155,10 @@ Usage of powerline-go:
         (default "venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root")
   -newline
         Show the prompt on a new line
+  -priority string
+        Segments sorted by priority, if not enough space exists, the least priorized segments are removed first. Separate with ','
+        (valid choices: cwd, docker, exit, git-branch, git-status, hg, host, jobs, perms, root, ssh, time, user, venv)
+        (default "root,cwd,user,host,ssh,perms,git-branch,git-status,hg,jobs,exit")
   -shell string
         Set this to your shell type
         (valid choices: bare, bash, zsh)

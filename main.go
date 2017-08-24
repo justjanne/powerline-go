@@ -17,18 +17,19 @@ type segment struct {
 }
 
 type args struct {
-	CwdMode          *string
-	CwdMaxDepth      *int
-	CwdMaxDirSize    *int
-	ColorizeHostname *bool
-	EastAsianWidth   *bool
-	PromptOnNewLine  *bool
-	Mode             *string
-	Theme            *string
-	Shell            *string
-	Modules          *string
-	Priority         *string
-	PrevError        *int
+	CwdMode            *string
+	CwdMaxDepth        *int
+	CwdMaxDirSize      *int
+	ColorizeHostname   *bool
+	EastAsianWidth     *bool
+	PromptOnNewLine    *bool
+	Mode               *string
+	Theme              *string
+	Shell              *string
+	Modules            *string
+	Priority           *string
+	MaxWidthPercentage *int
+	PrevError          *int
 }
 
 func warn(msg string) {
@@ -118,6 +119,10 @@ func main() {
 			"root,cwd,user,host,ssh,perms,git-branch,git-status,hg,jobs,exit",
 			"Segments sorted by priority, if not enough space exists, the least priorized segments are removed first. Separate with ','\n"+
 				"    	(valid choices: cwd, docker, exit, git-branch, git-status, hg, host, jobs, perms, root, ssh, time, user, venv)\n"+
+				"       "),
+		MaxWidthPercentage: flag.Int("max-width",
+			50,
+			"Maximum width of the shell that the prompt may use, in percent.\n"+
 				"       "),
 		PrevError: flag.Int("error", 0,
 			"Exit code of previously executed command"),
