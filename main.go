@@ -13,6 +13,7 @@ type segment struct {
 	background          uint8
 	separator           string
 	separatorForeground uint8
+	priority            int
 }
 
 type args struct {
@@ -26,6 +27,7 @@ type args struct {
 	Theme            *string
 	Shell            *string
 	Modules          *string
+	Priority         *string
 	PrevError        *int
 }
 
@@ -42,7 +44,6 @@ func pathExists(path string) bool {
 }
 
 func getValidCwd() string {
-
 	cwd, exists := os.LookupEnv("PWD")
 	if !exists {
 		warn("Your current directory is invalid.")
@@ -113,11 +114,22 @@ func main() {
 			"The list of modules to load. Separate with ','\n"+
 				"    	(valid choices: cwd, docker, exit, git, hg, host, jobs, perms, root, ssh, time, user, venv)\n"+
 				"       "),
+		Priority: flag.String("priority",
+			"root,cwd,user,host,ssh,perms,git-branch,git-status,hg,jobs,exit",
+			"Segments sorted by priority, if not enough space exists, the least priorized segments are removed first. Separate with ','\n"+
+				"    	(valid choices: cwd, docker, exit, git-branch, git-status, hg, host, jobs, perms, root, ssh, time, user, venv)\n"+
+				"       "),
 		PrevError: flag.Int("error", 0,
 			"Exit code of previously executed command"),
 	}
 	flag.Parse()
-	powerline := NewPowerline(args, getValidCwd())
+	priorities := map[string]int{}
+	priorityList := strings.Split(*args.Priority, ",")
+	for idx, priority := range priorityList {
+		priorities[priority] = len(priorityList) - idx
+	}
+
+	powerline := NewPowerline(args, getValidCwd(), priorities)
 
 	for _, module := range strings.Split(*powerline.args.Modules, ",") {
 		elem, ok := modules[module]

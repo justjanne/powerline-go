@@ -4,6 +4,9 @@ import (
 	"bytes"
 	"fmt"
 	"golang.org/x/text/width"
+	"math"
+	"os"
+	"strconv"
 )
 
 type ShellInfo struct {
@@ -21,10 +24,11 @@ type powerline struct {
 	shellInfo       ShellInfo
 	reset           string
 	symbolTemplates Symbols
+	priorities      map[string]int
 	Segments        []segment
 }
 
-func NewPowerline(args args, cwd string) *powerline {
+func NewPowerline(args args, cwd string, priorities map[string]int) *powerline {
 	p := new(powerline)
 	p.args = args
 	p.cwd = cwd
@@ -32,6 +36,7 @@ func NewPowerline(args args, cwd string) *powerline {
 	p.shellInfo = shellInfos[*args.Shell]
 	p.reset = fmt.Sprintf(p.shellInfo.colorTemplate, "[0m")
 	p.symbolTemplates = symbolTemplates[*args.Mode]
+	p.priorities = priorities
 	p.Segments = make([]segment, 0)
 	return p
 }
@@ -52,21 +57,47 @@ func (p *powerline) bgColor(code uint8) string {
 	return p.color("48", code)
 }
 
-func (p *powerline) appendSegment(segment segment) {
+func (p *powerline) appendSegment(origin string, segment segment) {
 	if segment.separator == "" {
 		segment.separator = p.symbolTemplates.Separator
 	}
 	if segment.separatorForeground == 0 {
 		segment.separatorForeground = segment.background
 	}
+	priority, _ := p.priorities[origin]
+	segment.priority = priority
 	p.Segments = append(p.Segments, segment)
 }
 
 func (p *powerline) draw() string {
-	var buffer bytes.Buffer
-	for idx := range p.Segments {
-		segment := p.Segments[idx]
+	shellMaxLengthStr, _ := os.LookupEnv("COLUMNS")
+	shellMaxLength64, _ := strconv.ParseInt(shellMaxLengthStr, 0, 64)
+	shellMaxLength := int(shellMaxLength64)
 
+	shellActualLength := 0
+	if shellMaxLength > 0 {
+		for _, segment := range p.Segments {
+			shellActualLength += len(segment.content) + len(segment.separator)
+		}
+		for shellActualLength > shellMaxLength {
+			minPriority := math.MaxInt64
+			minPrioritySegmentId := -1
+			for idx, segment := range p.Segments {
+				if segment.priority < minPriority {
+					minPriority = segment.priority
+					minPrioritySegmentId = idx
+				}
+			}
+			if minPrioritySegmentId != -1 {
+				segment := p.Segments[minPrioritySegmentId]
+				p.Segments = append(p.Segments[:minPrioritySegmentId], p.Segments[minPrioritySegmentId+1:]...)
+				shellActualLength -= len(segment.content) + len(segment.separator)
+			}
+		}
+	}
+
+	var buffer bytes.Buffer
+	for idx, segment := range p.Segments {
 		var separatorBackground string
 		if idx >= len(p.Segments)-1 {
 			separatorBackground = p.reset

@@ -10,7 +10,7 @@ func segmentRoot(p *powerline) {
 		background = p.theme.CmdFailedBg
 	}
 
-	p.appendSegment(segment{
+	p.appendSegment("root", segment{
 		content:    p.shellInfo.rootIndicator,
 		foreground: foreground,
 		background: background,

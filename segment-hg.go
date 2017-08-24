@@ -60,7 +60,7 @@ func segmentHg(p *powerline) {
 			content = fmt.Sprintf(" %s ", branch)
 		}
 
-		p.appendSegment(segment{
+		p.appendSegment("hg", segment{
 			content:    content,
 			foreground: foreground,
 			background: background,

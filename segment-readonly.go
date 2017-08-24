@@ -1,9 +1,9 @@
 package main
 
 import (
-	"os"
 	"fmt"
 	"golang.org/x/sys/unix"
+	"os"
 )
 
 func segmentPerms(p *powerline) {
@@ -12,7 +12,7 @@ func segmentPerms(p *powerline) {
 		cwd, _ = os.LookupEnv("PWD")
 	}
 	if unix.Access(cwd, unix.W_OK) != nil {
-		p.appendSegment(segment{
+		p.appendSegment("perms", segment{
 			content:    fmt.Sprintf(" %s ", p.symbolTemplates.Lock),
 			foreground: p.theme.ReadonlyFg,
 			background: p.theme.ReadonlyBg,

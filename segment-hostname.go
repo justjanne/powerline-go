@@ -41,7 +41,7 @@ func segmentHost(p *powerline) {
 		background = p.theme.HostnameBg
 	}
 
-	p.appendSegment(segment{
+	p.appendSegment("host", segment{
 		content:    hostPrompt,
 		foreground: foreground,
 		background: background,

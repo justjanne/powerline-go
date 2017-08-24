@@ -22,7 +22,7 @@ func segmentJobs(p *powerline) {
 	}
 
 	if nJobs > 0 {
-		p.appendSegment(segment{
+		p.appendSegment("jobs", segment{
 			content:    fmt.Sprintf(" %d ", nJobs),
 			foreground: p.theme.JobsFg,
 			background: p.theme.JobsBg,

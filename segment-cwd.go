@@ -84,7 +84,7 @@ func segmentCwd(p *powerline) {
 			cwd = "~" + cwd[len(home):]
 		}
 
-		p.appendSegment(segment{
+		p.appendSegment("cwd", segment{
 			content:    fmt.Sprintf(" %s ", cwd),
 			foreground: p.theme.CwdFg,
 			background: p.theme.PathBg,
@@ -128,7 +128,7 @@ func segmentCwd(p *powerline) {
 					segment.separatorForeground = p.theme.SeparatorFg
 				}
 
-				p.appendSegment(segment)
+				p.appendSegment("cwd", segment)
 			}
 		}
 	}

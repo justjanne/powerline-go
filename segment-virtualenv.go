@@ -1,8 +1,8 @@
 package main
 
 import (
-	"os"
 	"fmt"
+	"os"
 	"path"
 )
 
@@ -21,7 +21,7 @@ func segmentVirtualEnv(p *powerline) {
 		return
 	} else {
 		envName := path.Base(env)
-		p.appendSegment(segment{
+		p.appendSegment("venv", segment{
 			content:    fmt.Sprintf(" %s ", envName),
 			foreground: p.theme.VirtualEnvFg,
 			background: p.theme.VirtualEnvBg,

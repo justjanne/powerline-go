@@ -23,7 +23,7 @@ func segmentUser(p *powerline) {
 		background = p.theme.UsernameBg
 	}
 
-	p.appendSegment(segment{
+	p.appendSegment("user", segment{
 		content:    userPrompt,
 		foreground: p.theme.UsernameFg,
 		background: background,
