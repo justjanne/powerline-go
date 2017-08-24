@@ -143,7 +143,7 @@ Usage of powerline-go:
   -error int
         Exit code of previously executed command
   -max-width int
-        Maximum width of the shell that the prompt may use, in percent.
+        Maximum width of the shell that the prompt may use, in percent. Setting this to 0 disables the shrinking subsystem.
         (default 50)
   -mode string
         The characters used to make separators between segments.

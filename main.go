@@ -122,7 +122,7 @@ func main() {
 				"       "),
 		MaxWidthPercentage: flag.Int("max-width",
 			50,
-			"Maximum width of the shell that the prompt may use, in percent.\n"+
+			"Maximum width of the shell that the prompt may use, in percent. Setting this to 0 disables the shrinking subsystem.\n"+
 				"       "),
 		PrevError: flag.Int("error", 0,
 			"Exit code of previously executed command"),
