@@ -3,6 +3,8 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"strings"
+
 	"golang.org/x/text/width"
 	"math"
 	"os"
@@ -25,6 +27,7 @@ type powerline struct {
 	reset           string
 	symbolTemplates Symbols
 	priorities      map[string]int
+	ignoreRepos     map[string]bool
 	Segments        []segment
 }
 
@@ -37,6 +40,10 @@ func NewPowerline(args args, cwd string, priorities map[string]int) *powerline {
 	p.reset = fmt.Sprintf(p.shellInfo.colorTemplate, "[0m")
 	p.symbolTemplates = symbolTemplates[*args.Mode]
 	p.priorities = priorities
+	p.ignoreRepos = make(map[string]bool)
+	for _, r := range strings.Split(*args.IgnoreRepos, ",") {
+		p.ignoreRepos[r] = true
+	}
 	p.Segments = make([]segment, 0)
 	return p
 }

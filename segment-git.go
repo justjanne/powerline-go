@@ -71,25 +71,28 @@ func gitProcessEnv() []string {
 	return result
 }
 
+func runGitCommand(cmd string, args ...string) (string, error) {
+	command := exec.Command(cmd, args...)
+	command.Env = gitProcessEnv()
+	out, err := command.Output()
+	return string(out), err
+}
+
 func parseGitBranchInfo(status []string) map[string]string {
 	return groupDict(branchRegex, status[0])
 }
 
 func getGitDetachedBranch(p *powerline) string {
-	command := exec.Command("git", "rev-parse", "--short", "HEAD")
-	command.Env = gitProcessEnv()
-	out, err := command.Output()
+	out, err := runGitCommand("git", "rev-parse", "--short", "HEAD")
 	if err != nil {
-		command2 := exec.Command("git", "symbolic-ref", "--short", "HEAD")
-		command2.Env = gitProcessEnv()
-		out, err := command2.Output()
+		out, err := runGitCommand("git", "symbolic-ref", "--short", "HEAD")
 		if err != nil {
 			return "Error"
 		} else {
-			return strings.SplitN(string(out), "\n", 2)[0]
+			return strings.SplitN(out, "\n", 2)[0]
 		}
 	} else {
-		detachedRef := strings.SplitN(string(out), "\n", 2)
+		detachedRef := strings.SplitN(out, "\n", 2)
 		return fmt.Sprintf("%s %s", p.symbolTemplates.RepoDetached, detachedRef[0])
 	}
 }
@@ -121,42 +124,52 @@ func parseGitStats(status []string) repoStats {
 }
 
 func segmentGit(p *powerline) {
-	command := exec.Command("git", "status", "--porcelain", "-b")
-	command.Env = gitProcessEnv()
-	out, err := command.Output()
-	if err != nil {
-	} else {
-		status := strings.Split(string(out), "\n")
-		stats := parseGitStats(status)
-		branchInfo := parseGitBranchInfo(status)
-		var branch string
-
-		if branchInfo["local"] != "" {
-			ahead, _ := strconv.ParseInt(branchInfo["ahead"], 10, 32)
-			stats.ahead = int(ahead)
-
-			behind, _ := strconv.ParseInt(branchInfo["behind"], 10, 32)
-			stats.behind = int(behind)
-
-			branch = branchInfo["local"]
-		} else {
-			branch = getGitDetachedBranch(p)
+	if len(p.ignoreRepos) > 0 {
+		out, err := runGitCommand("git", "rev-parse", "--show-toplevel")
+		if err != nil {
+			return
 		}
-
-		var foreground, background uint8
-		if stats.dirty() {
-			foreground = p.theme.RepoDirtyFg
-			background = p.theme.RepoDirtyBg
-		} else {
-			foreground = p.theme.RepoCleanFg
-			background = p.theme.RepoCleanBg
+		out = strings.TrimSpace(out)
+		if p.ignoreRepos[out] {
+			return
 		}
-
-		p.appendSegment("git-branch", segment{
-			content:    fmt.Sprintf(" %s ", branch),
-			foreground: foreground,
-			background: background,
-		})
-		stats.addToPowerline(p)
 	}
+
+	out, err := runGitCommand("git", "status", "--porcelain", "-b")
+	if err != nil {
+		return
+	}
+
+	status := strings.Split(out, "\n")
+	stats := parseGitStats(status)
+	branchInfo := parseGitBranchInfo(status)
+	var branch string
+
+	if branchInfo["local"] != "" {
+		ahead, _ := strconv.ParseInt(branchInfo["ahead"], 10, 32)
+		stats.ahead = int(ahead)
+
+		behind, _ := strconv.ParseInt(branchInfo["behind"], 10, 32)
+		stats.behind = int(behind)
+
+		branch = branchInfo["local"]
+	} else {
+		branch = getGitDetachedBranch(p)
+	}
+
+	var foreground, background uint8
+	if stats.dirty() {
+		foreground = p.theme.RepoDirtyFg
+		background = p.theme.RepoDirtyBg
+	} else {
+		foreground = p.theme.RepoCleanFg
+		background = p.theme.RepoCleanBg
+	}
+
+	p.appendSegment("git-branch", segment{
+		content:    fmt.Sprintf(" %s ", branch),
+		foreground: foreground,
+		background: background,
+	})
+	stats.addToPowerline(p)
 }
