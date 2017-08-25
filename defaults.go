@@ -124,6 +124,9 @@ var themes = map[string]Theme{
 		VirtualEnvFg: 00,
 		VirtualEnvBg: 35, // a mid-tone green
 
+		PerlbrewFg: 00,
+		PerlbrewBg: 20, // a mid-tone blue
+
 		TimeFg: 15,
 		TimeBg: 236,
 
@@ -443,7 +446,10 @@ var themes = map[string]Theme{
 		GitConflictedBg: 15,
 
 		VirtualEnvFg: 35, // a mid-tone green
-		VirtualEnvBg: 00,
+		VirtualEnvBg: 254,
+
+		PerlbrewFg: 20, // a mid-tone blue
+		PerlbrewBg: 15,
 
 		TimeFg: 236,
 		TimeBg: 15,
