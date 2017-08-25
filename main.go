@@ -66,19 +66,20 @@ func getValidCwd() string {
 }
 
 var modules = map[string](func(*powerline)){
-	"cwd":    segmentCwd,
-	"docker": segmentDocker,
-	"exit":   segmentExitCode,
-	"git":    segmentGit,
-	"hg":     segmentHg,
-	"host":   segmentHost,
-	"jobs":   segmentJobs,
-	"perms":  segmentPerms,
-	"root":   segmentRoot,
-	"ssh":    segmentSsh,
-	"time":   segmentTime,
-	"user":   segmentUser,
-	"venv":   segmentVirtualEnv,
+	"cwd":      segmentCwd,
+	"docker":   segmentDocker,
+	"exit":     segmentExitCode,
+	"git":      segmentGit,
+	"hg":       segmentHg,
+	"host":     segmentHost,
+	"jobs":     segmentJobs,
+	"perlbrew": segmentPerlbrew,
+	"perms":    segmentPerms,
+	"root":     segmentRoot,
+	"ssh":      segmentSsh,
+	"time":     segmentTime,
+	"user":     segmentUser,
+	"venv":     segmentVirtualEnv,
 }
 
 func main() {
@@ -113,12 +114,12 @@ func main() {
 		Modules: flag.String("modules",
 			"venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root",
 			"The list of modules to load. Separate with ','\n"+
-				"    	(valid choices: cwd, docker, exit, git, hg, host, jobs, perms, root, ssh, time, user, venv)\n"+
+				"    	(valid choices: cwd, docker, exit, git, hg, host, jobs, perlbrew, perms, root, ssh, time, user, venv)\n"+
 				"       "),
 		Priority: flag.String("priority",
 			"root,cwd,user,host,ssh,perms,git-branch,git-status,hg,jobs,exit",
 			"Segments sorted by priority, if not enough space exists, the least priorized segments are removed first. Separate with ','\n"+
-				"    	(valid choices: cwd, docker, exit, git-branch, git-status, hg, host, jobs, perms, root, ssh, time, user, venv)\n"+
+				"    	(valid choices: cwd, docker, exit, git-branch, git-status, hg, host, jobs, perlbrew, perms, root, ssh, time, user, venv)\n"+
 				"       "),
 		MaxWidthPercentage: flag.Int("max-width",
 			50,

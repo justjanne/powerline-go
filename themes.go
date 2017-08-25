@@ -77,6 +77,9 @@ type Theme struct {
 	VirtualEnvFg uint8
 	VirtualEnvBg uint8
 
+	PerlbrewFg uint8
+	PerlbrewBg uint8
+
 	TimeFg uint8
 	TimeBg uint8
 }
