@@ -29,6 +29,7 @@ type args struct {
 	Modules            *string
 	Priority           *string
 	MaxWidthPercentage *int
+	IgnoreRepos      *string
 	PrevError          *int
 }
 
@@ -127,6 +128,10 @@ func main() {
 				"       "),
 		PrevError: flag.Int("error", 0,
 			"Exit code of previously executed command"),
+		IgnoreRepos: flag.String("ignore-repos",
+			"",
+			"A list of git repos to ignore. Separate with ','\n"+
+				"Repos are identified by their root directory."),
 	}
 	flag.Parse()
 	priorities := map[string]int{}
