@@ -1,12 +1,10 @@
-// +build !windows
+// +build windows
 
 package main
 
 import (
 	"fmt"
 	"os"
-
-	"golang.org/x/sys/unix"
 )
 
 func segmentPerms(p *powerline) {
@@ -14,7 +12,11 @@ func segmentPerms(p *powerline) {
 	if cwd == "" {
 		cwd, _ = os.LookupEnv("PWD")
 	}
-	if unix.Access(cwd, unix.W_OK) != nil {
+
+	const W_USR = 0002
+	// Check user's permissions on directory in a portable but probably slower way
+	fileInfo, _ := os.Stat(cwd)
+	if fileInfo.Mode()&W_USR != W_USR {
 		p.appendSegment("perms", segment{
 			content:    fmt.Sprintf(" %s ", p.symbolTemplates.Lock),
 			foreground: p.theme.ReadonlyFg,
