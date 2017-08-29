@@ -82,6 +82,7 @@ var modules = map[string](func(*powerline)){
 	"time":     segmentTime,
 	"user":     segmentUser,
 	"venv":     segmentVirtualEnv,
+	"keymap":   segmentKeymap,
 }
 
 func main() {
