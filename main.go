@@ -29,7 +29,7 @@ type args struct {
 	Modules            *string
 	Priority           *string
 	MaxWidthPercentage *int
-	IgnoreRepos      *string
+	IgnoreRepos        *string
 	PrevError          *int
 }
 
@@ -71,6 +71,7 @@ var modules = map[string](func(*powerline)){
 	"docker":   segmentDocker,
 	"exit":     segmentExitCode,
 	"git":      segmentGit,
+	"gitlite":  segmentGitLite,
 	"hg":       segmentHg,
 	"host":     segmentHost,
 	"jobs":     segmentJobs,
@@ -115,7 +116,7 @@ func main() {
 		Modules: flag.String("modules",
 			"venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root",
 			"The list of modules to load. Separate with ','\n"+
-				"    	(valid choices: cwd, docker, exit, git, hg, host, jobs, perlbrew, perms, root, ssh, time, user, venv)\n"+
+				"    	(valid choices: cwd, docker, exit, git, gitlite, hg, host, jobs, perlbrew, perms, root, ssh, time, user, venv)\n"+
 				"       "),
 		Priority: flag.String("priority",
 			"root,cwd,user,host,ssh,perms,git-branch,git-status,hg,jobs,exit",
