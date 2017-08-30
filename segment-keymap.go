@@ -4,28 +4,28 @@ import (
 	"os"
 )
 
+var editSegment = segment{
+	content:    "\u270E",
+	foreground: 15,
+	background: 161,
+}
+
+var commandSegment = segment{
+	content:    "\u26CF",
+	foreground: 15,
+	background: 31,
+}
+
 func segmentKeymap(p *powerline) {
 	var keymap string
-	var present bool
 	if keymap == "" {
-		keymap, present = os.LookupEnv("KEYMAP_POWERLINE")
-	}
-	if !present {
-		keymap = "ouch"
+		keymap, _ = os.LookupEnv("KEYMAP_POWERLINE")
 	}
 	if keymap == "main" {
-		p.appendSegment("keymap", segment{
-			content:    " I ",
-			foreground: p.theme.RepoDirtyFg,
-			background: p.theme.RepoDirtyBg,
-		})
+		p.appendSegment("keymap", editSegment)
 	}
 	if keymap == "vicmd" {
-		p.appendSegment("keymap", segment{
-			content:    " C ",
-			foreground: p.theme.RepoCleanFg,
-			background: p.theme.RepoCleanBg,
-		})
+		p.appendSegment("keymap", commandSegment)
 	}
 
 }
