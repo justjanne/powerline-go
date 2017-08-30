@@ -107,6 +107,15 @@ function install_powerline_precmd() {
 if [ "$TERM" != "linux" ]; then
     install_powerline_precmd
 fi
+
+function zle-line-init zle-keymap-select {
+    export KEYMAP_POWERLINE=$KEYMAP
+    powerline_precmd
+    zle reset-prompt
+}
+
+zle -N zle-line-init
+zle -N zle-keymap-select
 ```
 
 ### Fish
