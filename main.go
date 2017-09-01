@@ -7,6 +7,13 @@ import (
 	"strings"
 )
 
+const (
+	MinUnsignedInteger uint = 0
+	MaxUnsignedInteger      = ^MinUnsignedInteger
+	MaxInteger         int  = int(MaxUnsignedInteger >> 1)
+	MinInteger              = ^MaxInteger
+)
+
 type segment struct {
 	content             string
 	foreground          uint8

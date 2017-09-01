@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"golang.org/x/text/width"
-	"math"
 	"os"
 	"strconv"
 )
@@ -89,7 +88,7 @@ func (p *powerline) draw() string {
 			shellActualLength += len(segment.content) + len(segment.separator)
 		}
 		for shellActualLength > shellMaxLength {
-			minPriority := math.MaxInt64
+			minPriority := MaxInteger
 			minPrioritySegmentId := -1
 			for idx, segment := range p.Segments {
 				if segment.priority < minPriority {
