@@ -62,15 +62,15 @@ I provide precompiled binaries for x64 Linux and macOS in the
 
 ### Other Platforms
 
-- Set your GOPATH (otherwise the package will be installed in $HOME/go/bin/)
-
-- Download and install the package
+- Install (and update) the package with
 
 ```
-go get github.com/justjanne/powerline-go
+go get -u github.com/justjanne/powerline-go
 ```
 
-- Move it to a convenient place (for example, `~/.powerline/powerline-go`)
+- By default it will be in `~/go/bin`, if you want to change that, you can set
+  your `$GOPATH` and/or `$GOBIN`, but will need ot change the path in the
+  following scripts, too.
 
 ### Bash
 
@@ -78,7 +78,7 @@ Add the following to your `.bashrc` (or `.profile` on Mac):
 
 ```
 function _update_ps1() {
-    PS1="$(~/.powerline/powerline-go -error $?)"
+    PS1="$(~/go/bin/powerline-go -error $?)"
 }
 
 if [ "$TERM" != "linux" ]; then
@@ -92,7 +92,7 @@ Add the following to your `.zshrc`:
 
 ```
 function powerline_precmd() {
-    PS1="$(~/.powerline/powerline-go -error $? -shell zsh)"
+    PS1="$(~/go/bin/powerline-go -error $? -shell zsh)"
 }
 
 function install_powerline_precmd() {
@@ -115,7 +115,7 @@ Redefine `fish_prompt` in `~/.config/fish/config.fish:`
 
 ```
 function fish_prompt
-    ~/.powerline/powerline-go -error $status -shell bare
+    ~/go/bin/powerline-go -error $status -shell bare
 end
 ```
 
