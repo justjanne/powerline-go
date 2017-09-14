@@ -1,8 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"strings"
 )
@@ -142,6 +144,16 @@ func main() {
 				"Repos are identified by their root directory."),
 	}
 	flag.Parse()
+	if strings.HasSuffix(*args.Theme, ".json") {
+		jsonTheme := themes["default"]
+
+		file, err := ioutil.ReadFile(*args.Theme)
+		if err == nil {
+			json.Unmarshal(file, &jsonTheme)
+		}
+
+		themes[*args.Theme] = jsonTheme
+	}
 	priorities := map[string]int{}
 	priorityList := strings.Split(*args.Priority, ",")
 	for idx, priority := range priorityList {
