@@ -78,8 +78,8 @@ Add the following to your `.bashrc` (or `.profile` on Mac):
 
 ```
 function _update_ps1() {
-    if [ -e ~/go/bin/powerline-go ]; then
-        PS1="$(~/go/bin/powerline-go -error $?)"
+    if [ -e $GOPATH/bin/powerline-go ]; then
+        PS1="$($GOPATH/bin/powerline-go -error $?)"
     fi
 }
 
