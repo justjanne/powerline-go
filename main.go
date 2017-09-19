@@ -97,6 +97,7 @@ func main() {
 	args := args{
 		CwdMode: flag.String("cwd-mode", "fancy",
 			"How to display the current directory\n"+
+				"    	(valid choices: fancy, plain, dironly)\n"+
 				"       "),
 		CwdMaxDepth: flag.Int("cwd-max-depth", 5,
 			"Maximum number of directories to show in path\n"+
@@ -124,7 +125,7 @@ func main() {
 				"       "),
 		Modules: flag.String("modules",
 			"venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root",
-			"The list of modules to load. Separate with ','\n"+
+			"The list of modules to load, separated by ','\n"+
 				"    	(valid choices: cwd, docker, exit, git, gitlite, hg, host, jobs, perlbrew, perms, root, ssh, time, user, venv)\n"+
 				"       "),
 		Priority: flag.String("priority",
