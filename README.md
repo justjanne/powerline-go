@@ -69,7 +69,7 @@ go get -u github.com/justjanne/powerline-go
 ```
 
 - By default it will be in `~/go/bin`, if you want to change that, you can set
-  your `$GOPATH` and/or `$GOBIN`, but will need ot change the path in the
+  your `$GOPATH` and/or `$GOBIN`, but will need to change the path in the
   following scripts, too.
 
 ### Bash
