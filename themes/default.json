@@ -18,6 +18,8 @@
     "SshBg": 166,
     "DockerMachineFg": 177,
     "DockerMachineBg": 55,
+    "DotEnvFg": 15,
+    "DotEnvBg": 55,
     "RepoCleanFg": 0,
     "RepoCleanBg": 148,
     "RepoDirtyFg": 15,
