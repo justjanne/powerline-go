@@ -45,6 +45,9 @@ type Theme struct {
 	DockerMachineFg uint8
 	DockerMachineBg uint8
 
+	DotEnvFg uint8
+	DotEnvBg uint8
+
 	RepoCleanFg uint8
 	RepoCleanBg uint8
 	RepoDirtyFg uint8

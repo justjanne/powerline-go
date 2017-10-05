@@ -92,6 +92,9 @@ var themes = map[string]Theme{
 		DockerMachineFg: 177, // light purple
 		DockerMachineBg: 55,  // purple
 
+		DotEnvFg: 15, // white
+		DotEnvBg: 55, // purple
+
 		RepoCleanFg: 0,   // black
 		RepoCleanBg: 148, // a light green color
 		RepoDirtyFg: 15,  // white
@@ -415,6 +418,9 @@ var themes = map[string]Theme{
 
 		DockerMachineFg: 55,  // purple
 		DockerMachineBg: 177, // light purple
+
+		DotEnvFg: 15, // white
+		DotEnvBg: 55, // purple
 
 		RepoCleanFg: 232, // black
 		RepoCleanBg: 230, // light yellow
