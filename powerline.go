@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"golang.org/x/crypto/ssh/terminal"
 	"golang.org/x/text/width"
 	"os"
 	"strconv"
@@ -75,10 +76,27 @@ func (p *powerline) appendSegment(origin string, segment segment) {
 	p.Segments = append(p.Segments, segment)
 }
 
+func termWidth() int {
+	width, _, err := terminal.GetSize(int(os.Stdout.Fd()))
+	if err != nil {
+		shellMaxLengthStr, found := os.LookupEnv("COLUMNS")
+		if !found {
+			return 80 // Otherwise 0 default.
+		}
+
+		shellMaxLength64, err := strconv.ParseInt(shellMaxLengthStr, 0, 64)
+		if err != nil {
+			return 80 // Otherwise 0 default.
+		}
+
+		width = int(shellMaxLength64)
+	}
+
+	return width
+}
+
 func (p *powerline) draw() string {
-	shellMaxLengthStr, _ := os.LookupEnv("COLUMNS")
-	shellMaxLength64, _ := strconv.ParseInt(shellMaxLengthStr, 0, 64)
-	shellMaxLength := int(shellMaxLength64)
+	shellMaxLength := termWidth()
 
 	shellMaxLength = shellMaxLength * *p.args.MaxWidthPercentage / 100
 
