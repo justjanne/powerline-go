@@ -48,6 +48,9 @@ type Theme struct {
 	DotEnvFg uint8
 	DotEnvBg uint8
 
+	AWSFg uint8
+	AWSBg uint8
+
 	RepoCleanFg uint8
 	RepoCleanBg uint8
 	RepoDirtyFg uint8
