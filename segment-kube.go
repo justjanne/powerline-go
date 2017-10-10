@@ -26,7 +26,7 @@ type KubeConfig struct {
 
 func segmentKube(p *powerline) {
 	home, _ := os.LookupEnv("HOME")
-	defaultConfigFile := home + "/.kube/config"
+	defaultConfigFile := filepath.Join(home, ".kube", "config")
 	kubeConfigFile := defaultConfigFile
 	kubeEnv, ok := os.LookupEnv("KUBECONFIG")
 
@@ -71,20 +71,28 @@ func segmentKube(p *powerline) {
 		}
 	}
 
+	// When you use gke your clusters may look something like gke_projectname_availability-zone_cluster-01
+	// instead I want it to read as `cluster-01`
+	// TODO: perhaps we should just allow some regex/substr config option for this ? or at least a toggle for gke
+	//       -shorten-gke-clustersnames  or something.
 	if strings.HasPrefix(cluster, "gke") {
 		segments := strings.Split(cluster, "_")
 		cluster = segments[len(segments)-1]
 	}
 
-	p.appendSegment("kube-cluster", segment{
-		content:    fmt.Sprintf("⎈ %s", cluster),
-		foreground: p.theme.KubeClusterFg,
-		background: p.theme.KubeClusterBg,
-	})
+	if cluster != "" {
+		p.appendSegment("kube-cluster", segment{
+			content:    fmt.Sprintf("⎈ %s", cluster),
+			foreground: p.theme.KubeClusterFg,
+			background: p.theme.KubeClusterBg,
+		})
+	}
 
-	p.appendSegment("kube-namespace", segment{
-		content:    fmt.Sprintf("%s ⎈", namespace),
-		foreground: p.theme.KubeNamespaceFg,
-		background: p.theme.KubeNamespaceBg,
-	})
+	if namespace != "" {
+		p.appendSegment("kube-namespace", segment{
+			content:    fmt.Sprintf("%s ⎈", namespace),
+			foreground: p.theme.KubeNamespaceFg,
+			background: p.theme.KubeNamespaceBg,
+		})
+	}
 }
