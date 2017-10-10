@@ -2,34 +2,89 @@ package main
 
 import (
 	"fmt"
-	"os/exec"
+	"io/ioutil"
+	"os"
+	"path/filepath"
 	"strings"
+
+	yaml "gopkg.in/yaml.v2"
 )
 
+type KubeContext struct {
+	Context struct {
+		Cluster   string
+		Namespace string
+		User      string
+	}
+	Name string
+}
+
+type KubeConfig struct {
+	Contexts       []KubeContext `yaml:"contexts"`
+	CurrentContext string        `yaml:"current-context"`
+}
+
 func segmentKube(p *powerline) {
-	var cluster string
+	home, _ := os.LookupEnv("HOME")
+	defaultConfigFile := home + "/.kube/config"
+	kubeConfigFile := defaultConfigFile
+	kubeEnv, ok := os.LookupEnv("KUBECONFIG")
 
-	// TODO: detect cluster
-	cluster, err := exec.Command("kubectl", "config", "current-context")
+	if ok {
+		possibleConfigs := strings.Split(kubeEnv, ":")
+		// for now just take the last one
+		// TODO: find one that works
+		kubeConfigFile = possibleConfigs[0]
+		if len(possibleConfigs) > 1 {
+			kubeConfigFile = possibleConfigs[len(possibleConfigs)-1]
+		}
+	}
+
+	//	fmt.Println("Reading config file " + kubeConfigFile)
+	path, err := filepath.Abs(kubeConfigFile)
 	if err != nil {
+		fmt.Println(err)
 		return
 	}
 
-	if cluster == "" {
+	// parse the config
+	config, err := ioutil.ReadFile(path)
+	if err != nil {
+		fmt.Println(err)
 		return
 	}
 
-	tmpl := `{.contexts[?(@.name=="` + cluster + `")].context.namespace}`
-	namespace, err := exec.Command("kubectl", "config", "view", "-o", "jsonpath", "--template", tmpl)
+	kc := &KubeConfig{}
+	err = yaml.Unmarshal(config, kc)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	cluster := ""
+	namespace := ""
+	for _, c := range kc.Contexts {
+		if c.Name == kc.CurrentContext {
+			cluster = c.Context.Cluster
+			namespace = c.Context.Namespace
+			break
+		}
+	}
 
 	if strings.HasPrefix(cluster, "gke") {
-		segments := strings.Split(cluster, '_')
+		segments := strings.Split(cluster, "_")
 		cluster = segments[len(segments)-1]
 	}
 
-	p.appendSegment("kube", segment{
-		content:    fmt.Sprintf("⎈%s/%s⎈", cluster, namespace),
+	p.appendSegment("kube-cluster", segment{
+		content:    fmt.Sprintf("⎈ %s", cluster),
 		foreground: p.theme.KubeClusterFg,
-		background: p.theme.KubeClusterFg,
+		background: p.theme.KubeClusterBg,
+	})
+
+	p.appendSegment("kube-namespace", segment{
+		content:    fmt.Sprintf("%s ⎈", namespace),
+		foreground: p.theme.KubeNamespaceFg,
+		background: p.theme.KubeNamespaceBg,
 	})
 }

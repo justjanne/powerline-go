@@ -12,7 +12,7 @@ Ported to golang by @justjanne.
 - Shows the current Python [virtualenv](http://www.virtualenv.org/) environment
 - It's easy to customize and extend. See below for details.
 
-**Table of Contents** 
+**Table of Contents**
 
 - [Version Control](#version-control)
 - [Installation](#installation)
@@ -52,7 +52,7 @@ but you may have to set your $TERM to `xterm-256color` for it to work.
 If you want to use the "patched" mode (which is the default, and provides
 improved UI), you'll need to install a powerline font, either as fallback,
 or by patching the font you use for your terminal: see
-[powerline-fonts](https://github.com/Lokaltog/powerline-fonts).  
+[powerline-fonts](https://github.com/Lokaltog/powerline-fonts).
 Alternatively you can use "compatible" or "flat" mode.
 
 ### Precompiled Binaries
@@ -126,59 +126,52 @@ There are a few optional arguments which can be seen by running
 in your shell’s init file.
 
 ```
-Usage of /tmp/___Build_powerline_go_and_run:
+Usage of powerline-go:
   -colorize-hostname
-    	Colorize the hostname based on a hash of itself
+        Colorize the hostname based on a hash of itself
   -cwd-max-depth int
-    	Maximum number of directories to show in path
+        Maximum number of directories to show in path
         (default 5)
   -cwd-max-dir-size int
-    	Maximum number of letters displayed for each directory in the path
+        Maximum number of letters displayed for each directory in the path
         (default -1)
   -cwd-mode string
-    	How to display the current directory
-    	(valid choices: fancy, plain, dironly)
+        How to display the current directory
         (default "fancy")
   -east-asian-width
-    	Use East Asian Ambiguous Widths
+        Use East Asian Ambiguous Widths
   -error int
-    	Exit code of previously executed command
-  -ignore-repos string
-    	A list of git repos to ignore. Separate with ','
-Repos are identified by their root directory.
+        Exit code of previously executed command
   -max-width int
-    	Maximum width of the shell that the prompt may use, in percent. Setting this to 0 disables the shrinking subsystem.
+        Maximum width of the shell that the prompt may use, in percent. Setting this to 0 disables the shrinking subsystem.
         (default 50)
   -mode string
-    	The characters used to make separators between segments.
-    	(valid choices: patched, compatible, flat)
+        The characters used to make separators between segments.
+        (valid choices: patched, compatible, flat)
         (default "patched")
   -modules string
-    	The list of modules to load, separated by ','
-    	(valid choices: aws, cwd, docker, dotenv, exit, git, gitlite, hg, host, jobs, perlbrew, perms, root, ssh, time, user, venv)
+        The list of modules to load. Separate with ','
+        (valid choices: cwd, docker, exit, git, hg, host, jobs, kube, perms, root, ssh, time, user, venv)
         (default "venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root")
   -newline
-    	Show the prompt on a new line
+        Show the prompt on a new line
   -priority string
-    	Segments sorted by priority, if not enough space exists, the least priorized segments are removed first. Separate with ','
-    	(valid choices: aws, cwd, docker, exit, git-branch, git-status, hg, host, jobs, perlbrew, perms, root, ssh, time, user, venv)
+        Segments sorted by priority, if not enough space exists, the least priorized segments are removed first. Separate with ','
+        (valid choices: cwd, docker, exit, git-branch, git-status, hg, host, jobs, kube, perms, root, ssh, time, user, venv)
         (default "root,cwd,user,host,ssh,perms,git-branch,git-status,hg,jobs,exit")
   -shell string
-    	Set this to your shell type
-    	(valid choices: bare, bash, zsh)
+        Set this to your shell type
+        (valid choices: bare, bash, zsh)
         (default "bash")
   -theme string
-    	Set this to the theme you want to use
-    	(valid choices: default, low-contrast)
+        Set this to the theme you want to use
+        (valid choices: default)
         (default "default")
-  -truncate-segment-width int
-    	Minimum width of a segment, segments longer than this will be shortened if space is limited. Setting this to 0 disables it.
-        (default 16)
 ```
 
 
 ## License
 
-> This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.  
-> This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.  
-> You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.  
+> This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+> This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+> You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.

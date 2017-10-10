@@ -136,12 +136,12 @@ func main() {
 		Modules: flag.String("modules",
 			"venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root",
 			"The list of modules to load, separated by ','\n"+
-				"    	(valid choices: aws, cwd, docker, dotenv, exit, git, gitlite, hg, host, jobs, perlbrew, perms, root, ssh, time, user, venv)\n"+
+				"    	(valid choices: aws, cwd, docker, dotenv, exit, git, gitlite, hg, host, jobs, kube, perlbrew, perms, root, ssh, time, user, venv)\n"+
 				"       "),
 		Priority: flag.String("priority",
 			"root,cwd,user,host,ssh,perms,git-branch,git-status,hg,jobs,exit",
 			"Segments sorted by priority, if not enough space exists, the least priorized segments are removed first. Separate with ','\n"+
-				"    	(valid choices: aws, cwd, docker, exit, git-branch, git-status, hg, host, jobs, perlbrew, perms, root, ssh, time, user, venv)\n"+
+				"    	(valid choices: aws, cwd, docker, exit, git-branch, git-status, hg, host, jobs, kube, perlbrew, perms, root, ssh, time, user, venv)\n"+
 				"       "),
 		MaxWidthPercentage: flag.Int("max-width",
 			50,
