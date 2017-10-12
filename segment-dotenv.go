@@ -9,8 +9,8 @@ func segmentDotEnv(p *powerline) {
 	if err == nil && !stat.IsDir() {
 		p.appendSegment("dotenv", segment{
 			content:    " \u2235 ",
-			foreground: p.theme.DockerMachineFg,
-			background: p.theme.DockerMachineBg,
+			foreground: p.theme.DotEnvFg,
+			background: p.theme.DotEnvBg,
 		})
 	}
 }
