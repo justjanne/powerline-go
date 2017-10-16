@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/mattn/go-runewidth"
 	"golang.org/x/crypto/ssh/terminal"
 	"golang.org/x/text/width"
 	"os"
@@ -102,8 +103,10 @@ func (p *powerline) draw() string {
 
 	shellActualLength := 0
 	if shellMaxLength > 0 {
+		rlen := runewidth.StringWidth
+
 		for _, segment := range p.Segments {
-			shellActualLength += len(segment.content) + len(segment.separator)
+			shellActualLength += rlen(segment.content) + rlen(segment.separator)
 		}
 		for shellActualLength > shellMaxLength {
 			minPriority := MaxInteger
@@ -117,7 +120,7 @@ func (p *powerline) draw() string {
 			if minPrioritySegmentId != -1 {
 				segment := p.Segments[minPrioritySegmentId]
 				p.Segments = append(p.Segments[:minPrioritySegmentId], p.Segments[minPrioritySegmentId+1:]...)
-				shellActualLength -= len(segment.content) + len(segment.separator)
+				shellActualLength -= rlen(segment.content) + rlen(segment.separator)
 			}
 		}
 	}
