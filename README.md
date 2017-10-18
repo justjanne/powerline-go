@@ -126,7 +126,7 @@ There are a few optional arguments which can be seen by running
 in your shell’s init file.
 
 ```
-Usage of /tmp/___Build_powerline_go_and_run:
+Usage of powerline-go:
   -colorize-hostname
     	Colorize the hostname based on a hash of itself
   -cwd-max-depth int
@@ -161,12 +161,14 @@ Repos are identified by their root directory.
     	Show the prompt on a new line
   -priority string
     	Segments sorted by priority, if not enough space exists, the least priorized segments are removed first. Separate with ','
-    	(valid choices: aws, cwd, docker, exit, git-branch, git-status, hg, host, jobs, perlbrew, perms, root, ssh, time, user, venv)
-        (default "root,cwd,user,host,ssh,perms,git-branch,git-status,hg,jobs,exit")
+    	(valid choices: aws, cwd, cwd-path, docker, exit, git-branch, git-status, hg, host, jobs, perlbrew, perms, root, ssh, time, user, venv)
+        (default "root,cwd,user,host,ssh,perms,git-branch,git-status,hg,jobs,exit,cwd-path")
   -shell string
     	Set this to your shell type
     	(valid choices: bare, bash, zsh)
         (default "bash")
+  -shorten-gke-names
+    	Shortens names for GKE Kube clusters.
   -theme string
     	Set this to the theme you want to use
     	(valid choices: default, low-contrast)
