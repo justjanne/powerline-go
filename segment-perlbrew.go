@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"path"
 )
@@ -14,7 +13,7 @@ func segmentPerlbrew(p *powerline) {
 
 	envName := path.Base(env)
 	p.appendSegment("perlbrew", segment{
-		content:    fmt.Sprintf(" %s ", envName),
+		content:    envName,
 		foreground: p.theme.PerlbrewFg,
 		background: p.theme.PerlbrewBg,
 	})

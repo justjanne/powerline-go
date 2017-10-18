@@ -25,7 +25,7 @@ func (r repoStats) dirty() bool {
 func addRepoStatsSegment(p *powerline, nChanges int, symbol string, foreground uint8, background uint8) {
 	if nChanges > 0 {
 		p.appendSegment("git-status", segment{
-			content:    fmt.Sprintf(" %d%s ", nChanges, symbol),
+			content:    fmt.Sprintf("%d%s", nChanges, symbol),
 			foreground: foreground,
 			background: background,
 		})
@@ -167,7 +167,7 @@ func segmentGit(p *powerline) {
 	}
 
 	p.appendSegment("git-branch", segment{
-		content:    fmt.Sprintf(" %s ", branch),
+		content:    branch,
 		foreground: foreground,
 		background: background,
 	})

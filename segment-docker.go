@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/url"
 	"os"
 )
@@ -22,7 +21,7 @@ func segmentDocker(p *powerline) {
 
 	if docker != "" {
 		p.appendSegment("docker", segment{
-			content:    fmt.Sprintf(" %s ", docker),
+			content:    docker,
 			foreground: p.theme.DockerMachineFg,
 			background: p.theme.DockerMachineBg,
 		})

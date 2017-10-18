@@ -3,7 +3,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 )
 
@@ -18,7 +17,7 @@ func segmentPerms(p *powerline) {
 	fileInfo, _ := os.Stat(cwd)
 	if fileInfo.Mode()&W_USR != W_USR {
 		p.appendSegment("perms", segment{
-			content:    fmt.Sprintf(" %s ", p.symbolTemplates.Lock),
+			content:    p.symbolTemplates.Lock,
 			foreground: p.theme.ReadonlyFg,
 			background: p.theme.ReadonlyBg,
 		})

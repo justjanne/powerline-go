@@ -52,12 +52,12 @@ func segmentHg(p *powerline) {
 				extra += "!"
 			}
 
-			content = fmt.Sprintf(" %s %s ", branch, extra)
+			content = fmt.Sprintf("%s %s", branch, extra)
 		} else {
 			foreground = p.theme.RepoCleanFg
 			background = p.theme.RepoCleanBg
 
-			content = fmt.Sprintf(" %s ", branch)
+			content = fmt.Sprintf(branch)
 		}
 
 		p.appendSegment("hg", segment{

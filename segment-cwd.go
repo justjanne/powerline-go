@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"strings"
 )
@@ -13,6 +12,7 @@ type pathSegment struct {
 	home     bool
 	root     bool
 	ellipsis bool
+	priority int
 }
 
 func cwdToPathSegments(cwd string) []pathSegment {
@@ -85,7 +85,7 @@ func segmentCwd(p *powerline) {
 		}
 
 		p.appendSegment("cwd", segment{
-			content:    fmt.Sprintf(" %s ", cwd),
+			content:    cwd,
 			foreground: p.theme.CwdFg,
 			background: p.theme.PathBg,
 		})
@@ -107,10 +107,17 @@ func segmentCwd(p *powerline) {
 				}
 				firstPart := pathSegments[:nBefore]
 				secondPart := pathSegments[len(pathSegments)+nBefore-maxDepth:]
-				pathSegments = append(append(firstPart, pathSegment{
+				pathSegments = make([]pathSegment, 0)
+				for _, segment := range firstPart {
+					segment.priority = -2
+					pathSegments = append(pathSegments, segment)
+				}
+				pathSegments = append(pathSegments, pathSegment{
+					priority: -1,
 					path:     ellipsis,
 					ellipsis: true,
-				}), secondPart...)
+				})
+				pathSegments = append(pathSegments, secondPart...)
 			}
 
 			for idx, pathSegment := range pathSegments {
@@ -118,7 +125,7 @@ func segmentCwd(p *powerline) {
 				foreground, background := getColor(p, pathSegment, isLastDir)
 
 				segment := segment{
-					content:    fmt.Sprintf(" %s ", escapeVariables(p, maybeShortenName(p, pathSegment.path))),
+					content:    escapeVariables(p, maybeShortenName(p, pathSegment.path)),
 					foreground: foreground,
 					background: background,
 				}

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"strings"
 )
 
@@ -32,7 +31,7 @@ func segmentGitLite(p *powerline) {
 	}
 
 	p.appendSegment("git-branch", segment{
-		content:    fmt.Sprintf(" %s ", branch),
+		content:    branch,
 		foreground: p.theme.RepoCleanFg,
 		background: p.theme.RepoCleanBg,
 	})

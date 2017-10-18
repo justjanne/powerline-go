@@ -1,19 +1,18 @@
 package main
 
 import (
-	"fmt"
 	"os"
 )
 
 func segmentUser(p *powerline) {
 	var userPrompt string
 	if *p.args.Shell == "bash" {
-		userPrompt = " \\u "
+		userPrompt = "\\u"
 	} else if *p.args.Shell == "zsh" {
-		userPrompt = " %n "
+		userPrompt = "%n"
 	} else {
 		user, _ := os.LookupEnv("USER")
-		userPrompt = fmt.Sprintf(" %s ", user)
+		userPrompt = user
 	}
 
 	var background uint8

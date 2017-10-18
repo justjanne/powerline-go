@@ -73,12 +73,13 @@ func (p *powerline) appendSegment(origin string, segment segment) {
 		segment.separatorForeground = segment.background
 	}
 	priority, _ := p.priorities[origin]
-	segment.priority = priority
+	segment.priority += priority
+	segment.width = segment.computeWidth()
 	p.Segments = append(p.Segments, segment)
 }
 
 func termWidth() int {
-	width, _, err := terminal.GetSize(int(os.Stdout.Fd()))
+	termWidth, _, err := terminal.GetSize(int(os.Stdout.Fd()))
 	if err != nil {
 		shellMaxLengthStr, found := os.LookupEnv("COLUMNS")
 		if !found {
@@ -90,10 +91,10 @@ func termWidth() int {
 			return 80 // Otherwise 0 default.
 		}
 
-		width = int(shellMaxLength64)
+		termWidth = int(shellMaxLength64)
 	}
 
-	return width
+	return termWidth
 }
 
 func (p *powerline) draw() string {
@@ -103,11 +104,40 @@ func (p *powerline) draw() string {
 
 	shellActualLength := 0
 	if shellMaxLength > 0 {
-		rlen := runewidth.StringWidth
-
 		for _, segment := range p.Segments {
-			shellActualLength += rlen(segment.content) + rlen(segment.separator)
+			shellActualLength += segment.width
 		}
+		if shellActualLength > shellMaxLength && *p.args.TruncateSegmentWidth > 0 {
+			minPriorityNotTruncated := MaxInteger
+			minPriorityNotTruncatedSegmentId := -1
+			for idx, segment := range p.Segments {
+				if segment.width > *p.args.TruncateSegmentWidth && segment.priority < minPriorityNotTruncated {
+					minPriorityNotTruncated = segment.priority
+					minPriorityNotTruncatedSegmentId = idx
+				}
+			}
+			for minPriorityNotTruncatedSegmentId != -1 && shellActualLength > shellMaxLength {
+				segment := p.Segments[minPriorityNotTruncatedSegmentId]
+
+				shellActualLength -= segment.width
+
+				segment.content = runewidth.Truncate(segment.content, *p.args.TruncateSegmentWidth-runewidth.StringWidth(segment.separator)-5, "")
+				segment.width = segment.computeWidth()
+
+				p.Segments = append(append(p.Segments[:minPriorityNotTruncatedSegmentId], segment), p.Segments[minPriorityNotTruncatedSegmentId+1:]...)
+				shellActualLength += segment.width
+
+				minPriorityNotTruncated = MaxInteger
+				minPriorityNotTruncatedSegmentId = -1
+				for idx, segment := range p.Segments {
+					if segment.width > *p.args.TruncateSegmentWidth && segment.priority < minPriorityNotTruncated {
+						minPriorityNotTruncated = segment.priority
+						minPriorityNotTruncatedSegmentId = idx
+					}
+				}
+			}
+		}
+
 		for shellActualLength > shellMaxLength {
 			minPriority := MaxInteger
 			minPrioritySegmentId := -1
@@ -120,7 +150,7 @@ func (p *powerline) draw() string {
 			if minPrioritySegmentId != -1 {
 				segment := p.Segments[minPrioritySegmentId]
 				p.Segments = append(p.Segments[:minPrioritySegmentId], p.Segments[minPrioritySegmentId+1:]...)
-				shellActualLength -= rlen(segment.content) + rlen(segment.separator)
+				shellActualLength -= segment.width
 			}
 		}
 	}
@@ -137,7 +167,9 @@ func (p *powerline) draw() string {
 
 		buffer.WriteString(p.fgColor(segment.foreground))
 		buffer.WriteString(p.bgColor(segment.background))
+		buffer.WriteRune(' ')
 		buffer.WriteString(segment.content)
+		buffer.WriteRune(' ')
 		buffer.WriteString(separatorBackground)
 		buffer.WriteString(p.fgColor(segment.separatorForeground))
 		buffer.WriteString(segment.separator)

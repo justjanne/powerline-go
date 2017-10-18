@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"github.com/mattn/go-runewidth"
 	"io/ioutil"
 	"os"
 	"strings"
@@ -23,23 +24,29 @@ type segment struct {
 	separator           string
 	separatorForeground uint8
 	priority            int
+	width               int
 }
 
 type args struct {
-	CwdMode            *string
-	CwdMaxDepth        *int
-	CwdMaxDirSize      *int
-	ColorizeHostname   *bool
-	EastAsianWidth     *bool
-	PromptOnNewLine    *bool
-	Mode               *string
-	Theme              *string
-	Shell              *string
-	Modules            *string
-	Priority           *string
-	MaxWidthPercentage *int
-	IgnoreRepos        *string
-	PrevError          *int
+	CwdMode              *string
+	CwdMaxDepth          *int
+	CwdMaxDirSize        *int
+	ColorizeHostname     *bool
+	EastAsianWidth       *bool
+	PromptOnNewLine      *bool
+	Mode                 *string
+	Theme                *string
+	Shell                *string
+	Modules              *string
+	Priority             *string
+	MaxWidthPercentage   *int
+	TruncateSegmentWidth *int
+	IgnoreRepos          *string
+	PrevError            *int
+}
+
+func (s segment) computeWidth() int {
+	return runewidth.StringWidth(s.content) + runewidth.StringWidth(s.separator) + 2
 }
 
 func warn(msg string) {
@@ -138,6 +145,10 @@ func main() {
 		MaxWidthPercentage: flag.Int("max-width",
 			50,
 			"Maximum width of the shell that the prompt may use, in percent. Setting this to 0 disables the shrinking subsystem.\n"+
+				"       "),
+		TruncateSegmentWidth: flag.Int("truncate-segment-width",
+			16,
+			"Minimum width of a segment, segments longer than this will be shortened if space is limited. Setting this to 0 disables it.\n"+
 				"       "),
 		PrevError: flag.Int("error", 0,
 			"Exit code of previously executed command"),

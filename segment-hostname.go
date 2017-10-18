@@ -2,7 +2,6 @@ package main
 
 import (
 	"crypto/md5"
-	"fmt"
 	"os"
 	"strings"
 )
@@ -23,18 +22,18 @@ func segmentHost(p *powerline) {
 	var foreground, background uint8
 	if *p.args.ColorizeHostname {
 		hostName := getHostName()
-		hostPrompt = fmt.Sprintf(" %s ", hostName)
+		hostPrompt = hostName
 
 		hash := getMd5(hostName)
 		background = hash[0]
 		foreground = p.theme.HostnameColorizedFgMap[background]
 	} else {
 		if *p.args.Shell == "bash" {
-			hostPrompt = " \\h "
+			hostPrompt = "\\h"
 		} else if *p.args.Shell == "zsh" {
-			hostPrompt = " %m "
+			hostPrompt = "%m"
 		} else {
-			hostPrompt = fmt.Sprintf(" %s ", getHostName())
+			hostPrompt = getHostName()
 		}
 
 		foreground = p.theme.HostnameFg
