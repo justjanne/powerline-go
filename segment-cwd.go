@@ -12,7 +12,6 @@ type pathSegment struct {
 	home     bool
 	root     bool
 	ellipsis bool
-	priority int
 }
 
 func cwdToPathSegments(cwd string) []pathSegment {
@@ -107,13 +106,12 @@ func segmentCwd(p *powerline) {
 				}
 				firstPart := pathSegments[:nBefore]
 				secondPart := pathSegments[len(pathSegments)+nBefore-maxDepth:]
+
 				pathSegments = make([]pathSegment, 0)
 				for _, segment := range firstPart {
-					segment.priority = -2
 					pathSegments = append(pathSegments, segment)
 				}
 				pathSegments = append(pathSegments, pathSegment{
-					priority: -1,
 					path:     ellipsis,
 					ellipsis: true,
 				})
@@ -135,7 +133,12 @@ func segmentCwd(p *powerline) {
 					segment.separatorForeground = p.theme.SeparatorFg
 				}
 
-				p.appendSegment("cwd", segment)
+				origin := "cwd-path"
+				if isLastDir {
+					origin = "cwd"
+				}
+
+				p.appendSegment(origin, segment)
 			}
 		}
 	}

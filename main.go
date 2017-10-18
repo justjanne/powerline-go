@@ -41,8 +41,9 @@ type args struct {
 	Priority             *string
 	MaxWidthPercentage   *int
 	TruncateSegmentWidth *int
-	IgnoreRepos          *string
 	PrevError            *int
+	IgnoreRepos          *string
+	ShortenGKENames      *bool
 }
 
 func (s segment) computeWidth() int {
@@ -93,6 +94,7 @@ var modules = map[string](func(*powerline)){
 	"hg":       segmentHg,
 	"host":     segmentHost,
 	"jobs":     segmentJobs,
+	"kube":     segmentKube,
 	"perlbrew": segmentPerlbrew,
 	"perms":    segmentPerms,
 	"root":     segmentRoot,
@@ -104,58 +106,87 @@ var modules = map[string](func(*powerline)){
 
 func main() {
 	args := args{
-		CwdMode: flag.String("cwd-mode", "fancy",
+		CwdMode: flag.String(
+			"cwd-mode",
+			"fancy",
 			"How to display the current directory\n"+
 				"    	(valid choices: fancy, plain, dironly)\n"+
 				"       "),
-		CwdMaxDepth: flag.Int("cwd-max-depth", 5,
+		CwdMaxDepth: flag.Int(
+			"cwd-max-depth",
+			5,
 			"Maximum number of directories to show in path\n"+
 				"       "),
-		CwdMaxDirSize: flag.Int("cwd-max-dir-size", -1,
+		CwdMaxDirSize: flag.Int(
+			"cwd-max-dir-size",
+			-1,
 			"Maximum number of letters displayed for each directory in the path\n"+
 				"       "),
-		ColorizeHostname: flag.Bool("colorize-hostname", false,
+		ColorizeHostname: flag.Bool(
+			"colorize-hostname",
+			false,
 			"Colorize the hostname based on a hash of itself"),
-		EastAsianWidth: flag.Bool("east-asian-width", false,
+		EastAsianWidth: flag.Bool(
+			"east-asian-width",
+			false,
 			"Use East Asian Ambiguous Widths"),
-		PromptOnNewLine: flag.Bool("newline", false,
+		PromptOnNewLine: flag.Bool(
+			"newline",
+			false,
 			"Show the prompt on a new line"),
-		Mode: flag.String("mode", "patched",
+		Mode: flag.String(
+			"mode",
+			"patched",
 			"The characters used to make separators between segments.\n"+
 				"    	(valid choices: patched, compatible, flat)\n"+
 				"       "),
-		Theme: flag.String("theme", "default",
+		Theme: flag.String(
+			"theme",
+			"default",
 			"Set this to the theme you want to use\n"+
 				"    	(valid choices: default, low-contrast)\n"+
 				"       "),
-		Shell: flag.String("shell", "bash",
+		Shell: flag.String(
+			"shell",
+			"bash",
 			"Set this to your shell type\n"+
 				"    	(valid choices: bare, bash, zsh)\n"+
 				"       "),
-		Modules: flag.String("modules",
+		Modules: flag.String(
+			"modules",
 			"venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root",
 			"The list of modules to load, separated by ','\n"+
 				"    	(valid choices: aws, cwd, docker, dotenv, exit, git, gitlite, hg, host, jobs, perlbrew, perms, root, ssh, time, user, venv)\n"+
 				"       "),
-		Priority: flag.String("priority",
-			"root,cwd,user,host,ssh,perms,git-branch,git-status,hg,jobs,exit",
+		Priority: flag.String(
+			"priority",
+			"root,cwd,user,host,ssh,perms,git-branch,git-status,hg,jobs,exit,cwd-path",
 			"Segments sorted by priority, if not enough space exists, the least priorized segments are removed first. Separate with ','\n"+
-				"    	(valid choices: aws, cwd, docker, exit, git-branch, git-status, hg, host, jobs, perlbrew, perms, root, ssh, time, user, venv)\n"+
+				"    	(valid choices: aws, cwd, cwd-path, docker, exit, git-branch, git-status, hg, host, jobs, perlbrew, perms, root, ssh, time, user, venv)\n"+
 				"       "),
-		MaxWidthPercentage: flag.Int("max-width",
+		MaxWidthPercentage: flag.Int(
+			"max-width",
 			50,
 			"Maximum width of the shell that the prompt may use, in percent. Setting this to 0 disables the shrinking subsystem.\n"+
 				"       "),
-		TruncateSegmentWidth: flag.Int("truncate-segment-width",
+		TruncateSegmentWidth: flag.Int(
+			"truncate-segment-width",
 			16,
 			"Minimum width of a segment, segments longer than this will be shortened if space is limited. Setting this to 0 disables it.\n"+
 				"       "),
-		PrevError: flag.Int("error", 0,
+		PrevError: flag.Int(
+			"error",
+			0,
 			"Exit code of previously executed command"),
-		IgnoreRepos: flag.String("ignore-repos",
+		IgnoreRepos: flag.String(
+			"ignore-repos",
 			"",
 			"A list of git repos to ignore. Separate with ','\n"+
 				"Repos are identified by their root directory."),
+		ShortenGKENames: flag.Bool(
+			"shorten-gke-names",
+			false,
+			"Shortens names for GKE Kube clusters."),
 	}
 	flag.Parse()
 	if strings.HasSuffix(*args.Theme, ".json") {

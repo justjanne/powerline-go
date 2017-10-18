@@ -92,6 +92,11 @@ var themes = map[string]Theme{
 		DockerMachineFg: 177, // light purple
 		DockerMachineBg: 55,  // purple
 
+		KubeClusterFg:   117,
+		KubeClusterBg:   26,
+		KubeNamespaceFg: 170,
+		KubeNamespaceBg: 17,
+
 		DotEnvFg: 15, // white
 		DotEnvBg: 55, // purple
 
@@ -421,6 +426,11 @@ var themes = map[string]Theme{
 
 		DockerMachineFg: 55,  // purple
 		DockerMachineBg: 177, // light purple
+
+		KubeClusterFg:   117,
+		KubeClusterBg:   26,
+		KubeNamespaceFg: 170,
+		KubeNamespaceBg: 17,
 
 		DotEnvFg: 15, // white
 		DotEnvBg: 55, // purple
