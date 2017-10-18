@@ -45,6 +45,11 @@ type Theme struct {
 	DockerMachineFg uint8
 	DockerMachineBg uint8
 
+	KubeClusterFg   uint8
+	KubeClusterBg   uint8
+	KubeNamespaceFg uint8
+	KubeNamespaceBg uint8
+
 	DotEnvFg uint8
 	DotEnvBg uint8
 

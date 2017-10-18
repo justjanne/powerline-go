@@ -12,7 +12,7 @@ Ported to golang by @justjanne.
 - Shows the current Python [virtualenv](http://www.virtualenv.org/) environment
 - It's easy to customize and extend. See below for details.
 
-**Table of Contents** 
+**Table of Contents**
 
 - [Version Control](#version-control)
 - [Installation](#installation)
@@ -155,13 +155,13 @@ Repos are identified by their root directory.
         (default "patched")
   -modules string
     	The list of modules to load, separated by ','
-    	(valid choices: aws, cwd, docker, dotenv, exit, git, gitlite, hg, host, jobs, perlbrew, perms, root, ssh, time, user, venv)
+    	(valid choices: aws, cwd, docker, kube, dotenv, exit, git, gitlite, hg, host, jobs, perlbrew, perms, root, ssh, time, user, venv)
         (default "venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root")
   -newline
     	Show the prompt on a new line
   -priority string
     	Segments sorted by priority, if not enough space exists, the least priorized segments are removed first. Separate with ','
-    	(valid choices: aws, cwd, docker, exit, git-branch, git-status, hg, host, jobs, perlbrew, perms, root, ssh, time, user, venv)
+    	(valid choices: aws, cwd, docker, kube, exit, git-branch, git-status, hg, host, jobs, perlbrew, perms, root, ssh, time, user, venv)
         (default "root,cwd,user,host,ssh,perms,git-branch,git-status,hg,jobs,exit")
   -shell string
     	Set this to your shell type
