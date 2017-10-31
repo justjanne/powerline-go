@@ -155,6 +155,12 @@ var themes = map[string]Theme{
 		NodeFg: 15,
 		NodeBg: 40,
 
+		LoadFg:           15,
+		LoadBg:           22,
+		LoadHighBg:       161,
+		LoadAvgValue:     5,
+		LoadThresholdBad: 1.0,
+
 		HostnameColorizedFgMap: map[uint8]uint8{
 			0:   250,
 			1:   250,
@@ -491,6 +497,12 @@ var themes = map[string]Theme{
 
 		TimeFg: 236,
 		TimeBg: 15,
+
+		LoadFg:           15,
+		LoadBg:           22,
+		LoadHighBg:       161,
+		LoadAvgValue:     5,
+		LoadThresholdBad: 1.0,
 
 		HostnameColorizedFgMap: map[uint8]uint8{
 			0:   250,

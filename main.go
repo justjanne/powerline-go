@@ -100,6 +100,7 @@ var modules = map[string](func(*powerline)){
 	"host":      segmentHost,
 	"jobs":      segmentJobs,
 	"kube":      segmentKube,
+	"load":      segmentLoad,
 	"newline":   segmentNewline,
 	"perlbrew":  segmentPerlbrew,
 	"perms":     segmentPerms,
@@ -168,12 +169,12 @@ func main() {
 			"modules",
 			"venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root,vgo",
 			commentsWithDefaults("The list of modules to load, separated by ','",
-				"(valid choices: aws, cwd, docker, dotenv, exit, git, gitlite, hg, host, jobs, perlbrew, perms, root, shell-var, ssh, termtitle, time, user, venv, vgo)")),
+				"(valid choices: aws, cwd, docker, dotenv, exit, git, gitlite, hg, host, jobs, load, perlbrew, perms, root, shell-var, ssh, termtitle, time, user, venv, vgo)")),
 		Priority: flag.String(
 			"priority",
 			"root,cwd,user,host,ssh,perms,git-branch,git-status,hg,jobs,exit,cwd-path",
 			commentsWithDefaults("Segments sorted by priority, if not enough space exists, the least priorized segments are removed first. Separate with ','",
-				"(valid choices: aws, cwd, cwd-path, docker, exit, git-branch, git-status, hg, host, jobs, perlbrew, perms, root, ssh, time, user, venv, vgo)")),
+				"(valid choices: aws, cwd, cwd-path, docker, exit, git-branch, git-status, hg, host, jobs, load, perlbrew, perms, root, ssh, time, user, venv, vgo)")),
 		MaxWidthPercentage: flag.Int(
 			"max-width",
 			0,

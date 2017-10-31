@@ -56,6 +56,11 @@
   "ShellVarBg": 11,
   "NodeFg": 15,
   "NodeBg": 40,
+  "LoadFg": 15,
+  "LoadBg": 22,
+  "LoadHighBg": 161,
+  "LoadAvgValue":     5,
+  "LoadThresholdBad": 1.0,
   "HostnameColorizedFgMap": {
     "0": 250,
     "1": 250,
