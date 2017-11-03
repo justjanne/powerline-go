@@ -79,16 +79,16 @@ func (p *powerline) appendSegment(origin string, segment segment) {
 }
 
 func termWidth() int {
-	termWidth, _, err := terminal.GetSize(int(os.Stdout.Fd()))
+	termWidth, _, err := terminal.GetSize(int(os.Stdin.Fd()))
 	if err != nil {
 		shellMaxLengthStr, found := os.LookupEnv("COLUMNS")
 		if !found {
-			return 80 // Otherwise 0 default.
+			return 0
 		}
 
 		shellMaxLength64, err := strconv.ParseInt(shellMaxLengthStr, 0, 64)
 		if err != nil {
-			return 80 // Otherwise 0 default.
+			return 0
 		}
 
 		termWidth = int(shellMaxLength64)
