@@ -44,6 +44,8 @@
   "GitUntrackedBg": 52,
   "GitConflictedFg": 15,
   "GitConflictedBg": 9,
+  "GitStashedFg": 15,
+  "GitStashedBg": 20,
   "VirtualEnvFg": 0,
   "VirtualEnvBg": 35,
   "PerlbrewFg": 0,

@@ -16,6 +16,7 @@ type repoStats struct {
 	notStaged  int
 	staged     int
 	conflicted int
+	stashed    int
 }
 
 func (r repoStats) dirty() bool {
@@ -39,6 +40,7 @@ func (r repoStats) addToPowerline(p *powerline) {
 	addRepoStatsSegment(p, r.notStaged, p.symbolTemplates.RepoNotStaged, p.theme.GitNotStagedFg, p.theme.GitNotStagedBg)
 	addRepoStatsSegment(p, r.untracked, p.symbolTemplates.RepoUntracked, p.theme.GitUntrackedFg, p.theme.GitUntrackedBg)
 	addRepoStatsSegment(p, r.conflicted, p.symbolTemplates.RepoConflicted, p.theme.GitConflictedFg, p.theme.GitConflictedBg)
+	addRepoStatsSegment(p, r.stashed, p.symbolTemplates.RepoStashed, p.theme.GitStashedFg, p.theme.GitStashedBg)
 }
 
 var branchRegex = regexp.MustCompile(`^## (?P<local>\S+?)(\.{3}(?P<remote>\S+?)( \[(ahead (?P<ahead>\d+)(, )?)?(behind (?P<behind>\d+))?])?)?$`)
@@ -164,6 +166,14 @@ func segmentGit(p *powerline) {
 	} else {
 		foreground = p.theme.RepoCleanFg
 		background = p.theme.RepoCleanBg
+	}
+
+	out, err = runGitCommand("git", "stash", "list")
+	if err != nil {
+		return
+	}
+	if len(out) > 0 {
+		stats.stashed = len(strings.Split(out, "\n")) - 1
 	}
 
 	p.appendSegment("git-branch", segment{
