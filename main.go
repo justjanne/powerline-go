@@ -95,6 +95,7 @@ var modules = map[string](func(*powerline)){
 	"host":     segmentHost,
 	"jobs":     segmentJobs,
 	"kube":     segmentKube,
+	"newline":  segmentNewline,
 	"perlbrew": segmentPerlbrew,
 	"perms":    segmentPerms,
 	"root":     segmentRoot,

@@ -29,7 +29,8 @@ type powerline struct {
 	symbolTemplates Symbols
 	priorities      map[string]int
 	ignoreRepos     map[string]bool
-	Segments        []segment
+	Segments        [][]segment
+	curSegment      int
 }
 
 func NewPowerline(args args, cwd string, priorities map[string]int) *powerline {
@@ -45,7 +46,7 @@ func NewPowerline(args args, cwd string, priorities map[string]int) *powerline {
 	for _, r := range strings.Split(*args.IgnoreRepos, ",") {
 		p.ignoreRepos[r] = true
 	}
-	p.Segments = make([]segment, 0)
+	p.Segments = make([][]segment, 1)
 	return p
 }
 
@@ -75,7 +76,12 @@ func (p *powerline) appendSegment(origin string, segment segment) {
 	priority, _ := p.priorities[origin]
 	segment.priority += priority
 	segment.width = segment.computeWidth()
-	p.Segments = append(p.Segments, segment)
+	p.Segments[p.curSegment] = append(p.Segments[p.curSegment], segment)
+}
+
+func (p *powerline) newRow() {
+	p.Segments = append(p.Segments, make([]segment, 0))
+	p.curSegment = p.curSegment + 1
 }
 
 func termWidth() int {
@@ -97,39 +103,40 @@ func termWidth() int {
 	return termWidth
 }
 
-func (p *powerline) draw() string {
-	shellMaxLength := termWidth()
+func (p *powerline) truncateRow(rowNum int) {
 
-	shellMaxLength = shellMaxLength * *p.args.MaxWidthPercentage / 100
+	shellMaxLength := termWidth() * *p.args.MaxWidthPercentage / 100
+	row := p.Segments[rowNum]
+	rowLength := 0
 
-	shellActualLength := 0
 	if shellMaxLength > 0 {
-		for _, segment := range p.Segments {
-			shellActualLength += segment.width
+		for _, segment := range row {
+			rowLength += segment.width
 		}
-		if shellActualLength > shellMaxLength && *p.args.TruncateSegmentWidth > 0 {
+
+		if rowLength > shellMaxLength && *p.args.TruncateSegmentWidth > 0 {
 			minPriorityNotTruncated := MaxInteger
 			minPriorityNotTruncatedSegmentId := -1
-			for idx, segment := range p.Segments {
+			for idx, segment := range row {
 				if segment.width > *p.args.TruncateSegmentWidth && segment.priority < minPriorityNotTruncated {
 					minPriorityNotTruncated = segment.priority
 					minPriorityNotTruncatedSegmentId = idx
 				}
 			}
-			for minPriorityNotTruncatedSegmentId != -1 && shellActualLength > shellMaxLength {
-				segment := p.Segments[minPriorityNotTruncatedSegmentId]
+			for minPriorityNotTruncatedSegmentId != -1 && rowLength > shellMaxLength {
+				segment := row[minPriorityNotTruncatedSegmentId]
 
-				shellActualLength -= segment.width
+				rowLength -= segment.width
 
 				segment.content = runewidth.Truncate(segment.content, *p.args.TruncateSegmentWidth-runewidth.StringWidth(segment.separator)-3, "…")
 				segment.width = segment.computeWidth()
 
-				p.Segments = append(append(p.Segments[:minPriorityNotTruncatedSegmentId], segment), p.Segments[minPriorityNotTruncatedSegmentId+1:]...)
-				shellActualLength += segment.width
+				row = append(append(row[:minPriorityNotTruncatedSegmentId], segment), row[minPriorityNotTruncatedSegmentId+1:]...)
+				rowLength += segment.width
 
 				minPriorityNotTruncated = MaxInteger
 				minPriorityNotTruncatedSegmentId = -1
-				for idx, segment := range p.Segments {
+				for idx, segment := range row {
 					if segment.width > *p.args.TruncateSegmentWidth && segment.priority < minPriorityNotTruncated {
 						minPriorityNotTruncated = segment.priority
 						minPriorityNotTruncatedSegmentId = idx
@@ -138,33 +145,36 @@ func (p *powerline) draw() string {
 			}
 		}
 
-		for shellActualLength > shellMaxLength {
+		for rowLength > shellMaxLength {
 			minPriority := MaxInteger
 			minPrioritySegmentId := -1
-			for idx, segment := range p.Segments {
+			for idx, segment := range row {
 				if segment.priority < minPriority {
 					minPriority = segment.priority
 					minPrioritySegmentId = idx
 				}
 			}
 			if minPrioritySegmentId != -1 {
-				segment := p.Segments[minPrioritySegmentId]
-				p.Segments = append(p.Segments[:minPrioritySegmentId], p.Segments[minPrioritySegmentId+1:]...)
-				shellActualLength -= segment.width
+				segment := row[minPrioritySegmentId]
+				row = append(row[:minPrioritySegmentId], row[minPrioritySegmentId+1:]...)
+				rowLength -= segment.width
 			}
 		}
 	}
+	p.Segments[rowNum] = row
+}
 
+func (p *powerline) drawRow(rowNum int) string {
+	row := p.Segments[rowNum]
 	var buffer bytes.Buffer
-	for idx, segment := range p.Segments {
+	for idx, segment := range row {
 		var separatorBackground string
-		if idx >= len(p.Segments)-1 {
+		if idx >= len(row)-1 {
 			separatorBackground = p.reset
 		} else {
-			nextSegment := p.Segments[idx+1]
+			nextSegment := row[idx+1]
 			separatorBackground = p.bgColor(nextSegment.background)
 		}
-
 		buffer.WriteString(p.fgColor(segment.foreground))
 		buffer.WriteString(p.bgColor(segment.background))
 		buffer.WriteRune(' ')
@@ -176,8 +186,19 @@ func (p *powerline) draw() string {
 		buffer.WriteString(p.reset)
 	}
 	buffer.WriteRune(' ')
+	return buffer.String()
+}
 
-	drawnResult := buffer.String()
+func (p *powerline) draw() string {
+
+	rows := make([]string, 0)
+
+	for rowNum, _ := range p.Segments {
+		p.truncateRow(rowNum)
+		rows = append(rows, p.drawRow(rowNum))
+	}
+	drawnResult := strings.Join(rows, "\n")
+
 	if *p.args.EastAsianWidth {
 		var spaceBuffer bytes.Buffer
 		for _, r := range drawnResult {
