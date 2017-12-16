@@ -25,6 +25,7 @@ type segment struct {
 	separatorForeground uint8
 	priority            int
 	width               int
+	special             bool
 }
 
 type args struct {
@@ -102,6 +103,7 @@ var modules = map[string](func(*powerline)){
 	"time":     segmentTime,
 	"user":     segmentUser,
 	"venv":     segmentVirtualEnv,
+	"set-term-title": segmentSetTermTitle,
 }
 
 func comments(lines ...string) string {
