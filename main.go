@@ -44,6 +44,7 @@ type args struct {
 	PrevError            *int
 	IgnoreRepos          *string
 	ShortenGKENames      *bool
+	ShellVar             *string
 }
 
 func (s segment) computeWidth() int {
@@ -102,6 +103,7 @@ var modules = map[string](func(*powerline)){
 	"time":     segmentTime,
 	"user":     segmentUser,
 	"venv":     segmentVirtualEnv,
+	"shell-var": segmentShellVar,
 }
 
 func comments(lines ...string) string {
@@ -185,6 +187,10 @@ func main() {
 			"shorten-gke-names",
 			false,
 			comments("Shortens names for GKE Kube clusters.")),
+		ShellVar: flag.String(
+			"shell-var",
+			"",
+			comments("A shell variable to add to the segments.")),
 	}
 	flag.Parse()
 	if strings.HasSuffix(*args.Theme, ".json") {
