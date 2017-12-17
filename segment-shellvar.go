@@ -5,15 +5,20 @@ import (
 )
 
 func segmentShellVar(p *powerline) {
-	var varContent string
-	var varExists bool
-	varContent, varExists = os.LookupEnv(*p.args.ShellVar);
+	shellVarName := *p.args.ShellVar;
+	varContent, varExists := os.LookupEnv(shellVarName);
 
 	if (varExists) {
-		p.appendSegment("shell-var", segment {
-			content: "\\$" + *p.args.ShellVar + ":" + varContent,
-			foreground: p.theme.ShellVarFg,
-			background: p.theme.ShellVarBg,
-		})
+		if (varContent != "") {
+			p.appendSegment("shell-var", segment {
+				content:    varContent,
+				foreground: p.theme.ShellVarFg,
+				background: p.theme.ShellVarBg,
+			})
+		} else {
+			warn("Shell variable " + shellVarName + " is empty.");
+		}
+	} else {
+		warn("Shell variable " + shellVarName + " does not exist.");
 	}
 }

@@ -50,6 +50,8 @@
   "PerlbrewBg": 20,
   "TimeFg": 15,
   "TimeBg": 236,
+  "ShellVarFg": 52,
+  "ShellVarBg": 11,
   "HostnameColorizedFgMap": {
     "0": 250,
     "1": 250,
