@@ -166,7 +166,7 @@ func main() {
 				"(valid choices: aws, cwd, cwd-path, docker, exit, git-branch, git-status, hg, host, jobs, perlbrew, perms, root, ssh, time, user, venv)")),
 		MaxWidthPercentage: flag.Int(
 			"max-width",
-			50,
+			0,
 			commentsWithDefaults("Maximum width of the shell that the prompt may use, in percent. Setting this to 0 disables the shrinking subsystem.")),
 		TruncateSegmentWidth: flag.Int(
 			"truncate-segment-width",
