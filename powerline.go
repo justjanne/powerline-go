@@ -164,9 +164,28 @@ func (p *powerline) truncateRow(rowNum int) {
 	p.Segments[rowNum] = row
 }
 
-func (p *powerline) drawRow(rowNum int) string {
+func (p *powerline) numEastAsianRunes(segmentContent *string) int {
+	if *p.args.EastAsianWidth {
+		return 0
+	}
+	numEastAsianRunes := 0
+	for _, r := range *segmentContent {
+		switch width.LookupRune(r).Kind() {
+		case width.Neutral:
+		case width.EastAsianAmbiguous:
+			numEastAsianRunes += 1
+		case width.EastAsianWide:
+		case width.EastAsianNarrow:
+		case width.EastAsianFullwidth:
+		case width.EastAsianHalfwidth:
+		}
+	}
+	return numEastAsianRunes
+}
+
+func (p *powerline) drawRow(rowNum int, buffer *bytes.Buffer) {
 	row := p.Segments[rowNum]
-	var buffer bytes.Buffer
+	numEastAsianRunes := 0
 	for idx, segment := range row {
 		var separatorBackground string
 		if idx >= len(row)-1 {
@@ -179,6 +198,7 @@ func (p *powerline) drawRow(rowNum int) string {
 		buffer.WriteString(p.bgColor(segment.background))
 		buffer.WriteRune(' ')
 		buffer.WriteString(segment.content)
+		numEastAsianRunes += p.numEastAsianRunes(&segment.content)
 		buffer.WriteRune(' ')
 		buffer.WriteString(separatorBackground)
 		buffer.WriteString(p.fgColor(segment.separatorForeground))
@@ -186,38 +206,24 @@ func (p *powerline) drawRow(rowNum int) string {
 		buffer.WriteString(p.reset)
 	}
 	buffer.WriteRune(' ')
-	return buffer.String()
+
+	for i := 0; i < numEastAsianRunes; i++ {
+		buffer.WriteRune(' ')
+	}
 }
 
 func (p *powerline) draw() string {
 
-	rows := make([]string, 0)
+	var buffer bytes.Buffer
 
-	for rowNum, _ := range p.Segments {
+	for rowNum := range p.Segments {
 		p.truncateRow(rowNum)
-		rows = append(rows, p.drawRow(rowNum))
-	}
-	drawnResult := strings.Join(rows, "\n")
-
-	if *p.args.EastAsianWidth {
-		var spaceBuffer bytes.Buffer
-		for _, r := range drawnResult {
-			switch width.LookupRune(r).Kind() {
-			case width.Neutral:
-			case width.EastAsianAmbiguous:
-				spaceBuffer.WriteRune(' ')
-			case width.EastAsianWide:
-			case width.EastAsianNarrow:
-			case width.EastAsianFullwidth:
-			case width.EastAsianHalfwidth:
-			}
-		}
-		drawnResult += spaceBuffer.String()
+		p.drawRow(rowNum, &buffer)
+		buffer.WriteRune('\n')
 	}
 
 	if *p.args.PromptOnNewLine {
-		var nextLineBuffer bytes.Buffer
-		nextLineBuffer.WriteRune('\n')
+		buffer.WriteRune('\n')
 
 		var foreground, background uint8
 		if *p.args.PrevError == 0 {
@@ -228,17 +234,15 @@ func (p *powerline) draw() string {
 			background = p.theme.CmdFailedBg
 		}
 
-		nextLineBuffer.WriteString(p.fgColor(foreground))
-		nextLineBuffer.WriteString(p.bgColor(background))
-		nextLineBuffer.WriteString(p.shellInfo.rootIndicator)
-		nextLineBuffer.WriteString(p.reset)
-		nextLineBuffer.WriteString(p.fgColor(background))
-		nextLineBuffer.WriteString(p.symbolTemplates.Separator)
-		nextLineBuffer.WriteString(p.reset)
-		nextLineBuffer.WriteRune(' ')
-
-		drawnResult += nextLineBuffer.String()
+		buffer.WriteString(p.fgColor(foreground))
+		buffer.WriteString(p.bgColor(background))
+		buffer.WriteString(p.shellInfo.rootIndicator)
+		buffer.WriteString(p.reset)
+		buffer.WriteString(p.fgColor(background))
+		buffer.WriteString(p.symbolTemplates.Separator)
+		buffer.WriteString(p.reset)
+		buffer.WriteRune(' ')
 	}
 
-	return drawnResult
+	return buffer.String()
 }
