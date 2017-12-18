@@ -219,7 +219,9 @@ func (p *powerline) draw() string {
 	for rowNum := range p.Segments {
 		p.truncateRow(rowNum)
 		p.drawRow(rowNum, &buffer)
-		buffer.WriteRune('\n')
+		if rowNum < len(p.Segments)-1 {
+			buffer.WriteRune('\n')
+		}
 	}
 
 	if *p.args.PromptOnNewLine {
