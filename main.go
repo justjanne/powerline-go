@@ -44,6 +44,7 @@ type args struct {
 	PrevError            *int
 	IgnoreRepos          *string
 	ShortenGKENames      *bool
+	ShellVar             *string
 }
 
 func (s segment) computeWidth() int {
@@ -84,24 +85,25 @@ func getValidCwd() string {
 }
 
 var modules = map[string](func(*powerline)){
-	"aws":      segmentAWS,
-	"cwd":      segmentCwd,
-	"docker":   segmentDocker,
-	"dotenv":   segmentDotEnv,
-	"exit":     segmentExitCode,
-	"git":      segmentGit,
-	"gitlite":  segmentGitLite,
-	"hg":       segmentHg,
-	"host":     segmentHost,
-	"jobs":     segmentJobs,
-	"kube":     segmentKube,
-	"perlbrew": segmentPerlbrew,
-	"perms":    segmentPerms,
-	"root":     segmentRoot,
-	"ssh":      segmentSsh,
-	"time":     segmentTime,
-	"user":     segmentUser,
-	"venv":     segmentVirtualEnv,
+	"aws":       segmentAWS,
+	"cwd":       segmentCwd,
+	"docker":    segmentDocker,
+	"dotenv":    segmentDotEnv,
+	"exit":      segmentExitCode,
+	"git":       segmentGit,
+	"gitlite":   segmentGitLite,
+	"hg":        segmentHg,
+	"host":      segmentHost,
+	"jobs":      segmentJobs,
+	"kube":      segmentKube,
+	"perlbrew":  segmentPerlbrew,
+	"perms":     segmentPerms,
+	"root":      segmentRoot,
+	"shell-var": segmentShellVar,
+	"ssh":       segmentSsh,
+	"time":      segmentTime,
+	"user":      segmentUser,
+	"venv":      segmentVirtualEnv,
 }
 
 func comments(lines ...string) string {
@@ -158,7 +160,7 @@ func main() {
 			"modules",
 			"venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root",
 			commentsWithDefaults("The list of modules to load, separated by ','",
-				"(valid choices: aws, cwd, docker, dotenv, exit, git, gitlite, hg, host, jobs, perlbrew, perms, root, ssh, time, user, venv)")),
+				"(valid choices: aws, cwd, docker, dotenv, exit, git, gitlite, hg, host, jobs, perlbrew, perms, root, shell-var, ssh, time, user, venv)")),
 		Priority: flag.String(
 			"priority",
 			"root,cwd,user,host,ssh,perms,git-branch,git-status,hg,jobs,exit,cwd-path",
@@ -185,6 +187,10 @@ func main() {
 			"shorten-gke-names",
 			false,
 			comments("Shortens names for GKE Kube clusters.")),
+		ShellVar: flag.String(
+			"shell-var",
+			"",
+			comments("A shell variable to add to the segments.")),
 	}
 	flag.Parse()
 	if strings.HasSuffix(*args.Theme, ".json") {

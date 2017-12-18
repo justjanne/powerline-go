@@ -96,4 +96,7 @@ type Theme struct {
 
 	TimeFg uint8
 	TimeBg uint8
+
+	ShellVarFg uint8
+	ShellVarBg uint8
 }

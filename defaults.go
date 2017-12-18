@@ -146,6 +146,9 @@ var themes = map[string]Theme{
 		TimeFg: 15,
 		TimeBg: 236,
 
+		ShellVarFg: 52,
+		ShellVarBg: 11,
+
 		HostnameColorizedFgMap: map[uint8]uint8{
 			0:   250,
 			1:   250,
