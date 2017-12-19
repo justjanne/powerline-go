@@ -157,7 +157,7 @@ func (p *powerline) draw() string {
 
 	var buffer bytes.Buffer
 	for idx, segment := range p.Segments {
-		if (segment.special) {
+		if (segment.hideSeparators) {
 			buffer.WriteString(segment.content);
 			continue;
 		}
