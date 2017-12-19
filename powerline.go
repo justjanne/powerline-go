@@ -157,6 +157,11 @@ func (p *powerline) draw() string {
 
 	var buffer bytes.Buffer
 	for idx, segment := range p.Segments {
+		if (segment.special) {
+			buffer.WriteString(segment.content);
+			continue;
+		}
+
 		var separatorBackground string
 		if idx >= len(p.Segments)-1 {
 			separatorBackground = p.reset
