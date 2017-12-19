@@ -14,6 +14,7 @@ var symbolTemplates = map[string]Symbols{
 		RepoNotStaged:  "\u270E",
 		RepoUntracked:  "+",
 		RepoConflicted: "\u273C",
+		RepoStashed:    "\u2691",
 	},
 	"patched": {
 		Lock:          "\uE0A2",
@@ -28,6 +29,7 @@ var symbolTemplates = map[string]Symbols{
 		RepoNotStaged:  "\u270E",
 		RepoUntracked:  "+",
 		RepoConflicted: "\u273C",
+		RepoStashed:    "\u2691",
 	},
 	"flat": {
 		RepoDetached:   "\u2693",
@@ -37,6 +39,7 @@ var symbolTemplates = map[string]Symbols{
 		RepoNotStaged:  "\u270E",
 		RepoUntracked:  "+",
 		RepoConflicted: "\u273C",
+		RepoStashed:    "\u2691",
 	},
 }
 
@@ -131,6 +134,8 @@ var themes = map[string]Theme{
 		GitUntrackedBg:  52,
 		GitConflictedFg: 15,
 		GitConflictedBg: 9,
+		GitStashedFg:    15,
+		GitStashedBg:    20,
 
 		VirtualEnvFg: 00,
 		VirtualEnvBg: 35, // a mid-tone green
@@ -140,6 +145,9 @@ var themes = map[string]Theme{
 
 		TimeFg: 15,
 		TimeBg: 236,
+
+		ShellVarFg: 52,
+		ShellVarBg: 11,
 
 		HostnameColorizedFgMap: map[uint8]uint8{
 			0:   250,
@@ -463,6 +471,8 @@ var themes = map[string]Theme{
 		GitUntrackedBg:  15,
 		GitConflictedFg: 9,
 		GitConflictedBg: 15,
+		GitStashedFg:    15,
+		GitStashedBg:    20,
 
 		VirtualEnvFg: 35, // a mid-tone green
 		VirtualEnvBg: 254,

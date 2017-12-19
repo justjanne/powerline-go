@@ -16,6 +16,8 @@ git init;
 touch file1;
 git add .;
 git commit -m "commit";
+echo "test">file1;
+git stash;
 
 export HOME=/tmp/home/
 

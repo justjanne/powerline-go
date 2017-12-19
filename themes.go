@@ -13,6 +13,7 @@ type Symbols struct {
 	RepoNotStaged  string
 	RepoUntracked  string
 	RepoConflicted string
+	RepoStashed    string
 }
 
 type Theme struct {
@@ -84,6 +85,8 @@ type Theme struct {
 	GitUntrackedBg  uint8
 	GitConflictedFg uint8
 	GitConflictedBg uint8
+	GitStashedFg    uint8
+	GitStashedBg    uint8
 
 	VirtualEnvFg uint8
 	VirtualEnvBg uint8
@@ -93,4 +96,7 @@ type Theme struct {
 
 	TimeFg uint8
 	TimeBg uint8
+
+	ShellVarFg uint8
+	ShellVarBg uint8
 }
