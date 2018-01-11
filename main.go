@@ -109,6 +109,7 @@ var modules = map[string](func(*powerline)){
 	"time":      segmentTime,
 	"user":      segmentUser,
 	"venv":      segmentVirtualEnv,
+	"vgo":       segmentVirtualGo,
 }
 
 func comments(lines ...string) string {
@@ -163,14 +164,14 @@ func main() {
 				"(valid choices: bare, bash, zsh)")),
 		Modules: flag.String(
 			"modules",
-			"venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root",
+			"venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root,vgo",
 			commentsWithDefaults("The list of modules to load, separated by ','",
-				"(valid choices: aws, cwd, docker, dotenv, exit, git, gitlite, hg, host, jobs, perlbrew, perms, root, shell-var, ssh, termtitle, time, user, venv)")),
+				"(valid choices: aws, cwd, docker, dotenv, exit, git, gitlite, hg, host, jobs, perlbrew, perms, root, shell-var, ssh, termtitle, time, user, venv, vgo)")),
 		Priority: flag.String(
 			"priority",
 			"root,cwd,user,host,ssh,perms,git-branch,git-status,hg,jobs,exit,cwd-path",
 			commentsWithDefaults("Segments sorted by priority, if not enough space exists, the least priorized segments are removed first. Separate with ','",
-				"(valid choices: aws, cwd, cwd-path, docker, exit, git-branch, git-status, hg, host, jobs, perlbrew, perms, root, ssh, time, user, venv)")),
+				"(valid choices: aws, cwd, cwd-path, docker, exit, git-branch, git-status, hg, host, jobs, perlbrew, perms, root, ssh, time, user, venv, vgo)")),
 		MaxWidthPercentage: flag.Int(
 			"max-width",
 			0,

@@ -91,6 +91,9 @@ type Theme struct {
 	VirtualEnvFg uint8
 	VirtualEnvBg uint8
 
+	VirtualGoFg uint8
+	VirtualGoBg uint8
+
 	PerlbrewFg uint8
 	PerlbrewBg uint8
 
