@@ -4,10 +4,11 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/mattn/go-runewidth"
 	"io/ioutil"
 	"os"
 	"strings"
+
+	runewidth "github.com/mattn/go-runewidth"
 )
 
 const (
@@ -42,6 +43,7 @@ type args struct {
 	MaxWidthPercentage   *int
 	TruncateSegmentWidth *int
 	PrevError            *int
+	NumericExitCodes     *bool
 	IgnoreRepos          *string
 	ShortenGKENames      *bool
 	ShellVar             *string
@@ -178,6 +180,10 @@ func main() {
 			"error",
 			0,
 			comments("Exit code of previously executed command")),
+		NumericExitCodes: flag.Bool(
+			"numeric-exit-codes",
+			false,
+			comments("Shows numeric exit codes for errors.")),
 		IgnoreRepos: flag.String(
 			"ignore-repos",
 			"",

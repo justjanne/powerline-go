@@ -12,7 +12,7 @@ Ported to golang by @justjanne.
 - Shows the current Python [virtualenv](http://www.virtualenv.org/) environment
 - It's easy to customize and extend. See below for details.
 
-**Table of Contents** 
+**Table of Contents**
 
 - [Version Control](#version-control)
 - [Installation](#installation)
@@ -143,6 +143,8 @@ Usage of powerline-go:
     	 Use East Asian Ambiguous Widths
   -error int
     	 Exit code of previously executed command
+  --numeric-exit-codes
+    	 Print the exit code of previously command in numeric value
   -ignore-repos string
     	 A list of git repos to ignore. Separate with ','
     	 Repos are identified by their root directory.
