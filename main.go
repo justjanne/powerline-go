@@ -187,7 +187,7 @@ func main() {
 		IgnoreRepos: flag.String(
 			"ignore-repos",
 			"",
-			comments("A list of git repos to ignore. Separate with ','",
+			comments("A list of git repos to ignore. Separate with ','.",
 				"Repos are identified by their root directory.")),
 		ShortenGKENames: flag.Bool(
 			"shorten-gke-names",
