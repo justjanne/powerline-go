@@ -47,6 +47,7 @@ type args struct {
 	IgnoreRepos          *string
 	ShortenGKENames      *bool
 	ShellVar             *string
+	PathAliases          *string
 }
 
 func (s segment) computeWidth() int {
@@ -197,6 +198,13 @@ func main() {
 			"shell-var",
 			"",
 			comments("A shell variable to add to the segments.")),
+		PathAliases: flag.String(
+			"path-aliases",
+			"",
+			comments("One or more aliases from a path to a short name. Separate with ','.",
+				"An alias maps a path like foo/bar/baz to a short name like FBB.",
+				"Specify these as key/value pairs like foo/bar/baz=FBB.",
+				"Use '~' for your home dir. You may need to escape this character to avoid shell substitution.")),
 	}
 	flag.Parse()
 	if strings.HasSuffix(*args.Theme, ".json") {

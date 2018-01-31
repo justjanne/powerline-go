@@ -161,6 +161,11 @@ Usage of powerline-go:
     	 (default "venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root")
   -newline
     	 Show the prompt on a new line
+  -path-aliases string
+    	 One or more aliases from a path to a short name. Separate with ','.
+    	 An alias maps a path like foo/bar/baz to a short name like FBB.
+    	 Specify these as key/value pairs like foo/bar/baz=FBB.
+    	 Use '~' for your home dir. You may need to escape this character to avoid shell substitution.
   -priority string
     	 Segments sorted by priority, if not enough space exists, the least priorized segments are removed first. Separate with ','
     	 (valid choices: aws, cwd, cwd-path, docker, exit, git-branch, git-status, hg, host, jobs, perlbrew, perms, root, ssh, time, user, venv)
