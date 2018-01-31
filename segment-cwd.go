@@ -108,9 +108,7 @@ func segmentCwd(p *powerline) {
 				secondPart := pathSegments[len(pathSegments)+nBefore-maxDepth:]
 
 				pathSegments = make([]pathSegment, 0)
-				for _, segment := range firstPart {
-					pathSegments = append(pathSegments, segment)
-				}
+				pathSegments = append(pathSegments, firstPart...)
 				pathSegments = append(pathSegments, pathSegment{
 					path:     ellipsis,
 					ellipsis: true,
