@@ -143,24 +143,23 @@ Usage of powerline-go:
     	 Use East Asian Ambiguous Widths
   -error int
     	 Exit code of previously executed command
-  --numeric-exit-codes
-    	 Print the exit code of previously command in numeric value
   -ignore-repos string
-    	 A list of git repos to ignore. Separate with ','
+    	 A list of git repos to ignore. Separate with ','.
     	 Repos are identified by their root directory.
   -max-width int
     	 Maximum width of the shell that the prompt may use, in percent. Setting this to 0 disables the shrinking subsystem.
-    	 (default 50)
   -mode string
     	 The characters used to make separators between segments.
     	 (valid choices: patched, compatible, flat)
     	 (default "patched")
   -modules string
     	 The list of modules to load, separated by ','
-    	 (valid choices: aws, cwd, docker, dotenv, exit, git, gitlite, hg, host, jobs, perlbrew, perms, root, ssh, time, user, venv)
+    	 (valid choices: aws, cwd, docker, dotenv, exit, git, gitlite, hg, host, jobs, perlbrew, perms, root, shell-var, ssh, time, user, venv)
     	 (default "venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root")
   -newline
     	 Show the prompt on a new line
+  -numeric-exit-codes
+    	 Shows numeric exit codes for errors.
   -path-aliases string
     	 One or more aliases from a path to a short name. Separate with ','.
     	 An alias maps a path like foo/bar/baz to a short name like FBB.
@@ -174,6 +173,8 @@ Usage of powerline-go:
     	 Set this to your shell type
     	 (valid choices: bare, bash, zsh)
     	 (default "bash")
+  -shell-var string
+    	 A shell variable to add to the segments.
   -shorten-gke-names
     	 Shortens names for GKE Kube clusters.
   -theme string
