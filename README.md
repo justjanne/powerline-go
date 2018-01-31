@@ -186,6 +186,25 @@ Usage of powerline-go:
     	 (default 16)
 ```
 
+### Path Aliases
+
+The point of the path aliases feature is to allow you to replace long paths
+with a shorter string that you can understand more quickly. This is useful if
+you're often in deep path hierarchies that end up consuming most of your
+terminal width, even when some portions are replaced by an ellipsis.
+
+For example, you might want to replace the string `~/go/src/github.com` with
+`@GOPATH-GH`. When you're in a directory like
+`~/go/src/github.com/justjanne/powerline-go`, you'll instead see `@GOPATH-GH >
+justjanne > powerline-go` in the shell prompt.
+
+Aliases are defined as comma-separated key value pairs, like this:
+
+    powerline-go ... -path-aliases \~/go/src/github.com=@GOPATH-GH,\~/work/projects/foo=@FOO,\~/work/projects/bar=@BAR
+    
+Note that you should use `~` instead of `/home/username` when specifying the
+path. Also make sure to escape the `~` character. Otherwise your shell will
+perform interpolation on it before `powerline-go` can see it!
 
 ## License
 
