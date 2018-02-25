@@ -26,6 +26,7 @@ type segment struct {
 	separatorForeground uint8
 	priority            int
 	width               int
+	hideSeparators      bool
 }
 
 type args struct {
@@ -104,6 +105,7 @@ var modules = map[string](func(*powerline)){
 	"root":      segmentRoot,
 	"shell-var": segmentShellVar,
 	"ssh":       segmentSsh,
+	"termtitle": segmentTermTitle,
 	"time":      segmentTime,
 	"user":      segmentUser,
 	"venv":      segmentVirtualEnv,
@@ -163,7 +165,7 @@ func main() {
 			"modules",
 			"venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root",
 			commentsWithDefaults("The list of modules to load, separated by ','",
-				"(valid choices: aws, cwd, docker, dotenv, exit, git, gitlite, hg, host, jobs, perlbrew, perms, root, shell-var, ssh, time, user, venv)")),
+				"(valid choices: aws, cwd, docker, dotenv, exit, git, gitlite, hg, host, jobs, perlbrew, perms, root, shell-var, ssh, termtitle, time, user, venv)")),
 		Priority: flag.String(
 			"priority",
 			"root,cwd,user,host,ssh,perms,git-branch,git-status,hg,jobs,exit,cwd-path",
