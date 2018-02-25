@@ -23,6 +23,7 @@ type ShellInfo struct {
 type powerline struct {
 	args            args
 	cwd             string
+	pathAliases     map[string]string
 	theme           Theme
 	shellInfo       ShellInfo
 	reset           string
@@ -43,7 +44,18 @@ func NewPowerline(args args, cwd string, priorities map[string]int) *powerline {
 	p.priorities = priorities
 	p.ignoreRepos = make(map[string]bool)
 	for _, r := range strings.Split(*args.IgnoreRepos, ",") {
+		if r == "" {
+			continue
+		}
 		p.ignoreRepos[r] = true
+	}
+	p.pathAliases = make(map[string]string)
+	for _, pa := range strings.Split(*args.PathAliases, ",") {
+		if pa == "" {
+			continue
+		}
+		kv := strings.SplitN(pa, "=", 2)
+		p.pathAliases[kv[0]] = kv[1]
 	}
 	p.Segments = make([]segment, 0)
 	return p
