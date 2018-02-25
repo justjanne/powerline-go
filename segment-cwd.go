@@ -185,29 +185,29 @@ func segmentCwd(p *powerline) {
 				})
 				pathSegments = append(pathSegments, secondPart...)
 			}
+		}
 
-			for idx, pathSegment := range pathSegments {
-				isLastDir := idx == len(pathSegments)-1
-				foreground, background := getColor(p, pathSegment, isLastDir)
+		for idx, pathSegment := range pathSegments {
+			isLastDir := idx == len(pathSegments)-1
+			foreground, background := getColor(p, pathSegment, isLastDir)
 
-				segment := segment{
-					content:    escapeVariables(p, maybeShortenName(p, pathSegment.path)),
-					foreground: foreground,
-					background: background,
-				}
-
-				if !(pathSegment.home && p.theme.HomeSpecialDisplay) && !isLastDir {
-					segment.separator = p.symbolTemplates.SeparatorThin
-					segment.separatorForeground = p.theme.SeparatorFg
-				}
-
-				origin := "cwd-path"
-				if isLastDir {
-					origin = "cwd"
-				}
-
-				p.appendSegment(origin, segment)
+			segment := segment{
+				content:    escapeVariables(p, maybeShortenName(p, pathSegment.path)),
+				foreground: foreground,
+				background: background,
 			}
+
+			if !(pathSegment.home && p.theme.HomeSpecialDisplay) && !isLastDir {
+				segment.separator = p.symbolTemplates.SeparatorThin
+				segment.separatorForeground = p.theme.SeparatorFg
+			}
+
+			origin := "cwd-path"
+			if isLastDir {
+				origin = "cwd"
+			}
+
+			p.appendSegment(origin, segment)
 		}
 	}
 }
