@@ -12,7 +12,7 @@ Ported to golang by @justjanne.
 - Shows the current Python [virtualenv](http://www.virtualenv.org/) environment
 - It's easy to customize and extend. See below for details.
 
-**Table of Contents** 
+**Table of Contents**
 
 - [Version Control](#version-control)
 - [Installation](#installation)
@@ -144,21 +144,27 @@ Usage of powerline-go:
   -error int
     	 Exit code of previously executed command
   -ignore-repos string
-    	 A list of git repos to ignore. Separate with ','
+    	 A list of git repos to ignore. Separate with ','.
     	 Repos are identified by their root directory.
   -max-width int
     	 Maximum width of the shell that the prompt may use, in percent. Setting this to 0 disables the shrinking subsystem.
-    	 (default 50)
   -mode string
     	 The characters used to make separators between segments.
     	 (valid choices: patched, compatible, flat)
     	 (default "patched")
   -modules string
     	 The list of modules to load, separated by ','
-    	 (valid choices: aws, cwd, docker, dotenv, exit, git, gitlite, hg, host, jobs, perlbrew, perms, root, ssh, time, user, venv)
+    	 (valid choices: aws, cwd, docker, dotenv, exit, git, gitlite, hg, host, jobs, perlbrew, perms, root, shell-var, ssh, time, user, venv)
     	 (default "venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root")
   -newline
     	 Show the prompt on a new line
+  -numeric-exit-codes
+    	 Shows numeric exit codes for errors.
+  -path-aliases string
+    	 One or more aliases from a path to a short name. Separate with ','.
+    	 An alias maps a path like foo/bar/baz to a short name like FBB.
+    	 Specify these as key/value pairs like foo/bar/baz=FBB.
+    	 Use '~' for your home dir. You may need to escape this character to avoid shell substitution.
   -priority string
     	 Segments sorted by priority, if not enough space exists, the least priorized segments are removed first. Separate with ','
     	 (valid choices: aws, cwd, cwd-path, docker, exit, git-branch, git-status, hg, host, jobs, perlbrew, perms, root, ssh, time, user, venv)
@@ -167,6 +173,8 @@ Usage of powerline-go:
     	 Set this to your shell type
     	 (valid choices: bare, bash, zsh)
     	 (default "bash")
+  -shell-var string
+    	 A shell variable to add to the segments.
   -shorten-gke-names
     	 Shortens names for GKE Kube clusters.
   -theme string
@@ -178,6 +186,25 @@ Usage of powerline-go:
     	 (default 16)
 ```
 
+### Path Aliases
+
+The point of the path aliases feature is to allow you to replace long paths
+with a shorter string that you can understand more quickly. This is useful if
+you're often in deep path hierarchies that end up consuming most of your
+terminal width, even when some portions are replaced by an ellipsis.
+
+For example, you might want to replace the string `~/go/src/github.com` with
+`@GOPATH-GH`. When you're in a directory like
+`~/go/src/github.com/justjanne/powerline-go`, you'll instead see `@GOPATH-GH >
+justjanne > powerline-go` in the shell prompt.
+
+Aliases are defined as comma-separated key value pairs, like this:
+
+    powerline-go ... -path-aliases \~/go/src/github.com=@GOPATH-GH,\~/work/projects/foo=@FOO,\~/work/projects/bar=@BAR
+    
+Note that you should use `~` instead of `/home/username` when specifying the
+path. Also make sure to escape the `~` character. Otherwise your shell will
+perform interpolation on it before `powerline-go` can see it!
 
 ## License
 

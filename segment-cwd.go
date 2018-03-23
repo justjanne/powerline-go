@@ -12,9 +12,79 @@ type pathSegment struct {
 	home     bool
 	root     bool
 	ellipsis bool
+	alias    bool
 }
 
-func cwdToPathSegments(cwd string) []pathSegment {
+func maybeAliasPathSegments(p *powerline, pathSegments []pathSegment) []pathSegment {
+	if p.pathAliases == nil {
+		return pathSegments
+	}
+
+Aliases:
+	for p, alias := range p.pathAliases {
+		// This turns a string like "foo/bar/baz" into an array of strings.
+		path := strings.Split(p, "/")
+
+		// If the path has 3 elements, we know we should look at pathSegments
+		// in 3-element chunks.
+		size := len(path)
+		// If there aren't that many segments in our path we can skip to the
+		// next alias.
+		if size > len(pathSegments) {
+			continue Aliases
+		}
+
+	Segments:
+		// We want to see if that array of strings exists in pathSegments.
+		for i, _ := range pathSegments {
+			// This is the upper index that we would look at. So if i is 0,
+			// then we'd look at pathSegments[0,1,2], then [1,2,3], etc.. If i
+			// is 2, we'd look at pathSegments[2,3,4] and so on.
+			max := (i + size) - 1
+
+			// But if the upper index is out of bounds we can short-circuit
+			// and move on to the next alias.
+			if max > (len(pathSegments)-i)-1 {
+				continue Aliases
+			}
+
+			// Then we loop over the indices in path and compare the
+			// elements. If any element doesn't match we can move on to the
+			// next index in pathSegments.
+			for j, _ := range path {
+				if path[j] != pathSegments[i+j].path {
+					continue Segments
+				}
+			}
+
+			// They all matched! That means we can replace this slice with our
+			// alias and skip to the next alias.
+			pathSegments = append(
+				pathSegments[:i],
+				append(
+					[]pathSegment{{
+						path:  alias,
+						alias: true,
+					}},
+					pathSegments[max+1:]...,
+				)...,
+			)
+			continue Aliases
+		}
+	}
+
+	return pathSegments
+}
+
+func toString(ps []pathSegment) string {
+	b := make([]string, 0)
+	for _, s := range ps {
+		b = append(b, s.path)
+	}
+	return strings.Join(b, " > ")
+}
+
+func cwdToPathSegments(p *powerline, cwd string) []pathSegment {
 	pathSegments := make([]pathSegment, 0)
 
 	home, _ := os.LookupEnv("HOME")
@@ -43,7 +113,7 @@ func cwdToPathSegments(cwd string) []pathSegment {
 		})
 	}
 
-	return pathSegments
+	return maybeAliasPathSegments(p, pathSegments)
 }
 
 func maybeShortenName(p *powerline, pathSegment string) string {
@@ -89,7 +159,7 @@ func segmentCwd(p *powerline) {
 			background: p.theme.PathBg,
 		})
 	} else {
-		pathSegments := cwdToPathSegments(cwd)
+		pathSegments := cwdToPathSegments(p, cwd)
 
 		if *p.args.CwdMode == "dironly" {
 			pathSegments = pathSegments[len(pathSegments)-1:]
@@ -108,38 +178,36 @@ func segmentCwd(p *powerline) {
 				secondPart := pathSegments[len(pathSegments)+nBefore-maxDepth:]
 
 				pathSegments = make([]pathSegment, 0)
-				for _, segment := range firstPart {
-					pathSegments = append(pathSegments, segment)
-				}
+				pathSegments = append(pathSegments, firstPart...)
 				pathSegments = append(pathSegments, pathSegment{
 					path:     ellipsis,
 					ellipsis: true,
 				})
 				pathSegments = append(pathSegments, secondPart...)
 			}
+		}
 
-			for idx, pathSegment := range pathSegments {
-				isLastDir := idx == len(pathSegments)-1
-				foreground, background := getColor(p, pathSegment, isLastDir)
+		for idx, pathSegment := range pathSegments {
+			isLastDir := idx == len(pathSegments)-1
+			foreground, background := getColor(p, pathSegment, isLastDir)
 
-				segment := segment{
-					content:    escapeVariables(p, maybeShortenName(p, pathSegment.path)),
-					foreground: foreground,
-					background: background,
-				}
-
-				if !(pathSegment.home && p.theme.HomeSpecialDisplay) && !isLastDir {
-					segment.separator = p.symbolTemplates.SeparatorThin
-					segment.separatorForeground = p.theme.SeparatorFg
-				}
-
-				origin := "cwd-path"
-				if isLastDir {
-					origin = "cwd"
-				}
-
-				p.appendSegment(origin, segment)
+			segment := segment{
+				content:    escapeVariables(p, maybeShortenName(p, pathSegment.path)),
+				foreground: foreground,
+				background: background,
 			}
+
+			if !(pathSegment.home && p.theme.HomeSpecialDisplay) && !isLastDir {
+				segment.separator = p.symbolTemplates.SeparatorThin
+				segment.separatorForeground = p.theme.SeparatorFg
+			}
+
+			origin := "cwd-path"
+			if isLastDir {
+				origin = "cwd"
+			}
+
+			p.appendSegment(origin, segment)
 		}
 	}
 }

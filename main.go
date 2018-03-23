@@ -4,10 +4,11 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/mattn/go-runewidth"
 	"io/ioutil"
 	"os"
 	"strings"
+
+	runewidth "github.com/mattn/go-runewidth"
 )
 
 const (
@@ -25,6 +26,7 @@ type segment struct {
 	separatorForeground uint8
 	priority            int
 	width               int
+	hideSeparators      bool
 }
 
 type args struct {
@@ -42,8 +44,11 @@ type args struct {
 	MaxWidthPercentage   *int
 	TruncateSegmentWidth *int
 	PrevError            *int
+	NumericExitCodes     *bool
 	IgnoreRepos          *string
 	ShortenGKENames      *bool
+	ShellVar             *string
+	PathAliases          *string
 }
 
 func (s segment) computeWidth() int {
@@ -84,25 +89,28 @@ func getValidCwd() string {
 }
 
 var modules = map[string](func(*powerline)){
-	"aws":      segmentAWS,
-	"cwd":      segmentCwd,
-	"docker":   segmentDocker,
-	"dotenv":   segmentDotEnv,
-	"exit":     segmentExitCode,
-	"git":      segmentGit,
-	"gitlite":  segmentGitLite,
-	"hg":       segmentHg,
-	"host":     segmentHost,
-	"jobs":     segmentJobs,
-	"kube":     segmentKube,
+	"aws":       segmentAWS,
+	"cwd":       segmentCwd,
+	"docker":    segmentDocker,
+	"dotenv":    segmentDotEnv,
+	"exit":      segmentExitCode,
+	"git":       segmentGit,
+	"gitlite":   segmentGitLite,
+	"hg":        segmentHg,
+	"host":      segmentHost,
+	"jobs":      segmentJobs,
+	"kube":      segmentKube,
 	"newline":  segmentNewline,
-	"perlbrew": segmentPerlbrew,
-	"perms":    segmentPerms,
-	"root":     segmentRoot,
-	"ssh":      segmentSsh,
-	"time":     segmentTime,
-	"user":     segmentUser,
-	"venv":     segmentVirtualEnv,
+	"perlbrew":  segmentPerlbrew,
+	"perms":     segmentPerms,
+	"root":      segmentRoot,
+	"shell-var": segmentShellVar,
+	"ssh":       segmentSsh,
+	"termtitle": segmentTermTitle,
+	"time":      segmentTime,
+	"user":      segmentUser,
+	"venv":      segmentVirtualEnv,
+	"vgo":       segmentVirtualGo,
 }
 
 func comments(lines ...string) string {
@@ -157,17 +165,17 @@ func main() {
 				"(valid choices: bare, bash, zsh)")),
 		Modules: flag.String(
 			"modules",
-			"venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root",
+			"venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root,vgo",
 			commentsWithDefaults("The list of modules to load, separated by ','",
-				"(valid choices: aws, cwd, docker, dotenv, exit, git, gitlite, hg, host, jobs, perlbrew, perms, root, ssh, time, user, venv)")),
+				"(valid choices: aws, cwd, docker, dotenv, exit, git, gitlite, hg, host, jobs, perlbrew, perms, root, shell-var, ssh, termtitle, time, user, venv, vgo)")),
 		Priority: flag.String(
 			"priority",
 			"root,cwd,user,host,ssh,perms,git-branch,git-status,hg,jobs,exit,cwd-path",
 			commentsWithDefaults("Segments sorted by priority, if not enough space exists, the least priorized segments are removed first. Separate with ','",
-				"(valid choices: aws, cwd, cwd-path, docker, exit, git-branch, git-status, hg, host, jobs, perlbrew, perms, root, ssh, time, user, venv)")),
+				"(valid choices: aws, cwd, cwd-path, docker, exit, git-branch, git-status, hg, host, jobs, perlbrew, perms, root, ssh, time, user, venv, vgo)")),
 		MaxWidthPercentage: flag.Int(
 			"max-width",
-			50,
+			0,
 			commentsWithDefaults("Maximum width of the shell that the prompt may use, in percent. Setting this to 0 disables the shrinking subsystem.")),
 		TruncateSegmentWidth: flag.Int(
 			"truncate-segment-width",
@@ -177,15 +185,30 @@ func main() {
 			"error",
 			0,
 			comments("Exit code of previously executed command")),
+		NumericExitCodes: flag.Bool(
+			"numeric-exit-codes",
+			false,
+			comments("Shows numeric exit codes for errors.")),
 		IgnoreRepos: flag.String(
 			"ignore-repos",
 			"",
-			comments("A list of git repos to ignore. Separate with ','",
+			comments("A list of git repos to ignore. Separate with ','.",
 				"Repos are identified by their root directory.")),
 		ShortenGKENames: flag.Bool(
 			"shorten-gke-names",
 			false,
 			comments("Shortens names for GKE Kube clusters.")),
+		ShellVar: flag.String(
+			"shell-var",
+			"",
+			comments("A shell variable to add to the segments.")),
+		PathAliases: flag.String(
+			"path-aliases",
+			"",
+			comments("One or more aliases from a path to a short name. Separate with ','.",
+				"An alias maps a path like foo/bar/baz to a short name like FBB.",
+				"Specify these as key/value pairs like foo/bar/baz=FBB.",
+				"Use '~' for your home dir. You may need to escape this character to avoid shell substitution.")),
 	}
 	flag.Parse()
 	if strings.HasSuffix(*args.Theme, ".json") {
