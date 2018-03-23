@@ -13,7 +13,7 @@ func segmentTermTitle(p *powerline) {
 	var title string
 
 	term := os.Getenv("TERM")
-	if (!(strings.Contains(term, "xterm") || strings.Contains(term, "rxvt"))) {
+	if !(strings.Contains(term, "xterm") || strings.Contains(term, "rxvt")) {
 		return
 	}
 

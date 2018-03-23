@@ -199,10 +199,10 @@ func (p *powerline) drawRow(rowNum int, buffer *bytes.Buffer) {
 	row := p.Segments[rowNum]
 	numEastAsianRunes := 0
 	for idx, segment := range row {
-        if (segment.hideSeparators) {
-            buffer.WriteString(segment.content);
-            continue;
-        }
+		if segment.hideSeparators {
+			buffer.WriteString(segment.content)
+			continue
+		}
 		var separatorBackground string
 		if idx >= len(row)-1 {
 			separatorBackground = p.reset
