@@ -152,6 +152,9 @@ var themes = map[string]Theme{
 		ShellVarFg: 52,
 		ShellVarBg: 11,
 
+		NodeFg: 15,
+		NodeBg: 40,
+
 		HostnameColorizedFgMap: map[uint8]uint8{
 			0:   250,
 			1:   250,

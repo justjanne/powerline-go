@@ -107,6 +107,7 @@ var modules = map[string](func(*powerline)){
 	"ssh":       segmentSsh,
 	"termtitle": segmentTermTitle,
 	"time":      segmentTime,
+	"node":      segmentNode,
 	"user":      segmentUser,
 	"venv":      segmentVirtualEnv,
 	"vgo":       segmentVirtualGo,
