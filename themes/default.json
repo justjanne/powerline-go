@@ -54,6 +54,8 @@
   "TimeBg": 236,
   "ShellVarFg": 52,
   "ShellVarBg": 11,
+  "NodeFg": 15,
+  "NodeBg": 40,
   "HostnameColorizedFgMap": {
     "0": 250,
     "1": 250,
