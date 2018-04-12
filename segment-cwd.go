@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"sort"
 	"strings"
 )
 
@@ -15,15 +16,33 @@ type pathSegment struct {
 	alias    bool
 }
 
+type byRevLength []string
+
+func (s byRevLength) Len() int {
+	return len(s)
+}
+func (s byRevLength) Swap(i, j int) {
+	s[i], s[j] = s[j], s[i]
+}
+func (s byRevLength) Less(i, j int) bool {
+	return len(s[i]) > len(s[j])
+}
+
 func maybeAliasPathSegments(p *powerline, pathSegments []pathSegment) []pathSegment {
 	if p.pathAliases == nil {
 		return pathSegments
 	}
 
+	keys := make([]string, len(p.pathAliases))
+	for k := range p.pathAliases {
+		keys = append(keys, k)
+	}
+	sort.Sort(byRevLength(keys))
+
 Aliases:
-	for p, alias := range p.pathAliases {
+	for _, k := range keys {
 		// This turns a string like "foo/bar/baz" into an array of strings.
-		path := strings.Split(p, "/")
+		path := strings.Split(k, "/")
 
 		// If the path has 3 elements, we know we should look at pathSegments
 		// in 3-element chunks.
@@ -33,6 +52,8 @@ Aliases:
 		if size > len(pathSegments) {
 			continue Aliases
 		}
+
+		alias := p.pathAliases[k]
 
 	Segments:
 		// We want to see if that array of strings exists in pathSegments.
