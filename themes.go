@@ -105,4 +105,10 @@ type Theme struct {
 
 	NodeFg uint8
 	NodeBg uint8
+
+	LoadFg           uint8
+	LoadBg           uint8
+	LoadHighBg       uint8
+	LoadAvgValue     byte
+	LoadThresholdBad float64
 }
