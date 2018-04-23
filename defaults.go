@@ -161,6 +161,9 @@ var themes = map[string]Theme{
 		LoadAvgValue:     5,
 		LoadThresholdBad: 1.0,
 
+		NixShellFg: 00,
+		NixShellBg: 69, // a light blue
+
 		HostnameColorizedFgMap: map[uint8]uint8{
 			0:   250,
 			1:   250,
@@ -503,6 +506,9 @@ var themes = map[string]Theme{
 		LoadHighBg:       161,
 		LoadAvgValue:     5,
 		LoadThresholdBad: 1.0,
+
+		NixShellFg: 69, // a light blue
+		NixShellBg: 254,
 
 		HostnameColorizedFgMap: map[uint8]uint8{
 			0:   250,

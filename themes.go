@@ -111,4 +111,7 @@ type Theme struct {
 	LoadHighBg       uint8
 	LoadAvgValue     byte
 	LoadThresholdBad float64
+
+	NixShellFg uint8
+	NixShellBg uint8
 }
