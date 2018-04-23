@@ -61,6 +61,8 @@
   "LoadHighBg": 161,
   "LoadAvgValue":     5,
   "LoadThresholdBad": 1.0,
+  "NixShellFg": 0,
+  "NixShellBg": 69,
   "HostnameColorizedFgMap": {
     "0": 250,
     "1": 250,
