@@ -42,6 +42,7 @@ In addition, git has a few extra symbols:
 - `✔` -- a file is staged for commit
 - `✼` -- a file has conflicts
 - `+` -- untracked files are present
+- `⚑` -- stash is present
 
 Each of these will have a number next to it if more than one file matches.
 
@@ -155,7 +156,7 @@ Usage of powerline-go:
     	 (default "patched")
   -modules string
     	 The list of modules to load, separated by ','
-    	 (valid choices: aws, cwd, docker, dotenv, exit, git, gitlite, hg, host, jobs, load, nix-shell, perlbrew, perms, root, shell-var, ssh, time, user, venv, node)
+    	 (valid choices: aws, cwd, docker, dotenv, exit, git, gitlite, hg, host, jobs, load, nix-shell, perlbrew, perms, root, shell-var, ssh, termtitle, time, user, venv, node)
     	 (default "venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root")
   -newline
     	 Show the prompt on a new line
