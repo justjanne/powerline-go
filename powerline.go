@@ -3,13 +3,15 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"path/filepath"
 	"strings"
+
+	"os"
+	"strconv"
 
 	"github.com/mattn/go-runewidth"
 	"golang.org/x/crypto/ssh/terminal"
 	"golang.org/x/text/width"
-	"os"
-	"strconv"
 )
 
 type ShellInfo struct {
@@ -48,7 +50,7 @@ func NewPowerline(args args, cwd string, priorities map[string]int) *powerline {
 		if r == "" {
 			continue
 		}
-		p.ignoreRepos[r] = true
+		p.ignoreRepos[filepath.Clean(r)] = true
 	}
 	p.pathAliases = make(map[string]string)
 	for _, pa := range strings.Split(*args.PathAliases, ",") {
