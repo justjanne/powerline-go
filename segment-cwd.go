@@ -218,9 +218,14 @@ func segmentCwd(p *powerline) {
 				background: background,
 			}
 
-			if !(pathSegment.home && p.theme.HomeSpecialDisplay) && !isLastDir {
-				segment.separator = p.symbolTemplates.SeparatorThin
-				segment.separatorForeground = p.theme.SeparatorFg
+			if !(pathSegment.home && p.theme.HomeSpecialDisplay) {
+				if *p.args.SeparatorReversed && idx != 0 {
+					segment.separator = p.symbolTemplates.SeparatorReverseThin
+					segment.separatorForeground = p.theme.SeparatorFg
+				} else if !*p.args.SeparatorReversed && !isLastDir {
+					segment.separator = p.symbolTemplates.SeparatorThin
+					segment.separatorForeground = p.theme.SeparatorFg
+				}
 			}
 
 			origin := "cwd-path"

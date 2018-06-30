@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"strings"
 
+	"os"
+	"strconv"
+
 	"github.com/mattn/go-runewidth"
 	"golang.org/x/crypto/ssh/terminal"
 	"golang.org/x/text/width"
-	"os"
-	"strconv"
 )
 
 type ShellInfo struct {
@@ -80,7 +81,11 @@ func (p *powerline) bgColor(code uint8) string {
 
 func (p *powerline) appendSegment(origin string, segment segment) {
 	if segment.separator == "" {
-		segment.separator = p.symbolTemplates.Separator
+		if *p.args.SeparatorReversed {
+			segment.separator = p.symbolTemplates.SeparatorReverse
+		} else {
+			segment.separator = p.symbolTemplates.Separator
+		}
 	}
 	if segment.separatorForeground == 0 {
 		segment.separatorForeground = segment.background
@@ -204,11 +209,25 @@ func (p *powerline) drawRow(rowNum int, buffer *bytes.Buffer) {
 			continue
 		}
 		var separatorBackground string
-		if idx >= len(row)-1 {
-			separatorBackground = p.reset
+		if !*p.args.SeparatorReversed {
+			if idx >= len(row)-1 {
+				separatorBackground = p.reset
+			} else {
+				nextSegment := row[idx+1]
+				separatorBackground = p.bgColor(nextSegment.background)
+			}
 		} else {
-			nextSegment := row[idx+1]
-			separatorBackground = p.bgColor(nextSegment.background)
+			if idx == 0 {
+				separatorBackground = p.reset
+			} else {
+				prevSegment := row[idx-1]
+				separatorBackground = p.bgColor(prevSegment.background)
+			}
+		}
+		if *p.args.SeparatorReversed {
+			buffer.WriteString(separatorBackground)
+			buffer.WriteString(p.fgColor(segment.separatorForeground))
+			buffer.WriteString(segment.separator)
 		}
 		buffer.WriteString(p.fgColor(segment.foreground))
 		buffer.WriteString(p.bgColor(segment.background))
@@ -216,9 +235,11 @@ func (p *powerline) drawRow(rowNum int, buffer *bytes.Buffer) {
 		buffer.WriteString(segment.content)
 		numEastAsianRunes += p.numEastAsianRunes(&segment.content)
 		buffer.WriteRune(' ')
-		buffer.WriteString(separatorBackground)
-		buffer.WriteString(p.fgColor(segment.separatorForeground))
-		buffer.WriteString(segment.separator)
+		if !*p.args.SeparatorReversed {
+			buffer.WriteString(separatorBackground)
+			buffer.WriteString(p.fgColor(segment.separatorForeground))
+			buffer.WriteString(segment.separator)
+		}
 		buffer.WriteString(p.reset)
 	}
 	buffer.WriteRune(' ')
