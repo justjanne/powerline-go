@@ -5,36 +5,44 @@ import (
 	"fmt"
 	"strings"
 
+	"os"
+	"strconv"
+
 	"github.com/mattn/go-runewidth"
 	"golang.org/x/crypto/ssh/terminal"
 	"golang.org/x/text/width"
-	"os"
-	"strconv"
 )
 
 type ShellInfo struct {
-	rootIndicator    string
-	colorTemplate    string
-	escapedDollar    string
-	escapedBacktick  string
-	escapedBackslash string
+	rootIndicator         string
+	colorTemplate         string
+	escapedDollar         string
+	escapedBacktick       string
+	escapedBackslash      string
+	evalPromptPrefix      string
+	evalPromptSuffix      string
+	evalPromptRightPrefix string
+	evalPromptRightSuffix string
 }
 
 type powerline struct {
-	args            args
-	cwd             string
-	pathAliases     map[string]string
-	theme           Theme
-	shellInfo       ShellInfo
-	reset           string
-	symbolTemplates Symbols
-	priorities      map[string]int
-	ignoreRepos     map[string]bool
-	Segments        [][]segment
-	curSegment      int
+	args                   args
+	cwd                    string
+	pathAliases            map[string]string
+	theme                  Theme
+	shellInfo              ShellInfo
+	reset                  string
+	symbolTemplates        Symbols
+	priorities             map[string]int
+	ignoreRepos            map[string]bool
+	Segments               [][]segment
+	curSegment             int
+	align                  alignment
+	rightPowerline         *powerline
+	appendEastAsianPadding int
 }
 
-func NewPowerline(args args, cwd string, priorities map[string]int) *powerline {
+func newPowerline(args args, cwd string, priorities map[string]int, align alignment) *powerline {
 	p := new(powerline)
 	p.args = args
 	p.cwd = cwd
@@ -43,6 +51,7 @@ func NewPowerline(args args, cwd string, priorities map[string]int) *powerline {
 	p.reset = fmt.Sprintf(p.shellInfo.colorTemplate, "[0m")
 	p.symbolTemplates = symbolTemplates[*args.Mode]
 	p.priorities = priorities
+	p.align = align
 	p.ignoreRepos = make(map[string]bool)
 	for _, r := range strings.Split(*args.IgnoreRepos, ",") {
 		if r == "" {
@@ -59,6 +68,27 @@ func NewPowerline(args args, cwd string, priorities map[string]int) *powerline {
 		p.pathAliases[kv[0]] = kv[1]
 	}
 	p.Segments = make([][]segment, 1)
+	var mods string
+	if p.align == alignLeft {
+		mods = *args.Modules
+		if len(*args.ModulesRight) > 0 {
+			if p.supportsRightModules() {
+				p.rightPowerline = newPowerline(args, cwd, priorities, alignRight)
+			} else {
+				mods += `,` + *args.ModulesRight
+			}
+		}
+	} else {
+		mods = *args.ModulesRight
+	}
+	for _, module := range strings.Split(mods, ",") {
+		elem, ok := modules[module]
+		if !ok {
+			println("Module not found: " + module)
+			continue
+		}
+		elem(p)
+	}
 	return p
 }
 
@@ -80,7 +110,11 @@ func (p *powerline) bgColor(code uint8) string {
 
 func (p *powerline) appendSegment(origin string, segment segment) {
 	if segment.separator == "" {
-		segment.separator = p.symbolTemplates.Separator
+		if p.isRightPrompt() {
+			segment.separator = p.symbolTemplates.SeparatorReverse
+		} else {
+			segment.separator = p.symbolTemplates.Separator
+		}
 	}
 	if segment.separatorForeground == 0 {
 		segment.separatorForeground = segment.background
@@ -198,17 +232,39 @@ func (p *powerline) numEastAsianRunes(segmentContent *string) int {
 func (p *powerline) drawRow(rowNum int, buffer *bytes.Buffer) {
 	row := p.Segments[rowNum]
 	numEastAsianRunes := 0
+
+	// Prepend padding
+	if p.isRightPrompt() {
+		buffer.WriteRune(' ')
+	}
 	for idx, segment := range row {
 		if segment.hideSeparators {
 			buffer.WriteString(segment.content)
 			continue
 		}
 		var separatorBackground string
-		if idx >= len(row)-1 {
-			separatorBackground = p.reset
+		if p.isRightPrompt() {
+			if idx == 0 {
+				separatorBackground = p.reset
+			} else {
+				prevSegment := row[idx-1]
+				separatorBackground = p.bgColor(prevSegment.background)
+			}
+			buffer.WriteString(separatorBackground)
+			buffer.WriteString(p.fgColor(segment.separatorForeground))
+			buffer.WriteString(segment.separator)
 		} else {
-			nextSegment := row[idx+1]
-			separatorBackground = p.bgColor(nextSegment.background)
+			if idx >= len(row)-1 {
+				if !p.hasRightModules() || p.supportsRightModules() {
+					separatorBackground = p.reset
+				} else if p.hasRightModules() && rowNum >= len(p.Segments)-1 {
+					nextSegment := p.rightPowerline.Segments[0][0]
+					separatorBackground = p.bgColor(nextSegment.background)
+				}
+			} else {
+				nextSegment := row[idx+1]
+				separatorBackground = p.bgColor(nextSegment.background)
+			}
 		}
 		buffer.WriteString(p.fgColor(segment.foreground))
 		buffer.WriteString(p.bgColor(segment.background))
@@ -216,21 +272,38 @@ func (p *powerline) drawRow(rowNum int, buffer *bytes.Buffer) {
 		buffer.WriteString(segment.content)
 		numEastAsianRunes += p.numEastAsianRunes(&segment.content)
 		buffer.WriteRune(' ')
-		buffer.WriteString(separatorBackground)
-		buffer.WriteString(p.fgColor(segment.separatorForeground))
-		buffer.WriteString(segment.separator)
+		if !p.isRightPrompt() {
+			buffer.WriteString(separatorBackground)
+			buffer.WriteString(p.fgColor(segment.separatorForeground))
+			buffer.WriteString(segment.separator)
+		}
 		buffer.WriteString(p.reset)
 	}
-	buffer.WriteRune(' ')
 
-	for i := 0; i < numEastAsianRunes; i++ {
+	// Append padding before cursor for left-aligned prompts
+	if !p.isRightPrompt() || !p.hasRightModules() {
 		buffer.WriteRune(' ')
+	}
+
+	// Don't append padding for right-aligned modules
+	if !p.isRightPrompt() {
+		for i := 0; i < numEastAsianRunes; i++ {
+			buffer.WriteRune(' ')
+		}
 	}
 }
 
 func (p *powerline) draw() string {
 
 	var buffer bytes.Buffer
+
+	if *p.args.Eval {
+		if p.align == alignLeft {
+			buffer.WriteString(p.shellInfo.evalPromptPrefix)
+		} else if p.supportsRightModules() {
+			buffer.WriteString(p.shellInfo.evalPromptRightPrefix)
+		}
+	}
 
 	for rowNum := range p.Segments {
 		p.truncateRow(rowNum)
@@ -262,5 +335,34 @@ func (p *powerline) draw() string {
 		buffer.WriteRune(' ')
 	}
 
+	if *p.args.Eval {
+		switch p.align {
+		case alignLeft:
+			buffer.WriteString(p.shellInfo.evalPromptSuffix)
+			if p.hasRightModules() {
+				buffer.WriteRune('\n')
+			}
+		case alignRight:
+			if p.supportsRightModules() {
+				buffer.WriteString(p.shellInfo.evalPromptSuffix)
+			}
+		}
+		if p.hasRightModules() {
+			buffer.WriteString(p.rightPowerline.draw())
+		}
+	}
+
 	return buffer.String()
+}
+
+func (p *powerline) hasRightModules() bool {
+	return p.rightPowerline != nil && len(p.rightPowerline.Segments[0]) > 0
+}
+
+func (p *powerline) supportsRightModules() bool {
+	return p.shellInfo.evalPromptRightPrefix != "" || p.shellInfo.evalPromptRightSuffix != ""
+}
+
+func (p *powerline) isRightPrompt() bool {
+	return p.align == alignRight && p.supportsRightModules()
 }

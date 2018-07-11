@@ -11,11 +11,16 @@ import (
 	runewidth "github.com/mattn/go-runewidth"
 )
 
+type alignment int
+
 const (
 	MinUnsignedInteger uint = 0
 	MaxUnsignedInteger      = ^MinUnsignedInteger
 	MaxInteger         int  = int(MaxUnsignedInteger >> 1)
 	MinInteger              = ^MaxInteger
+
+	alignLeft alignment = iota
+	alignRight
 )
 
 type segment struct {
@@ -40,6 +45,7 @@ type args struct {
 	Theme                *string
 	Shell                *string
 	Modules              *string
+	ModulesRight         *string
 	Priority             *string
 	MaxWidthPercentage   *int
 	TruncateSegmentWidth *int
@@ -50,6 +56,7 @@ type args struct {
 	ShellVar             *string
 	PathAliases          *string
 	Duration             *string
+	Eval                 *bool
 }
 
 func (s segment) computeWidth() int {
@@ -174,12 +181,17 @@ func main() {
 			"modules",
 			"nix-shell,venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root,vgo",
 			commentsWithDefaults("The list of modules to load, separated by ','",
-				"(valid choices: aws, cwd, docker, dotenv, exit, git, gitlite, hg, host, jobs, load, nix-shell, perlbrew, perms, root, shell-var, ssh, svn, termtitle, time, user, venv, vgo)")),
+				"(valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, root, shell-var, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
+		ModulesRight: flag.String(
+			"modules-right",
+			"",
+			comments("The list of modules to load anchored to the right, for shells that support it, separated by ','",
+				"(valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, root, shell-var, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
 		Priority: flag.String(
 			"priority",
 			"root,cwd,user,host,ssh,perms,git-branch,git-status,hg,jobs,exit,cwd-path",
 			commentsWithDefaults("Segments sorted by priority, if not enough space exists, the least priorized segments are removed first. Separate with ','",
-				"(valid choices: aws, cwd, cwd-path, docker, exit, git-branch, git-status, hg, host, jobs, load, nix-shell, perlbrew, perms, root, ssh, svn, time, user, venv, vgo)")),
+				"(valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, perlbrew, perms, root, shell-var, ssh, termtitle, terraform-workspace, time, node, user, venv, vgo, nix-shell)")),
 		MaxWidthPercentage: flag.Int(
 			"max-width",
 			0,
@@ -220,6 +232,10 @@ func main() {
 			"duration",
 			"",
 			comments("The elapsed clock-time of the previous command")),
+		Eval: flag.Bool(
+			"eval",
+			false,
+			comments("Output prompt in 'eval' format.")),
 	}
 	flag.Parse()
 	if strings.HasSuffix(*args.Theme, ".json") {
@@ -238,15 +254,11 @@ func main() {
 		priorities[priority] = len(priorityList) - idx
 	}
 
-	powerline := NewPowerline(args, getValidCwd(), priorities)
-
-	for _, module := range strings.Split(*powerline.args.Modules, ",") {
-		elem, ok := modules[module]
-		if ok {
-			elem(powerline)
-		} else {
-			println("Module not found: " + module)
-		}
+	p := newPowerline(args, getValidCwd(), priorities, alignLeft)
+	if p.supportsRightModules() && p.hasRightModules() && !*args.Eval {
+		fmt.Fprint(os.Stderr, "Flag '-modules-right' requires '-eval' mode.")
+		os.Exit(1)
 	}
-	fmt.Print(powerline.draw())
+
+	fmt.Print(p.draw())
 }

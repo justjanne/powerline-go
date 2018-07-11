@@ -2,10 +2,12 @@ package main
 
 var symbolTemplates = map[string]Symbols{
 	"compatible": {
-		Lock:          "RO",
-		Network:       "SSH",
-		Separator:     "\u25B6",
-		SeparatorThin: "\u276F",
+		Lock:                 "RO",
+		Network:              "SSH",
+		Separator:            "\u25B6",
+		SeparatorThin:        "\u276F",
+		SeparatorReverse:     "\u25C0",
+		SeparatorReverseThin: "\u276E",
 
 		RepoDetached:   "\u2693",
 		RepoAhead:      "\u2B06",
@@ -17,10 +19,12 @@ var symbolTemplates = map[string]Symbols{
 		RepoStashed:    "\u2691",
 	},
 	"patched": {
-		Lock:          "\uE0A2",
-		Network:       "\uE0A2",
-		Separator:     "\uE0B0",
-		SeparatorThin: "\uE0B1",
+		Lock:                 "\uE0A2",
+		Network:              "\uE0A2",
+		Separator:            "\uE0B0",
+		SeparatorThin:        "\uE0B1",
+		SeparatorReverse:     "\uE0B2",
+		SeparatorReverseThin: "\uE0B3",
 
 		RepoDetached:   "\u2693",
 		RepoAhead:      "\u2B06",
@@ -50,13 +54,19 @@ var shellInfos = map[string]ShellInfo{
 		escapedBackslash: `\\\\`,
 		escapedBacktick:  "\\`",
 		escapedDollar:    `\$`,
+		evalPromptPrefix: `PS1="`,
+		evalPromptSuffix: `"`,
 	},
 	"zsh": {
-		colorTemplate:    "%%{\u001b%s%%}",
-		rootIndicator:    "%#",
-		escapedBackslash: `\\`,
-		escapedBacktick:  "\\`",
-		escapedDollar:    `\$`,
+		colorTemplate:         "%%{\u001b%s%%}",
+		rootIndicator:         "%#",
+		escapedBackslash:      `\\`,
+		escapedBacktick:       "\\`",
+		escapedDollar:         `\$`,
+		evalPromptPrefix:      `PROMPT="`,
+		evalPromptSuffix:      `"`,
+		evalPromptRightPrefix: `RPROMPT="`,
+		evalPromptRightSuffix: `"`,
 	},
 	"bare": {
 		colorTemplate: "%s",
