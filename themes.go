@@ -1,10 +1,12 @@
 package main
 
 type Symbols struct {
-	Lock          string
-	Network       string
-	Separator     string
-	SeparatorThin string
+	Lock                 string
+	Network              string
+	Separator            string
+	SeparatorThin        string
+	SeparatorReverse     string
+	SeparatorReverseThin string
 
 	RepoDetached   string
 	RepoAhead      string
