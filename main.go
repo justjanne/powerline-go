@@ -49,6 +49,7 @@ type args struct {
 	ShortenGKENames      *bool
 	ShellVar             *string
 	PathAliases          *string
+	Duration             *string
 }
 
 func (s segment) computeWidth() int {
@@ -93,6 +94,7 @@ var modules = map[string](func(*powerline)){
 	"cwd":       segmentCwd,
 	"docker":    segmentDocker,
 	"dotenv":    segmentDotEnv,
+	"duration":  segmentDuration,
 	"exit":      segmentExitCode,
 	"git":       segmentGit,
 	"gitlite":   segmentGitLite,
@@ -212,6 +214,10 @@ func main() {
 				"An alias maps a path like foo/bar/baz to a short name like FBB.",
 				"Specify these as key/value pairs like foo/bar/baz=FBB.",
 				"Use '~' for your home dir. You may need to escape this character to avoid shell substitution.")),
+		Duration: flag.String(
+			"duration",
+			"",
+			comments("The elapsed clock-time of the previous command")),
 	}
 	flag.Parse()
 	if strings.HasSuffix(*args.Theme, ".json") {

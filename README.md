@@ -113,7 +113,7 @@ fi
 
 ### Fish
 
-Redefine `fish_prompt` in `~/.config/fish/config.fish:`
+Redefine `fish_prompt` in `~/.config/fish/config.fish`:
 
 ```
 function fish_prompt
@@ -141,6 +141,8 @@ Usage of powerline-go:
     	 How to display the current directory
     	 (valid choices: fancy, plain, dironly)
     	 (default "fancy")
+  -duration string
+    	 The number of wall-clock seconds elapsed for the previous command.  May be an integer (whole seconds) or floating point (seconds and fractions of a second).
   -east-asian-width
     	 Use East Asian Ambiguous Widths
   -error int
@@ -156,7 +158,7 @@ Usage of powerline-go:
     	 (default "patched")
   -modules string
     	 The list of modules to load, separated by ','
-    	 (valid choices: aws, cwd, docker, dotenv, exit, git, gitlite, hg, host, jobs, load, nix-shell, perlbrew, perms, root, shell-var, ssh, termtitle, time, user, venv, node)
+    	 (valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, load, nix-shell, perlbrew, perms, root, shell-var, ssh, termtitle, time, user, venv, node)
     	 (default "venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root")
   -newline
     	 Show the prompt on a new line
@@ -169,7 +171,7 @@ Usage of powerline-go:
     	 Use '~' for your home dir. You may need to escape this character to avoid shell substitution.
   -priority string
     	 Segments sorted by priority, if not enough space exists, the least priorized segments are removed first. Separate with ','
-    	 (valid choices: aws, cwd, cwd-path, docker, exit, git-branch, git-status, hg, host, jobs, load, nix-shell, perlbrew, perms, root, ssh, time, user, venv, node)
+    	 (valid choices: aws, cwd, cwd-path, docker, duration, exit, git-branch, git-status, hg, host, jobs, load, nix-shell, perlbrew, perms, root, ssh, time, user, venv, node)
     	 (default "root,cwd,user,host,ssh,perms,git-branch,git-status,hg,jobs,exit,cwd-path")
   -shell string
     	 Set this to your shell type
@@ -207,6 +209,76 @@ Aliases are defined as comma-separated key value pairs, like this:
 Note that you should use `~` instead of `/home/username` when specifying the
 path. Also make sure to escape the `~` character. Otherwise your shell will
 perform interpolation on it before `powerline-go` can see it!
+
+### Duration
+
+The duration segment requires some assistance from the shell.  The shell must have a hook that gets executed immediately before the command.
+
+#### Bash
+
+Bash 4.4 includes an easy way to get a start-time, using `$PS0`.  However, not all operating systems come with a sufficiently recent version of Bash installed.  This example only has seconds precision.  Add or modify your `.bashrc` file to include the following:
+
+``` sh
+INTERACTIVE_BASHPID_TIMER="/tmp/${USER}.START.$$"
+
+PS0='$(echo $SECONDS > "$INTERACTIVE_BASHPID_TIMER")'
+
+function _update_ps1() {
+  local __ERRCODE=$?
+
+  local __DURATION=0
+  if [ -e $INTERACTIVE_BASHPID_TIMER ]; then
+    local __END=$SECONDS
+    local __START=$(cat "$INTERACTIVE_BASHPID_TIMER")
+    __DURATION="$(($__END - ${__START:-__END}))"
+    rm -f "$INTERACTIVE_BASHPID_TIMER"
+  fi
+
+  PS1="$(powerline-go -modules duration -duration $__DURATION -error $__ERRCODE -shell bash)"
+}
+
+if [ "$TERM" != "linux" ]; then
+  PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
+fi
+```
+
+#### Zsh
+
+Using `$EPOCHREALTIME` requires loading the 'datetime' module in your `.zshrc` file, for example:
+
+``` sh
+zmodload zsh/datetime
+
+function preexec() {
+  __TIMER=$EPOCHREALTIME
+}
+
+function powerline_precmd() {
+  local __ERRCODE=$?
+  local __DURATION=0
+
+  if [ -n $__TIMER ]; then
+    local __ERT=$EPOCHREALTIME
+    __DURATION="$(($__ERT - ${__TIMER:-__ERT}))"
+  fi
+
+  PS1="$(powerline-go -modules duration -duration $__DURATION -error $__ERRCODE -shell zsh)"
+  unset __TIMER
+}
+```
+
+If the 'datetime' module is unavailable or unwanted, you may replace `$EPOCHREALTIME` with `$SECONDS`, at the loss of precision.
+
+#### Fish
+
+The fish prompt, in `~/.config/fish/config.fish`, will require a minimum of changes, as Fish automatically provides `$CMD_DURATION`, although with only milliseconds accuracy.
+
+``` sh
+function fish_prompt
+    set duration (math -s6 "$CMD_DURATION / 1000")
+    ~/go/bin/powerline-go -modules duration -duration $duration -error $status -shell bare
+end
+```
 
 ## License
 
