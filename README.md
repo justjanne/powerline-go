@@ -22,6 +22,7 @@ Ported to golang by @justjanne.
   - [Bash](#bash)
   - [ZSH](#zsh)
   - [Fish](#fish)
+  - [Nix](#nix)
 - [Customization](#customization)
 - [License](#license)
 
@@ -119,6 +120,24 @@ Redefine `fish_prompt` in `~/.config/fish/config.fish:`
 function fish_prompt
     ~/go/bin/powerline-go -error $status -shell bare
 end
+```
+### Nix
+
+When using `nix-shell --pure`, `powerline-go` will not be accessible, and
+your prompt will disappear.
+
+To work around this you can add this snippet to your `.bashrc`,
+which should re-enable the prompt in most cases:
+
+```bash
+# Workaround for nix-shell --pure
+if [ "$IN_NIX_SHELL" == "pure" ]; then
+    if [ -x "$HOME/.nix-profile/bin/powerline-go" ]; then
+        alias powerline-go="$HOME/.nix-profile/bin/powerline-go"
+    elif [ -x "/run/current-system/sw/bin/powerline-go" ]; then
+        alias powerline-go="/run/current-system/sw/bin/powerline-go"
+    fi
+fi
 ```
 
 ## Customization
