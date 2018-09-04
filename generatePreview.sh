@@ -38,6 +38,14 @@ cd /tmp/home/deep/down/into/the/abyss/of/directories/where/no/one/ever/comes/;
 
 powerline-go -shell bare $FLAGS;
 
+# terraform
+if hash terraform 2>/dev/null; then
+    mkdir -p  /tmp/home/terraform && cd /tmp/home/terraform
+    echo "create terraform workspace named 'production' at ~/terraform"
+    terraform init 1>/dev/null && terraform workspace new production 1>/dev/null
+    powerline-go -shell bare $FLAGS
+fi
+
 rm -rf /tmp/home;
 
 echo;echo;echo;echo;echo;echo;echo;echo;echo;echo;echo;echo;echo;echo;echo;echo;
