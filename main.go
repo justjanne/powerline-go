@@ -49,6 +49,7 @@ type args struct {
 	ShortenGKENames      *bool
 	ShellVar             *string
 	PathAliases          *string
+	SeparatorReversed    *bool
 }
 
 func (s segment) computeWidth() int {
@@ -213,6 +214,10 @@ func main() {
 				"An alias maps a path like foo/bar/baz to a short name like FBB.",
 				"Specify these as key/value pairs like foo/bar/baz=FBB.",
 				"Use '~' for your home dir. You may need to escape this character to avoid shell substitution.")),
+		SeparatorReversed: flag.Bool(
+			"separator-reversed",
+			false,
+			comments("Reverse the direction of segment separators.")),
 	}
 	flag.Parse()
 	if strings.HasSuffix(*args.Theme, ".json") {
