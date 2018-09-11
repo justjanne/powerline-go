@@ -10,7 +10,7 @@ Ported to golang by @justjanne.
 - Changes color if the last command exited with a failure code
 - If you're too deep into a directory tree, shortens the displayed path with an ellipsis
 - Shows the current Python [virtualenv](http://www.virtualenv.org/) environment
-- Shows if you are in a [nix](https://nixos.org.org/) shell
+- Shows if you are in a [nix](https://nixos.org/) shell
 - It's easy to customize and extend. See below for details.
 
 **Table of Contents**

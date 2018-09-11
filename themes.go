@@ -97,6 +97,9 @@ type Theme struct {
 	PerlbrewFg uint8
 	PerlbrewBg uint8
 
+	TFWsFg uint8
+	TFWsBg uint8
+
 	TimeFg uint8
 	TimeBg uint8
 

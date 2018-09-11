@@ -146,6 +146,9 @@ var themes = map[string]Theme{
 		PerlbrewFg: 00,
 		PerlbrewBg: 20, // a mid-tone blue
 
+		TFWsFg: 15, // white
+		TFWsBg: 26, // blue
+
 		TimeFg: 15,
 		TimeBg: 236,
 
