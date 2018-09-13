@@ -167,6 +167,9 @@ var themes = map[string]Theme{
 		NixShellFg: 00,
 		NixShellBg: 69, // a light blue
 
+		DurationFg: 250,
+		DurationBg: 237,
+
 		HostnameColorizedFgMap: map[uint8]uint8{
 			0:   250,
 			1:   250,
