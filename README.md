@@ -80,10 +80,10 @@ Add the following to your `.bashrc` (or `.profile` on Mac):
 
 ```
 function _update_ps1() {
-    PS1="$(~/go/bin/powerline-go -error $?)"
+    PS1="$($GOPATH/bin/powerline-go -error $?)"
 }
 
-if [ "$TERM" != "linux" ]; then
+if [ "$TERM" != "linux" ] && [ -f "$GOPATH/bin/powerline-go" ]; then
     PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
 fi
 ```
@@ -234,10 +234,10 @@ function _update_ps1() {
     rm -f "$INTERACTIVE_BASHPID_TIMER"
   fi
 
-  PS1="$(powerline-go -modules duration -duration $__DURATION -error $__ERRCODE -shell bash)"
+  PS1="$($GOPATH/bin/powerline-go -modules duration -duration $__DURATION -error $__ERRCODE -shell bash)"
 }
 
-if [ "$TERM" != "linux" ]; then
+if [ "$TERM" != "linux" ] && [ -f "$GOPATH/bin/powerline-go" ]; then
   PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
 fi
 ```
