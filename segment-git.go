@@ -137,7 +137,7 @@ func segmentGit(p *powerline) {
 		}
 	}
 
-	out, err := runGitCommand("git", "status", "--porcelain", "-b")
+	out, err := runGitCommand("git", "status", "--porcelain", "-b", "--ignore-submodules")
 	if err != nil {
 		return
 	}
