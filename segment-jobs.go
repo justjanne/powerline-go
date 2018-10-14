@@ -11,13 +11,18 @@ import (
 func segmentJobs(p *powerline) {
 	nJobs := -1
 
-	pppid_out, _ := exec.Command("ps", "-p", fmt.Sprintf("%d", os.Getppid()), "-oppid=").Output()
-	pppid, _ := strconv.ParseInt(strings.TrimSpace(string(pppid_out)), 10, 64)
+	ppid := os.Getppid()
+	if *p.args.Shell == "bash" {
+		pppidOut, _ := exec.Command("ps", "-p", strconv.Itoa(ppid), "-oppid=").Output()
+		pppid, _ := strconv.ParseInt(strings.TrimSpace(string(pppidOut)), 10, 64)
+		ppid = int(pppid)
+	}
+
 	out, _ := exec.Command("ps", "-a", "-oppid=").Output()
 	processes := strings.Split(string(out), "\n")
 	for _, processPpidStr := range processes {
 		processPpid, _ := strconv.ParseInt(strings.TrimSpace(processPpidStr), 10, 64)
-		if int(processPpid) == int(pppid) {
+		if int(processPpid) == ppid {
 			nJobs++
 		}
 	}
