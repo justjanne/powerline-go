@@ -99,6 +99,7 @@ var modules = map[string](func(*powerline)){
 	"git":                 segmentGit,
 	"gitlite":             segmentGitLite,
 	"hg":                  segmentHg,
+	"svn":                 segmentSubversion,
 	"host":                segmentHost,
 	"jobs":                segmentJobs,
 	"kube":                segmentKube,
