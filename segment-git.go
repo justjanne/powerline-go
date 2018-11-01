@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	pwl "github.com/justjanne/powerline-go/powerline"
 	"os"
 	"os/exec"
 	"regexp"
@@ -25,10 +26,10 @@ func (r repoStats) dirty() bool {
 
 func addRepoStatsSegment(p *powerline, nChanges int, symbol string, foreground uint8, background uint8) {
 	if nChanges > 0 {
-		p.appendSegment("git-status", segment{
-			content:    fmt.Sprintf("%d%s", nChanges, symbol),
-			foreground: foreground,
-			background: background,
+		p.appendSegment("git-status", pwl.Segment{
+			Content:    fmt.Sprintf("%d%s", nChanges, symbol),
+			Foreground: foreground,
+			Background: background,
 		})
 	}
 }
@@ -174,10 +175,10 @@ func segmentGit(p *powerline) {
 		stats.stashed = len(strings.Split(out, "\n")) - 1
 	}
 
-	p.appendSegment("git-branch", segment{
-		content:    branch,
-		foreground: foreground,
-		background: background,
+	p.appendSegment("git-branch", pwl.Segment{
+		Content:    branch,
+		Foreground: foreground,
+		Background: background,
 	})
 	stats.addToPowerline(p)
 }

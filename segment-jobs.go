@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	pwl "github.com/justjanne/powerline-go/powerline"
 	"os"
 	"os/exec"
 	"strconv"
@@ -28,10 +29,10 @@ func segmentJobs(p *powerline) {
 	}
 
 	if nJobs > 0 {
-		p.appendSegment("jobs", segment{
-			content:    fmt.Sprintf("%d", nJobs),
-			foreground: p.theme.JobsFg,
-			background: p.theme.JobsBg,
+		p.appendSegment("jobs", pwl.Segment{
+			Content:    fmt.Sprintf("%d", nJobs),
+			Foreground: p.theme.JobsFg,
+			Background: p.theme.JobsBg,
 		})
 	}
 }

@@ -7,8 +7,6 @@ import (
 	"io/ioutil"
 	"os"
 	"strings"
-
-	"github.com/mattn/go-runewidth"
 )
 
 type alignment int
@@ -28,17 +26,6 @@ const (
 	// MinInteger minimum integer
 	MinInteger = ^MaxInteger
 )
-
-type segment struct {
-	content             string
-	foreground          uint8
-	background          uint8
-	separator           string
-	separatorForeground uint8
-	priority            int
-	width               int
-	hideSeparators      bool
-}
 
 type args struct {
 	CwdMode               *string
@@ -66,13 +53,6 @@ type args struct {
 	Duration              *string
 	Eval                  *bool
 	Condensed             *bool
-}
-
-func (s segment) computeWidth(condensed bool) int {
-	if condensed {
-		return runewidth.StringWidth(s.content) + runewidth.StringWidth(s.separator)
-	}
-	return runewidth.StringWidth(s.content) + runewidth.StringWidth(s.separator) + 2
 }
 
 func warn(msg string) {

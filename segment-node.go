@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"os"
+
+	pwl "github.com/justjanne/powerline-go/powerline"
 )
 
 const pkgfile = "./package.json"
@@ -20,10 +22,10 @@ func segmentNode(p *powerline) {
 		if err == nil {
 			err = json.Unmarshal(raw, &pkg)
 			if err == nil {
-				p.appendSegment("node-version", segment{
-					content:    pkg.Version + " \u2B22",
-					foreground: p.theme.NodeFg,
-					background: p.theme.NodeBg,
+				p.appendSegment("node-version", pwl.Segment{
+					Content:    pkg.Version + " \u2B22",
+					Foreground: p.theme.NodeFg,
+					Background: p.theme.NodeBg,
 				})
 			}
 		}

@@ -1,6 +1,7 @@
 package main
 
 import (
+	pwl "github.com/justjanne/powerline-go/powerline"
 	"os"
 )
 
@@ -12,10 +13,10 @@ func segmentAWS(p *powerline) {
 		if region != "" {
 			r = " (" + region + ")"
 		}
-		p.appendSegment("aws", segment{
-			content:    profile + r,
-			foreground: p.theme.AWSFg,
-			background: p.theme.AWSBg,
+		p.appendSegment("aws", pwl.Segment{
+			Content:    profile + r,
+			Foreground: p.theme.AWSFg,
+			Background: p.theme.AWSBg,
 		})
 	}
 }

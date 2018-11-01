@@ -1,6 +1,7 @@
 package main
 
 import (
+	pwl "github.com/justjanne/powerline-go/powerline"
 	"os"
 	"path"
 )
@@ -12,9 +13,9 @@ func segmentPerlbrew(p *powerline) {
 	}
 
 	envName := path.Base(env)
-	p.appendSegment("perlbrew", segment{
-		content:    envName,
-		foreground: p.theme.PerlbrewFg,
-		background: p.theme.PerlbrewBg,
+	p.appendSegment("perlbrew", pwl.Segment{
+		Content:    envName,
+		Foreground: p.theme.PerlbrewFg,
+		Background: p.theme.PerlbrewBg,
 	})
 }
