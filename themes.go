@@ -21,7 +21,11 @@ type Symbols struct {
 
 // Theme definitions
 type Theme struct {
-	Reset          uint8
+	Reset uint8
+
+	DefaultFg uint8
+	DefaultBg uint8
+
 	UsernameFg     uint8
 	UsernameBg     uint8
 	UsernameRootBg uint8

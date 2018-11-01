@@ -84,11 +84,13 @@ func newPowerline(args args, cwd string, priorities map[string]int, align alignm
 	}
 	for _, module := range strings.Split(mods, ",") {
 		elem, ok := modules[module]
-		if !ok {
-			println("Module not found: " + module)
-			continue
+		if ok {
+			elem(p)
+		} else {
+			if ok := segmentPlugin(p, module); !ok {
+				println("Module not found: " + module)
+			}
 		}
-		elem(p)
 	}
 	return p
 }
@@ -109,6 +111,10 @@ func (p *powerline) bgColor(code uint8) string {
 }
 
 func (p *powerline) appendSegment(origin string, segment pwl.Segment) {
+	if segment.Foreground == segment.Background && segment.Background == 0 {
+		segment.Background = p.theme.DefaultBg
+		segment.Foreground = p.theme.DefaultFg
+	}
 	if segment.Separator == "" {
 		if p.isRightPrompt() {
 			segment.Separator = p.symbolTemplates.SeparatorReverse
