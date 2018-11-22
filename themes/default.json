@@ -63,6 +63,8 @@
   "LoadThresholdBad": 1.0,
   "NixShellFg": 0,
   "NixShellBg": 69,
+  "DurationFg": 250,
+  "DurationBg": 237,
   "HostnameColorizedFgMap": {
     "0": 250,
     "1": 250,

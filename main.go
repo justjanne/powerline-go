@@ -49,6 +49,7 @@ type args struct {
 	ShortenGKENames      *bool
 	ShellVar             *string
 	PathAliases          *string
+	Duration             *string
 }
 
 func (s segment) computeWidth() int {
@@ -89,31 +90,34 @@ func getValidCwd() string {
 }
 
 var modules = map[string](func(*powerline)){
-	"aws":       segmentAWS,
-	"cwd":       segmentCwd,
-	"docker":    segmentDocker,
-	"dotenv":    segmentDotEnv,
-	"exit":      segmentExitCode,
-	"git":       segmentGit,
-	"gitlite":   segmentGitLite,
-	"hg":        segmentHg,
-	"host":      segmentHost,
-	"jobs":      segmentJobs,
-	"kube":      segmentKube,
-	"load":      segmentLoad,
-	"newline":   segmentNewline,
-	"perlbrew":  segmentPerlbrew,
-	"perms":     segmentPerms,
-	"root":      segmentRoot,
-	"shell-var": segmentShellVar,
-	"ssh":       segmentSsh,
-	"termtitle": segmentTermTitle,
-	"time":      segmentTime,
-	"node":      segmentNode,
-	"user":      segmentUser,
-	"venv":      segmentVirtualEnv,
-	"vgo":       segmentVirtualGo,
-	"nix-shell": segmentNixShell,
+	"aws":                 segmentAWS,
+	"cwd":                 segmentCwd,
+	"docker":              segmentDocker,
+	"dotenv":              segmentDotEnv,
+	"duration":            segmentDuration,
+	"exit":                segmentExitCode,
+	"git":                 segmentGit,
+	"gitlite":             segmentGitLite,
+	"hg":                  segmentHg,
+	"svn":                 segmentSubversion,
+	"host":                segmentHost,
+	"jobs":                segmentJobs,
+	"kube":                segmentKube,
+	"load":                segmentLoad,
+	"newline":             segmentNewline,
+	"perlbrew":            segmentPerlbrew,
+	"perms":               segmentPerms,
+	"root":                segmentRoot,
+	"shell-var":           segmentShellVar,
+	"ssh":                 segmentSsh,
+	"termtitle":           segmentTermTitle,
+	"terraform-workspace": segmentTerraformWorkspace,
+	"time":                segmentTime,
+	"node":                segmentNode,
+	"user":                segmentUser,
+	"venv":                segmentVirtualEnv,
+	"vgo":                 segmentVirtualGo,
+	"nix-shell":           segmentNixShell,
 }
 
 func comments(lines ...string) string {
@@ -212,6 +216,10 @@ func main() {
 				"An alias maps a path like foo/bar/baz to a short name like FBB.",
 				"Specify these as key/value pairs like foo/bar/baz=FBB.",
 				"Use '~' for your home dir. You may need to escape this character to avoid shell substitution.")),
+		Duration: flag.String(
+			"duration",
+			"",
+			comments("The elapsed clock-time of the previous command")),
 	}
 	flag.Parse()
 	if strings.HasSuffix(*args.Theme, ".json") {
