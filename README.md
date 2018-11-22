@@ -71,7 +71,7 @@ I provide precompiled binaries for x64 Linux and macOS in the
 go get -u github.com/justjanne/powerline-go
 ```
 
-- By default it will be in `~/go/bin`, if you want to change that, you can set
+- By default it will be in `$GOPATH/bin`, if you want to change that, you can set
   your `$GOPATH` and/or `$GOBIN`, but will need to change the path in the
   following scripts, too.
 
@@ -95,7 +95,7 @@ Add the following to your `.zshrc`:
 
 ```
 function powerline_precmd() {
-    PS1="$(~/go/bin/powerline-go -error $? -shell zsh)"
+    PS1="$($GOPATH/bin/powerline-go -error $? -shell zsh)"
 }
 
 function install_powerline_precmd() {
@@ -118,7 +118,7 @@ Redefine `fish_prompt` in `~/.config/fish/config.fish`:
 
 ```
 function fish_prompt
-    ~/go/bin/powerline-go -error $status -shell bare
+    $GOPATH/bin/powerline-go -error $status -shell bare
 end
 ```
 ### Nix
@@ -216,14 +216,14 @@ with a shorter string that you can understand more quickly. This is useful if
 you're often in deep path hierarchies that end up consuming most of your
 terminal width, even when some portions are replaced by an ellipsis.
 
-For example, you might want to replace the string `~/go/src/github.com` with
+For example, you might want to replace the string `$GOPATH/src/github.com` with
 `@GOPATH-GH`. When you're in a directory like
-`~/go/src/github.com/justjanne/powerline-go`, you'll instead see `@GOPATH-GH >
+`$GOPATH/src/github.com/justjanne/powerline-go`, you'll instead see `@GOPATH-GH >
 justjanne > powerline-go` in the shell prompt.
 
 Aliases are defined as comma-separated key value pairs, like this:
 
-    powerline-go ... -path-aliases \~/go/src/github.com=@GOPATH-GH,\~/work/projects/foo=@FOO,\~/work/projects/bar=@BAR
+    powerline-go ... -path-aliases \$GOPATH/src/github.com=@GOPATH-GH,\~/work/projects/foo=@FOO,\~/work/projects/bar=@BAR
     
 Note that you should use `~` instead of `/home/username` when specifying the
 path. Also make sure to escape the `~` character. Otherwise your shell will
@@ -295,7 +295,7 @@ The fish prompt, in `~/.config/fish/config.fish`, will require a minimum of chan
 ``` sh
 function fish_prompt
     set duration (math -s6 "$CMD_DURATION / 1000")
-    ~/go/bin/powerline-go -modules duration -duration $duration -error $status -shell bare
+    $GOPATH/bin/powerline-go -modules duration -duration $duration -error $status -shell bare
 end
 ```
 
