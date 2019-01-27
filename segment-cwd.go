@@ -57,7 +57,7 @@ Aliases:
 
 	Segments:
 		// We want to see if that array of strings exists in pathSegments.
-		for i, _ := range pathSegments {
+		for i := range pathSegments {
 			// This is the upper index that we would look at. So if i is 0,
 			// then we'd look at pathSegments[0,1,2], then [1,2,3], etc.. If i
 			// is 2, we'd look at pathSegments[2,3,4] and so on.
@@ -72,7 +72,7 @@ Aliases:
 			// Then we loop over the indices in path and compare the
 			// elements. If any element doesn't match we can move on to the
 			// next index in pathSegments.
-			for j, _ := range path {
+			for j := range path {
 				if path[j] != pathSegments[i+j].path {
 					continue Segments
 				}
@@ -95,14 +95,6 @@ Aliases:
 	}
 
 	return pathSegments
-}
-
-func toString(ps []pathSegment) string {
-	b := make([]string, 0)
-	for _, s := range ps {
-		b = append(b, s.path)
-	}
-	return strings.Join(b, " > ")
 }
 
 func cwdToPathSegments(p *powerline, cwd string) []pathSegment {

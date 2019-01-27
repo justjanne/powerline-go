@@ -18,12 +18,14 @@ func segmentNode(p *powerline) {
 		pkg := packageJSON{"!"}
 		raw, err := ioutil.ReadFile(pkgfile)
 		if err == nil {
-			json.Unmarshal(raw, &pkg)
+			err = json.Unmarshal(raw, &pkg)
+			if err == nil {
+				p.appendSegment("node-version", segment{
+					content:    pkg.Version + " \u2B22",
+					foreground: p.theme.NodeFg,
+					background: p.theme.NodeBg,
+				})
+			}
 		}
-		p.appendSegment("node-version", segment{
-			content:    pkg.Version + " \u2B22",
-			foreground: p.theme.NodeFg,
-			background: p.theme.NodeBg,
-		})
 	}
 }

@@ -8,7 +8,7 @@ import (
 	"os"
 	"strings"
 
-	runewidth "github.com/mattn/go-runewidth"
+	"github.com/mattn/go-runewidth"
 )
 
 type alignment int
@@ -16,7 +16,7 @@ type alignment int
 const (
 	MinUnsignedInteger uint = 0
 	MaxUnsignedInteger      = ^MinUnsignedInteger
-	MaxInteger         int  = int(MaxUnsignedInteger >> 1)
+	MaxInteger              = int(MaxUnsignedInteger >> 1)
 	MinInteger              = ^MaxInteger
 
 	alignLeft alignment = iota
@@ -96,7 +96,7 @@ func getValidCwd() string {
 	return cwd
 }
 
-var modules = map[string](func(*powerline)){
+var modules = map[string]func(*powerline){
 	"aws":                 segmentAWS,
 	"cwd":                 segmentCwd,
 	"docker":              segmentDocker,
@@ -128,11 +128,11 @@ var modules = map[string](func(*powerline)){
 }
 
 func comments(lines ...string) string {
-	return " " + strings.Join(lines, "\n"+"    \t ")
+	return " " + strings.Join(lines, "\n"+" ")
 }
 
 func commentsWithDefaults(lines ...string) string {
-	return comments(lines...) + "\n" + "    \t"
+	return comments(lines...) + "\n"
 }
 
 func main() {
@@ -191,11 +191,11 @@ func main() {
 			"priority",
 			"root,cwd,user,host,ssh,perms,git-branch,git-status,hg,jobs,exit,cwd-path",
 			commentsWithDefaults("Segments sorted by priority, if not enough space exists, the least priorized segments are removed first. Separate with ','",
-				"(valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, perlbrew, perms, root, shell-var, ssh, termtitle, terraform-workspace, time, node, user, venv, vgo, nix-shell)")),
+				"(valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, root, shell-var, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
 		MaxWidthPercentage: flag.Int(
 			"max-width",
 			0,
-			commentsWithDefaults("Maximum width of the shell that the prompt may use, in percent. Setting this to 0 disables the shrinking subsystem.")),
+			comments("Maximum width of the shell that the prompt may use, in percent. Setting this to 0 disables the shrinking subsystem.")),
 		TruncateSegmentWidth: flag.Int(
 			"truncate-segment-width",
 			16,
@@ -243,10 +243,14 @@ func main() {
 
 		file, err := ioutil.ReadFile(*args.Theme)
 		if err == nil {
-			json.Unmarshal(file, &jsonTheme)
+			err = json.Unmarshal(file, &jsonTheme)
+			if err == nil {
+				themes[*args.Theme] = jsonTheme
+			} else {
+				println("Error reading theme")
+				println(err.Error())
+			}
 		}
-
-		themes[*args.Theme] = jsonTheme
 	}
 	priorities := map[string]int{}
 	priorityList := strings.Split(*args.Priority, ",")
@@ -256,7 +260,7 @@ func main() {
 
 	p := newPowerline(args, getValidCwd(), priorities, alignLeft)
 	if p.supportsRightModules() && p.hasRightModules() && !*args.Eval {
-		fmt.Fprint(os.Stderr, "Flag '-modules-right' requires '-eval' mode.")
+		fmt.Fprintln(os.Stderr, "Flag '-modules-right' requires '-eval' mode.")
 		os.Exit(1)
 	}
 

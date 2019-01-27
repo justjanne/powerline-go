@@ -6,7 +6,7 @@ import (
 
 func segmentNixShell(p *powerline) {
 	var nixShell string
-		nixShell, _ = os.LookupEnv("IN_NIX_SHELL")
+	nixShell, _ = os.LookupEnv("IN_NIX_SHELL")
 	if nixShell == "" {
 		return
 	} else {
