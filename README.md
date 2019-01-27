@@ -67,7 +67,7 @@ I provide precompiled binaries for x64 Linux and macOS in the
 
 - Install (and update) the package with
 
-```
+```bash
 go get -u github.com/justjanne/powerline-go
 ```
 
@@ -79,7 +79,7 @@ go get -u github.com/justjanne/powerline-go
 
 Add the following to your `.bashrc` (or `.profile` on Mac):
 
-```
+```bash
 function _update_ps1() {
     PS1="$($GOPATH/bin/powerline-go -error $?)"
 }
@@ -93,7 +93,7 @@ fi
 
 Add the following to your `.zshrc`:
 
-```
+```bash
 function powerline_precmd() {
     PS1="$($GOPATH/bin/powerline-go -error $? -shell zsh)"
 }
@@ -116,7 +116,7 @@ fi
 
 Redefine `fish_prompt` in `~/.config/fish/config.fish`:
 
-```
+```bash
 function fish_prompt
     $GOPATH/bin/powerline-go -error $status -shell bare
 end
@@ -230,7 +230,9 @@ justjanne > powerline-go` in the shell prompt.
 
 Aliases are defined as comma-separated key value pairs, like this:
 
-    powerline-go ... -path-aliases \$GOPATH/src/github.com=@GOPATH-GH,\~/work/projects/foo=@FOO,\~/work/projects/bar=@BAR
+```bash
+powerline-go ... -path-aliases \$GOPATH/src/github.com=@GOPATH-GH,\~/work/projects/foo=@FOO,\~/work/projects/bar=@BAR
+```
     
 Note that you should use `~` instead of `/home/username` when specifying the
 path. Also make sure to escape the `~` character. Otherwise your shell will
@@ -244,7 +246,7 @@ The duration segment requires some assistance from the shell.  The shell must ha
 
 Bash 4.4 includes an easy way to get a start-time, using `$PS0`.  However, not all operating systems come with a sufficiently recent version of Bash installed.  This example only has seconds precision.  Add or modify your `.bashrc` file to include the following:
 
-``` sh
+```bash
 INTERACTIVE_BASHPID_TIMER="/tmp/${USER}.START.$$"
 
 PS0='$(echo $SECONDS > "$INTERACTIVE_BASHPID_TIMER")'
@@ -272,7 +274,7 @@ fi
 
 Using `$EPOCHREALTIME` requires loading the 'datetime' module in your `.zshrc` file, for example:
 
-``` sh
+```bash
 zmodload zsh/datetime
 
 function preexec() {
@@ -299,7 +301,7 @@ If the 'datetime' module is unavailable or unwanted, you may replace `$EPOCHREAL
 
 The fish prompt, in `~/.config/fish/config.fish`, will require a minimum of changes, as Fish automatically provides `$CMD_DURATION`, although with only milliseconds accuracy.
 
-``` sh
+```bash
 function fish_prompt
     set duration (math -s6 "$CMD_DURATION / 1000")
     $GOPATH/bin/powerline-go -modules duration -duration $duration -error $status -shell bare
