@@ -34,6 +34,8 @@ type Theme struct {
 	HomeSpecialDisplay bool
 	HomeFg             uint8
 	HomeBg             uint8
+	AliasFg            uint8
+	AliasBg            uint8
 	PathFg             uint8
 	PathBg             uint8
 	CwdFg              uint8

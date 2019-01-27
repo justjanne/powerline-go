@@ -8,6 +8,8 @@
   "HomeSpecialDisplay": true,
   "HomeFg": 15,
   "HomeBg": 31,
+  "AliasFg": 15,
+  "AliasBg": 31,
   "PathFg": 250,
   "PathBg": 237,
   "CwdFg": 254,

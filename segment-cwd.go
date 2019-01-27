@@ -42,7 +42,7 @@ func maybeAliasPathSegments(p *powerline, pathSegments []pathSegment) []pathSegm
 Aliases:
 	for _, k := range keys {
 		// This turns a string like "foo/bar/baz" into an array of strings.
-		path := strings.Split(k, "/")
+		path := strings.Split(strings.Trim(k, "/"), "/")
 
 		// If the path has 3 elements, we know we should look at pathSegments
 		// in 3-element chunks.
@@ -144,13 +144,15 @@ func escapeVariables(p *powerline, pathSegment string) string {
 	return pathSegment
 }
 
-func getColor(p *powerline, pathSegment pathSegment, isLastDir bool) (uint8, uint8) {
+func getColor(p *powerline, pathSegment pathSegment, isLastDir bool) (uint8, uint8, bool) {
 	if pathSegment.home && p.theme.HomeSpecialDisplay {
-		return p.theme.HomeFg, p.theme.HomeBg
+		return p.theme.HomeFg, p.theme.HomeBg, true
+	} else if pathSegment.alias {
+		return p.theme.AliasFg, p.theme.AliasBg, true
 	} else if isLastDir {
-		return p.theme.CwdFg, p.theme.PathBg
+		return p.theme.CwdFg, p.theme.PathBg, false
 	} else {
-		return p.theme.PathFg, p.theme.PathBg
+		return p.theme.PathFg, p.theme.PathBg, false
 	}
 }
 
@@ -202,7 +204,7 @@ func segmentCwd(p *powerline) {
 
 		for idx, pathSegment := range pathSegments {
 			isLastDir := idx == len(pathSegments)-1
-			foreground, background := getColor(p, pathSegment, isLastDir)
+			foreground, background, special := getColor(p, pathSegment, isLastDir)
 
 			segment := segment{
 				content:    escapeVariables(p, maybeShortenName(p, pathSegment.path)),
@@ -210,7 +212,7 @@ func segmentCwd(p *powerline) {
 				background: background,
 			}
 
-			if !(pathSegment.home && p.theme.HomeSpecialDisplay) {
+			if !special {
 				if p.align == alignRight && p.supportsRightModules() && idx != 0 {
 					segment.separator = p.symbolTemplates.SeparatorReverseThin
 					segment.separatorForeground = p.theme.SeparatorFg

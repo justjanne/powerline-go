@@ -91,6 +91,8 @@ var themes = map[string]Theme{
 		HomeSpecialDisplay: true,
 		HomeFg:             15,  // white
 		HomeBg:             31,  // blueish
+		AliasFg:            15,  // white
+		AliasBg:            31,  // blueish
 		PathFg:             250, // light grey
 		PathBg:             237, // dark grey
 		CwdFg:              254, // nearly-white grey
@@ -452,6 +454,8 @@ var themes = map[string]Theme{
 		HomeSpecialDisplay: true,
 		HomeFg:             30, // blueish-green
 		HomeBg:             15, // white
+		AliasFg:            30, // blueish-green
+		AliasBg:            15, // white
 		PathFg:             234,
 		PathBg:             254,
 		CwdFg:              236,
