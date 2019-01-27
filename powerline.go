@@ -121,7 +121,7 @@ func (p *powerline) appendSegment(origin string, segment segment) {
 	}
 	priority, _ := p.priorities[origin]
 	segment.priority += priority
-	segment.width = segment.computeWidth()
+	segment.width = segment.computeWidth(*p.args.Condensed)
 	p.Segments[p.curSegment] = append(p.Segments[p.curSegment], segment)
 }
 
@@ -175,7 +175,7 @@ func (p *powerline) truncateRow(rowNum int) {
 				rowLength -= segment.width
 
 				segment.content = runewidth.Truncate(segment.content, *p.args.TruncateSegmentWidth-runewidth.StringWidth(segment.separator)-3, "…")
-				segment.width = segment.computeWidth()
+				segment.width = segment.computeWidth(*p.args.Condensed)
 
 				row = append(append(row[:minPriorityNotTruncatedSegmentId], segment), row[minPriorityNotTruncatedSegmentId+1:]...)
 				rowLength += segment.width
@@ -268,10 +268,14 @@ func (p *powerline) drawRow(rowNum int, buffer *bytes.Buffer) {
 		}
 		buffer.WriteString(p.fgColor(segment.foreground))
 		buffer.WriteString(p.bgColor(segment.background))
-		buffer.WriteRune(' ')
+		if !*p.args.Condensed {
+			buffer.WriteRune(' ')
+		}
 		buffer.WriteString(segment.content)
 		numEastAsianRunes += p.numEastAsianRunes(&segment.content)
-		buffer.WriteRune(' ')
+		if !*p.args.Condensed {
+			buffer.WriteRune(' ')
+		}
 		if !p.isRightPrompt() {
 			buffer.WriteString(separatorBackground)
 			buffer.WriteString(p.fgColor(segment.separatorForeground))

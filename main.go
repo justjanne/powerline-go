@@ -57,10 +57,15 @@ type args struct {
 	PathAliases          *string
 	Duration             *string
 	Eval                 *bool
+	Condensed            *bool
 }
 
-func (s segment) computeWidth() int {
-	return runewidth.StringWidth(s.content) + runewidth.StringWidth(s.separator) + 2
+func (s segment) computeWidth(condensed bool) int {
+	if condensed {
+		return runewidth.StringWidth(s.content) + runewidth.StringWidth(s.separator)
+	} else {
+		return runewidth.StringWidth(s.content) + runewidth.StringWidth(s.separator) + 2
+	}
 }
 
 func warn(msg string) {
@@ -236,6 +241,10 @@ func main() {
 			"eval",
 			false,
 			comments("Output prompt in 'eval' format.")),
+		Condensed: flag.Bool(
+			"condensed",
+			false,
+			comments("Remove spacing between segments")),
 	}
 	flag.Parse()
 	if strings.HasSuffix(*args.Theme, ".json") {

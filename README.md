@@ -150,6 +150,8 @@ in your shell’s init file.
 Usage of powerline-go:
   -colorize-hostname
     	 Colorize the hostname based on a hash of itself
+  -condensed
+    	 Remove spacing between segments
   -cwd-max-depth int
     	 Maximum number of directories to show in path
     	 (default 5)
