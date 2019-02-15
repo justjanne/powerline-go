@@ -215,6 +215,56 @@ Usage of powerline-go:
     	 Minimum width of a segment, segments longer than this will be shortened if space is limited. Setting this to 0 disables it.
     	 (default 16)
 ```
+### Eval
+
+If using `eval` and `-modules-right` is desired, the shell setup must be modified slightly, as shown below:
+
+##### Bash
+
+Add the following to your `.bashrc` (or `.profile` on Mac):
+
+```bash
+function _update_ps1() {
+    eval "$($GOPATH/bin/powerline-go -error $? -eval -modules-right git)"
+}
+
+if [ "$TERM" != "linux" ] && [ -f "$GOPATH/bin/powerline-go" ]; then
+    PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
+fi
+```
+
+##### ZSH
+
+Add the following to your `.zshrc`:
+
+```bash
+function powerline_precmd() {
+    eval "$($GOPATH/bin/powerline-go -error $? -shell zsh -eval -modules-right git)"
+}
+
+function install_powerline_precmd() {
+  for s in "${precmd_functions[@]}"; do
+    if [ "$s" = "powerline_precmd" ]; then
+      return
+    fi
+  done
+  precmd_functions+=(powerline_precmd)
+}
+
+if [ "$TERM" != "linux" ]; then
+    install_powerline_precmd
+fi
+```
+
+##### Fish
+
+Redefine `fish_prompt` in `~/.config/fish/config.fish`:
+
+```bash
+function fish_prompt
+    eval $GOPATH/bin/powerline-go -error $status -shell bare -eval -modules-right git
+end
+```
 
 ### Path Aliases
 
