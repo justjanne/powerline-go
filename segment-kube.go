@@ -55,8 +55,12 @@ func segmentKube(p *powerline) {
 	paths := append(strings.Split(os.Getenv("KUBECONFIG"), ":"), path.Join(homePath(), ".kube", "config"))
 	config := &KubeConfig{}
 	for _, configPath := range paths {
-		if readKubeConfig(config, configPath) == nil {
-			break
+		temp := &KubeConfig{}
+		if readKubeConfig(temp, configPath) == nil {
+			config.Contexts = append(config.Contexts, temp.Contexts...)
+			if config.CurrentContext == "" {
+				config.CurrentContext = temp.CurrentContext
+			}
 		}
 	}
 
