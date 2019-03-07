@@ -53,6 +53,7 @@ type args struct {
 	NumericExitCodes     *bool
 	IgnoreRepos          *string
 	ShortenGKENames      *bool
+	ShortenEKSNames      *bool
 	ShellVar             *string
 	PathAliases          *string
 	Duration             *string
@@ -222,6 +223,10 @@ func main() {
 			"shorten-gke-names",
 			false,
 			comments("Shortens names for GKE Kube clusters.")),
+		ShortenEKSNames: flag.Bool(
+			"shorten-eks-names",
+			false,
+			comments("Shortens names for EKS Kube clusters.")),
 		ShellVar: flag.String(
 			"shell-var",
 			"",

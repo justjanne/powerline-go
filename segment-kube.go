@@ -5,10 +5,12 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"regexp"
 	"runtime"
 	"strings"
 
 	"fmt"
+
 	"gopkg.in/yaml.v2"
 )
 
@@ -82,6 +84,15 @@ func segmentKube(p *powerline) {
 		if len(segments) > 3 {
 			cluster = strings.Join(segments[3:], "_")
 		}
+	}
+
+	// With AWS EKS, cluster names are ARNs; it makes more sense to shorten them
+	// so "eks-infra" instead of "arn:aws:eks:us-east-1:XXXXXXXXXXXX:cluster/eks-infra
+	const arnRegexString string = "^arn:aws:eks:[[:alnum:]-]+:[[:digit:]]+:cluster/(.*)$"
+	arnRe := regexp.MustCompile(arnRegexString)
+
+	if arnMatches := arnRe.FindStringSubmatch(cluster); arnMatches != nil && *p.args.ShortenEKSNames {
+		cluster = arnMatches[1]
 	}
 
 	// Only draw the icon once

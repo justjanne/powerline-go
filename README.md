@@ -207,6 +207,8 @@ Usage of powerline-go:
     	 A shell variable to add to the segments.
   -shorten-gke-names
     	 Shortens names for GKE Kube clusters.
+  -shorten-eks-names
+    	 Shortens names for EKS Kube clusters.
   -theme string
     	 Set this to the theme you want to use
     	 (valid choices: default, low-contrast)
