@@ -177,7 +177,8 @@ func main() {
 			"theme",
 			"default",
 			commentsWithDefaults("Set this to the theme you want to use",
-				"(valid choices: default, low-contrast)")),
+				"(valid choices: default, low-contrast)",
+				"Alternatively, a path with a valid .json theme file can be provided.")),
 		Shell: flag.String(
 			"shell",
 			"bash",
