@@ -5,10 +5,15 @@ import (
 )
 
 func segmentAWS(p *powerline) {
-	profile, _ := os.LookupEnv("AWS_PROFILE")
+	profile := os.Getenv("AWS_PROFILE")
+	region := os.Getenv("AWS_REGION")
 	if profile != "" {
+		var r string
+		if region != "" {
+			r = " (" + region + ")"
+		}
 		p.appendSegment("aws", segment{
-			content:    profile,
+			content:    profile + r,
 			foreground: p.theme.AWSFg,
 			background: p.theme.AWSBg,
 		})
