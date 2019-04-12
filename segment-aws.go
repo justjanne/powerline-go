@@ -6,7 +6,7 @@ import (
 
 func segmentAWS(p *powerline) {
 	profile := os.Getenv("AWS_PROFILE")
-	region := os.Getenv("AWS_REGION")
+	region := os.Getenv("AWS_DEFAULT_REGION")
 	if profile != "" {
 		var r string
 		if region != "" {
