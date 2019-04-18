@@ -38,11 +38,12 @@ type powerline struct {
 	Segments               [][]segment
 	curSegment             int
 	align                  alignment
+	force                  bool
 	rightPowerline         *powerline
 	appendEastAsianPadding int
 }
 
-func newPowerline(args args, cwd string, priorities map[string]int, align alignment) *powerline {
+func newPowerline(args args, cwd string, priorities map[string]int, align alignment, force bool) *powerline {
 	p := new(powerline)
 	p.args = args
 	p.cwd = cwd
@@ -52,6 +53,7 @@ func newPowerline(args args, cwd string, priorities map[string]int, align alignm
 	p.symbolTemplates = symbolTemplates[*args.Mode]
 	p.priorities = priorities
 	p.align = align
+	p.force = force
 	p.ignoreRepos = make(map[string]bool)
 	for _, r := range strings.Split(*args.IgnoreRepos, ",") {
 		if r == "" {
@@ -73,11 +75,14 @@ func newPowerline(args args, cwd string, priorities map[string]int, align alignm
 		mods = *args.Modules
 		if len(*args.ModulesRight) > 0 {
 			if p.supportsRightModules() {
-				p.rightPowerline = newPowerline(args, cwd, priorities, alignRight)
+				p.rightPowerline = newPowerline(args, cwd, priorities, alignRight, force)
 			} else {
 				mods += `,` + *args.ModulesRight
 			}
 		}
+	} else if p.align == alignRightForced {
+		p.rightPowerline = newPowerline(args, cwd, priorities, alignRight, true)
+		return p
 	} else {
 		mods = *args.ModulesRight
 	}
@@ -363,7 +368,7 @@ func (p *powerline) hasRightModules() bool {
 }
 
 func (p *powerline) supportsRightModules() bool {
-	return p.shellInfo.evalPromptRightPrefix != "" || p.shellInfo.evalPromptRightSuffix != ""
+	return p.force || p.shellInfo.evalPromptRightPrefix != "" || p.shellInfo.evalPromptRightSuffix != ""
 }
 
 func (p *powerline) isRightPrompt() bool {

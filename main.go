@@ -21,6 +21,7 @@ const (
 
 	alignLeft alignment = iota
 	alignRight
+	alignRightForced
 )
 
 type segment struct {
@@ -46,6 +47,7 @@ type args struct {
 	Shell                *string
 	Modules              *string
 	ModulesRight         *string
+	RightOnly            *bool
 	Priority             *string
 	MaxWidthPercentage   *int
 	TruncateSegmentWidth *int
@@ -191,6 +193,10 @@ func main() {
 			"",
 			comments("The list of modules to load anchored to the right, for shells that support it, separated by ','",
 				"(valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, root, shell-var, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
+		RightOnly: flag.Bool(
+			"right-only",
+			false,
+			comments("Use only modules-right with forced right alignment ; modules flag is ignored")),
 		Priority: flag.String(
 			"priority",
 			"root,cwd,user,host,ssh,perms,git-branch,git-status,hg,jobs,exit,cwd-path",
@@ -270,7 +276,12 @@ func main() {
 		priorities[priority] = len(priorityList) - idx
 	}
 
-	p := newPowerline(args, getValidCwd(), priorities, alignLeft)
+	var align = alignLeft
+	if *args.RightOnly {
+		align = alignRightForced
+	}
+
+	p := newPowerline(args, getValidCwd(), priorities, align, false)
 	if p.supportsRightModules() && p.hasRightModules() && !*args.Eval {
 		fmt.Fprintln(os.Stderr, "Flag '-modules-right' requires '-eval' mode.")
 		os.Exit(1)
