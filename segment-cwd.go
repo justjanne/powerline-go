@@ -132,9 +132,8 @@ func cwdToPathSegments(p *powerline, cwd string) []pathSegment {
 func maybeShortenName(p *powerline, pathSegment string) string {
 	if *p.args.CwdMaxDirSize > 0 && len(pathSegment) > *p.args.CwdMaxDirSize {
 		return pathSegment[:*p.args.CwdMaxDirSize]
-	} else {
-		return pathSegment
 	}
+	return pathSegment
 }
 
 func escapeVariables(p *powerline, pathSegment string) string {

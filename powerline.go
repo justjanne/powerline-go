@@ -95,9 +95,8 @@ func newPowerline(args args, cwd string, priorities map[string]int, align alignm
 func (p *powerline) color(prefix string, code uint8) string {
 	if code == p.theme.Reset {
 		return p.reset
-	} else {
-		return fmt.Sprintf(p.shellInfo.colorTemplate, fmt.Sprintf("[%s;5;%dm", prefix, code))
 	}
+	return fmt.Sprintf(p.shellInfo.colorTemplate, fmt.Sprintf("[%s;5;%dm", prefix, code))
 }
 
 func (p *powerline) fgColor(code uint8) string {
@@ -162,30 +161,30 @@ func (p *powerline) truncateRow(rowNum int) {
 
 		if rowLength > shellMaxLength && *p.args.TruncateSegmentWidth > 0 {
 			minPriorityNotTruncated := MaxInteger
-			minPriorityNotTruncatedSegmentId := -1
+			minPriorityNotTruncatedSegmentID := -1
 			for idx, segment := range row {
 				if segment.width > *p.args.TruncateSegmentWidth && segment.priority < minPriorityNotTruncated {
 					minPriorityNotTruncated = segment.priority
-					minPriorityNotTruncatedSegmentId = idx
+					minPriorityNotTruncatedSegmentID = idx
 				}
 			}
-			for minPriorityNotTruncatedSegmentId != -1 && rowLength > shellMaxLength {
-				segment := row[minPriorityNotTruncatedSegmentId]
+			for minPriorityNotTruncatedSegmentID != -1 && rowLength > shellMaxLength {
+				segment := row[minPriorityNotTruncatedSegmentID]
 
 				rowLength -= segment.width
 
 				segment.content = runewidth.Truncate(segment.content, *p.args.TruncateSegmentWidth-runewidth.StringWidth(segment.separator)-3, "…")
 				segment.width = segment.computeWidth(*p.args.Condensed)
 
-				row = append(append(row[:minPriorityNotTruncatedSegmentId], segment), row[minPriorityNotTruncatedSegmentId+1:]...)
+				row = append(append(row[:minPriorityNotTruncatedSegmentID], segment), row[minPriorityNotTruncatedSegmentID+1:]...)
 				rowLength += segment.width
 
 				minPriorityNotTruncated = MaxInteger
-				minPriorityNotTruncatedSegmentId = -1
+				minPriorityNotTruncatedSegmentID = -1
 				for idx, segment := range row {
 					if segment.width > *p.args.TruncateSegmentWidth && segment.priority < minPriorityNotTruncated {
 						minPriorityNotTruncated = segment.priority
-						minPriorityNotTruncatedSegmentId = idx
+						minPriorityNotTruncatedSegmentID = idx
 					}
 				}
 			}
@@ -193,16 +192,16 @@ func (p *powerline) truncateRow(rowNum int) {
 
 		for rowLength > shellMaxLength {
 			minPriority := MaxInteger
-			minPrioritySegmentId := -1
+			minPrioritySegmentID := -1
 			for idx, segment := range row {
 				if segment.priority < minPriority {
 					minPriority = segment.priority
-					minPrioritySegmentId = idx
+					minPrioritySegmentID = idx
 				}
 			}
-			if minPrioritySegmentId != -1 {
-				segment := row[minPrioritySegmentId]
-				row = append(row[:minPrioritySegmentId], row[minPrioritySegmentId+1:]...)
+			if minPrioritySegmentID != -1 {
+				segment := row[minPrioritySegmentID]
+				row = append(row[:minPrioritySegmentID], row[minPrioritySegmentID+1:]...)
 				rowLength -= segment.width
 			}
 		}
@@ -219,7 +218,7 @@ func (p *powerline) numEastAsianRunes(segmentContent *string) int {
 		switch width.LookupRune(r).Kind() {
 		case width.Neutral:
 		case width.EastAsianAmbiguous:
-			numEastAsianRunes += 1
+			numEastAsianRunes++
 		case width.EastAsianWide:
 		case width.EastAsianNarrow:
 		case width.EastAsianFullwidth:

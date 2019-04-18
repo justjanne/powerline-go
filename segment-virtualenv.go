@@ -18,12 +18,11 @@ func segmentVirtualEnv(p *powerline) {
 	}
 	if env == "" {
 		return
-	} else {
-		envName := path.Base(env)
-		p.appendSegment("venv", segment{
-			content:    envName,
-			foreground: p.theme.VirtualEnvFg,
-			background: p.theme.VirtualEnvBg,
-		})
 	}
+	envName := path.Base(env)
+	p.appendSegment("venv", segment{
+		content:    envName,
+		foreground: p.theme.VirtualEnvFg,
+		background: p.theme.VirtualEnvBg,
+	})
 }
