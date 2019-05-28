@@ -36,6 +36,7 @@ type segment struct {
 
 type args struct {
 	CwdMode              *string
+	Pwd                  *string
 	CwdMaxDepth          *int
 	CwdMaxDirSize        *int
 	ColorizeHostname     *bool
@@ -81,14 +82,7 @@ func pathExists(path string) bool {
 	}
 }
 
-func getValidCwd() string {
-	cwd, exists := os.LookupEnv("PWD")
-	if !exists {
-		warn("Your current directory is invalid.")
-		print("> ")
-		os.Exit(1)
-	}
-
+func getValidCwd(cwd string) string {
 	parts := strings.Split(cwd, string(os.PathSeparator))
 	up := cwd
 
@@ -142,12 +136,17 @@ func commentsWithDefaults(lines ...string) string {
 }
 
 func main() {
+	pwd, _ := os.LookupEnv("PWD")
 	args := args{
 		CwdMode: flag.String(
 			"cwd-mode",
 			"fancy",
 			commentsWithDefaults("How to display the current directory",
 				"(valid choices: fancy, plain, dironly)")),
+		Pwd: flag.String(
+			"pwd",
+			pwd,
+			comments("Override $PWD is needed for certain emulated environments such as cygwin")),
 		CwdMaxDepth: flag.Int(
 			"cwd-max-depth",
 			5,
@@ -272,7 +271,7 @@ func main() {
 		priorities[priority] = len(priorityList) - idx
 	}
 
-	p := newPowerline(args, getValidCwd(), priorities, alignLeft)
+	p := newPowerline(args, getValidCwd(*args.Pwd), priorities, alignLeft)
 	if p.supportsRightModules() && p.hasRightModules() && !*args.Eval {
 		fmt.Fprintln(os.Stderr, "Flag '-modules-right' requires '-eval' mode.")
 		os.Exit(1)
