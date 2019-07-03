@@ -2,7 +2,7 @@ sudo: false
 language: go
 
 go:
-  - "1.10"
+  - "1.12"
 before_script:
   - go get
 
