@@ -321,7 +321,7 @@ func (p *powerline) draw() string {
 		buffer.WriteRune('\n')
 
 		var foreground, background uint8
-		if *p.args.PrevError == 0 {
+		if *p.args.PrevError == 0 || *p.args.StaticPromptIndicator {
 			foreground = p.theme.CmdPassedFg
 			background = p.theme.CmdPassedBg
 		} else {

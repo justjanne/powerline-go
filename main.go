@@ -37,30 +37,31 @@ type segment struct {
 }
 
 type args struct {
-	CwdMode              *string
-	CwdMaxDepth          *int
-	CwdMaxDirSize        *int
-	ColorizeHostname     *bool
-	EastAsianWidth       *bool
-	PromptOnNewLine      *bool
-	Mode                 *string
-	Theme                *string
-	Shell                *string
-	Modules              *string
-	ModulesRight         *string
-	Priority             *string
-	MaxWidthPercentage   *int
-	TruncateSegmentWidth *int
-	PrevError            *int
-	NumericExitCodes     *bool
-	IgnoreRepos          *string
-	ShortenGKENames      *bool
-	ShortenEKSNames      *bool
-	ShellVar             *string
-	PathAliases          *string
-	Duration             *string
-	Eval                 *bool
-	Condensed            *bool
+	CwdMode               *string
+	CwdMaxDepth           *int
+	CwdMaxDirSize         *int
+	ColorizeHostname      *bool
+	EastAsianWidth        *bool
+	PromptOnNewLine       *bool
+	StaticPromptIndicator *bool
+	Mode                  *string
+	Theme                 *string
+	Shell                 *string
+	Modules               *string
+	ModulesRight          *string
+	Priority              *string
+	MaxWidthPercentage    *int
+	TruncateSegmentWidth  *int
+	PrevError             *int
+	NumericExitCodes      *bool
+	IgnoreRepos           *string
+	ShortenGKENames       *bool
+	ShortenEKSNames       *bool
+	ShellVar              *string
+	PathAliases           *string
+	Duration              *string
+	Eval                  *bool
+	Condensed             *bool
 }
 
 func (s segment) computeWidth(condensed bool) int {
@@ -170,6 +171,10 @@ func main() {
 			"newline",
 			false,
 			comments("Show the prompt on a new line")),
+		StaticPromptIndicator: flag.Bool(
+			"static-prompt-indicator",
+			false,
+			comments("Always show the prompt indicator with the default color, never with the error color")),
 		Mode: flag.String(
 			"mode",
 			"patched",
