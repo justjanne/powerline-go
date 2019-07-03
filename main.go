@@ -14,13 +14,15 @@ import (
 type alignment int
 
 const (
+	alignLeft alignment = iota
+	alignRight
+)
+
+const (
 	MinUnsignedInteger uint = 0
 	MaxUnsignedInteger      = ^MinUnsignedInteger
 	MaxInteger              = int(MaxUnsignedInteger >> 1)
 	MinInteger              = ^MaxInteger
-
-	alignLeft alignment = iota
-	alignRight
 )
 
 type segment struct {
@@ -274,8 +276,7 @@ func main() {
 
 	p := newPowerline(args, getValidCwd(), priorities, alignLeft)
 	if p.supportsRightModules() && p.hasRightModules() && !*args.Eval {
-		fmt.Fprintln(os.Stderr, "Flag '-modules-right' requires '-eval' mode.")
-		os.Exit(1)
+		panic("Flag '-modules-right' requires '-eval' mode.")
 	}
 
 	fmt.Print(p.draw())
