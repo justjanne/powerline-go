@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -37,7 +38,7 @@ func segmentDuration(p *powerline) {
 
 	hasPrecision := strings.Index(durationValue, ".") != -1
 
-	d, err := time.ParseDuration(durationValue + "s")
+	durationFloat, err := strconv.ParseFloat(durationValue, 64)
 	if err != nil {
 		p.appendSegment("duration", segment{
 			content:    fmt.Sprintf("Failed to convert '%s' to a number", *p.args.Duration),
@@ -47,9 +48,11 @@ func segmentDuration(p *powerline) {
 		return
 	}
 
-	if d > 0 {
+	duration := time.Duration(durationFloat) * time.Second
+
+	if duration > 0 {
 		var content string
-		ns := d.Nanoseconds()
+		ns := duration.Nanoseconds()
 		if ns > hours {
 			hrs := ns / hours
 			ns -= hrs * hours
