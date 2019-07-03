@@ -89,6 +89,8 @@ if [ "$TERM" != "linux" ] && [ -f "$GOPATH/bin/powerline-go" ]; then
 fi
 ```
 
+Currently, right prompt support is not available when using bash.
+
 ### ZSH
 
 Add the following to your `.zshrc`:
