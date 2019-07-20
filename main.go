@@ -273,6 +273,20 @@ func main() {
 			}
 		}
 	}
+	if strings.HasSuffix(*args.Mode, ".json") {
+		modeTheme := symbolTemplates["compatible"]
+
+		file, err := ioutil.ReadFile(*args.Mode)
+		if err == nil {
+			err = json.Unmarshal(file, &modeTheme)
+			if err == nil {
+				symbolTemplates[*args.Mode] = modeTheme
+			} else {
+				println("Error reading mode")
+				println(err.Error())
+			}
+		}
+	}
 	priorities := map[string]int{}
 	priorityList := strings.Split(*args.Priority, ",")
 	for idx, priority := range priorityList {
