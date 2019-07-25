@@ -183,11 +183,11 @@ Usage of powerline-go:
     	 (default "patched")
   -modules string
     	 The list of modules to load, separated by ','
-    	 (valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, root, shell-var, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)
+    	 (valid choices: aws, cwd, custom, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, root, shell-var, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)
     	 (default "nix-shell,venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root,vgo")
   -modules-right string
     	 The list of modules to load anchored to the right, for shells that support it, separated by ','
-    	 (valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, root, shell-var, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)
+    	 (valid choices: aws, cwd, custom, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, root, shell-var, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)
   -newline
     	 Show the prompt on a new line
   -numeric-exit-codes
@@ -199,7 +199,7 @@ Usage of powerline-go:
     	 Use '~' for your home dir. You may need to escape this character to avoid shell substitution.
   -priority string
     	 Segments sorted by priority, if not enough space exists, the least priorized segments are removed first. Separate with ','
-    	 (valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, root, shell-var, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)
+    	 (valid choices: aws, cwd, custom, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, root, shell-var, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)
     	 (default "root,cwd,user,host,ssh,perms,git-branch,git-status,hg,jobs,exit,cwd-path")
   -shell string
     	 Set this to your shell type
