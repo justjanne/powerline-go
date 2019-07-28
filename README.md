@@ -184,7 +184,7 @@ Usage of powerline-go:
   -modules string
     	 The list of modules to load, separated by ','
     	 (valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, root, shell-var, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)
-    	 (default "nix-shell,venv,user,host,ssh,cwd,perms,git,hg,bzr,jobs,exit,root,vgo")
+    	 (default "nix-shell,venv,user,host,ssh,cwd,perms,git,hg,bzr,fossil,jobs,exit,root,vgo")
   -modules-right string
     	 The list of modules to load anchored to the right, for shells that support it, separated by ','
     	 (valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, root, shell-var, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)
