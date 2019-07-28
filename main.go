@@ -107,6 +107,7 @@ func getValidCwd() string {
 
 var modules = map[string]func(*powerline){
 	"aws":                 segmentAWS,
+	"bzr":                 segmentBzr,
 	"cwd":                 segmentCwd,
 	"docker":              segmentDocker,
 	"dotenv":              segmentDotEnv,
@@ -192,7 +193,7 @@ func main() {
 				"(valid choices: bare, bash, zsh)")),
 		Modules: flag.String(
 			"modules",
-			"nix-shell,venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root,vgo",
+			"nix-shell,venv,user,host,ssh,cwd,perms,git,hg,bzr,jobs,exit,root,vgo",
 			commentsWithDefaults("The list of modules to load, separated by ','",
 				"(valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, root, shell-var, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
 		ModulesRight: flag.String(
