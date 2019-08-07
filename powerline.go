@@ -351,7 +351,8 @@ func (p *powerline) draw() string {
 			}
 		case alignRight:
 			if p.supportsRightModules() {
-				buffer.WriteString(p.shellInfo.evalPromptSuffix)
+				buffer.Truncate(buffer.Len() - 1)
+				buffer.WriteString(p.shellInfo.evalPromptRightSuffix)
 			}
 		}
 		if p.hasRightModules() {
