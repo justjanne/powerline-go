@@ -48,7 +48,7 @@ func segmentDuration(p *powerline) {
 		return
 	}
 
-	duration := time.Duration(durationFloat) * time.Second
+	duration := time.Duration(durationFloat * float64(time.Second.Nanoseconds()))
 
 	if duration > 0 {
 		var content string
