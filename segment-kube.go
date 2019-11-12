@@ -14,6 +14,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+// KubeContext holds the kubernetes context
 type KubeContext struct {
 	Context struct {
 		Cluster   string
@@ -23,6 +24,7 @@ type KubeContext struct {
 	Name string
 }
 
+// KubeConfig is the kubernetes configuration
 type KubeConfig struct {
 	Contexts       []KubeContext `yaml:"contexts"`
 	CurrentContext string        `yaml:"current-context"`

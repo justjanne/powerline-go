@@ -90,13 +90,11 @@ func getGitDetachedBranch(p *powerline) string {
 		out, err := runGitCommand("git", "symbolic-ref", "--short", "HEAD")
 		if err != nil {
 			return "Error"
-		} else {
-			return strings.SplitN(out, "\n", 2)[0]
 		}
-	} else {
-		detachedRef := strings.SplitN(out, "\n", 2)
-		return fmt.Sprintf("%s %s", p.symbolTemplates.RepoDetached, detachedRef[0])
+		return strings.SplitN(out, "\n", 2)[0]
 	}
+	detachedRef := strings.SplitN(out, "\n", 2)
+	return fmt.Sprintf("%s %s", p.symbolTemplates.RepoDetached, detachedRef[0])
 }
 
 func parseGitStats(status []string) repoStats {

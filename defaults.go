@@ -101,8 +101,8 @@ var themes = map[string]Theme{
 		ReadonlyFg: 254,
 		ReadonlyBg: 124,
 
-		SshFg: 254,
-		SshBg: 166, // medium orange
+		SSHFg: 254,
+		SSHBg: 166, // medium orange
 
 		DockerMachineFg: 177, // light purple
 		DockerMachineBg: 55,  // purple
@@ -115,7 +115,7 @@ var themes = map[string]Theme{
 		DotEnvFg: 15, // white
 		DotEnvBg: 55, // purple
 
-		AWSFg: 15, // white
+		AWSFg: 15,  // white
 		AWSBg: 172, // AWS orange
 
 		RepoCleanFg: 0,   // black
@@ -464,8 +464,8 @@ var themes = map[string]Theme{
 		ReadonlyFg: 124,
 		ReadonlyBg: 253,
 
-		SshFg: 166, // medium orange
-		SshBg: 254,
+		SSHFg: 166, // medium orange
+		SSHBg: 254,
 
 		DockerMachineFg: 55,  // purple
 		DockerMachineBg: 177, // light purple
@@ -805,8 +805,8 @@ var themes = map[string]Theme{
 		SeparatorFg:        15,
 		ReadonlyFg:         8,
 		ReadonlyBg:         1,
-		SshFg:              8,
-		SshBg:              9,
+		SSHFg:              8,
+		SSHBg:              9,
 		DockerMachineFg:    13,
 		DockerMachineBg:    55,
 		DotEnvFg:           15,
@@ -1129,8 +1129,8 @@ var themes = map[string]Theme{
 		SeparatorFg:        15,
 		ReadonlyFg:         8,
 		ReadonlyBg:         1,
-		SshFg:              8,
-		SshBg:              9,
+		SSHFg:              8,
+		SSHBg:              9,
 		DockerMachineFg:    13,
 		DockerMachineBg:    55,
 		DotEnvFg:           15,

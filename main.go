@@ -19,10 +19,14 @@ const (
 )
 
 const (
+	// MinUnsignedInteger minimum unsigned integer
 	MinUnsignedInteger uint = 0
-	MaxUnsignedInteger      = ^MinUnsignedInteger
-	MaxInteger              = int(MaxUnsignedInteger >> 1)
-	MinInteger              = ^MaxInteger
+	// MaxUnsignedInteger maximum unsigned integer
+	MaxUnsignedInteger = ^MinUnsignedInteger
+	// MaxInteger maximum integer
+	MaxInteger = int(MaxUnsignedInteger >> 1)
+	// MinInteger minimum integer
+	MinInteger = ^MaxInteger
 )
 
 type segment struct {
@@ -67,9 +71,8 @@ type args struct {
 func (s segment) computeWidth(condensed bool) int {
 	if condensed {
 		return runewidth.StringWidth(s.content) + runewidth.StringWidth(s.separator)
-	} else {
-		return runewidth.StringWidth(s.content) + runewidth.StringWidth(s.separator) + 2
 	}
+	return runewidth.StringWidth(s.content) + runewidth.StringWidth(s.separator) + 2
 }
 
 func warn(msg string) {
@@ -79,9 +82,8 @@ func warn(msg string) {
 func pathExists(path string) bool {
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		return false
-	} else {
-		return true
 	}
+	return true
 }
 
 func getValidCwd() string {
@@ -125,7 +127,7 @@ var modules = map[string]func(*powerline){
 	"perms":               segmentPerms,
 	"root":                segmentRoot,
 	"shell-var":           segmentShellVar,
-	"ssh":                 segmentSsh,
+	"ssh":                 segmentSSH,
 	"termtitle":           segmentTermTitle,
 	"terraform-workspace": segmentTerraformWorkspace,
 	"time":                segmentTime,
