@@ -70,7 +70,7 @@ func segmentKube(p *powerline) {
 	namespace := ""
 	for _, context := range config.Contexts {
 		if context.Name == config.CurrentContext {
-			cluster = context.Context.Cluster
+			cluster = context.Name
 			namespace = context.Context.Namespace
 			break
 		}
