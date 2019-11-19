@@ -112,6 +112,7 @@ var modules = map[string]func(*powerline){
 	"dotenv":              segmentDotEnv,
 	"duration":            segmentDuration,
 	"exit":                segmentExitCode,
+	"gcp":                 segmentGCP,
 	"git":                 segmentGit,
 	"gitlite":             segmentGitLite,
 	"hg":                  segmentHg,
