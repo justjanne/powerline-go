@@ -20,7 +20,7 @@ var symbolTemplates = map[string]Symbols{
 	},
 	"patched": {
 		Lock:                 "\uE0A2",
-		Network:              "\uE0A2",
+		Network:              "\u260E",
 		Separator:            "\uE0B0",
 		SeparatorThin:        "\uE0B1",
 		SeparatorReverse:     "\uE0B2",
@@ -115,7 +115,7 @@ var themes = map[string]Theme{
 		DotEnvFg: 15, // white
 		DotEnvBg: 55, // purple
 
-		AWSFg: 15, // white
+		AWSFg: 15,  // white
 		AWSBg: 172, // AWS orange
 
 		RepoCleanFg: 0,   // black
