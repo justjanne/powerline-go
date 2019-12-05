@@ -132,9 +132,8 @@ func cwdToPathSegments(p *powerline, cwd string) []pathSegment {
 func maybeShortenName(p *powerline, pathSegment string) string {
 	if *p.args.CwdMaxDirSize > 0 && len(pathSegment) > *p.args.CwdMaxDirSize {
 		return pathSegment[:*p.args.CwdMaxDirSize]
-	} else {
-		return pathSegment
 	}
+	return pathSegment
 }
 
 func escapeVariables(p *powerline, pathSegment string) string {
@@ -151,9 +150,8 @@ func getColor(p *powerline, pathSegment pathSegment, isLastDir bool) (uint8, uin
 		return p.theme.AliasFg, p.theme.AliasBg, true
 	} else if isLastDir {
 		return p.theme.CwdFg, p.theme.PathBg, false
-	} else {
-		return p.theme.PathFg, p.theme.PathBg, false
 	}
+	return p.theme.PathFg, p.theme.PathBg, false
 }
 
 func segmentCwd(p *powerline) {
