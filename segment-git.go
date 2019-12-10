@@ -168,9 +168,12 @@ func segmentGit(p *powerline) {
 		background = p.theme.RepoCleanBg
 	}
 
-	out, err = runGitCommand("git", "stash", "list")
-	if err != nil {
-		return
+	out, err = runGitCommand("git", "rev-parse", "--verify", "--quiet", "refs/stash")
+	if err == nil {
+		out, err = runGitCommand("git", "stash", "list")
+		if err != nil {
+			return
+		}
 	}
 	if len(out) > 0 {
 		stats.stashed = len(strings.Split(out, "\n")) - 1
