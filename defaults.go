@@ -161,6 +161,9 @@ var themes = map[string]Theme{
 		PerlbrewFg: 00,
 		PerlbrewBg: 20, // a mid-tone blue
 
+		PlEnvFg: 00,
+		PlEnvBg: 32,
+
 		TFWsFg: 15, // white
 		TFWsBg: 26, // blue
 
@@ -524,6 +527,9 @@ var themes = map[string]Theme{
 		PerlbrewFg: 20, // a mid-tone blue
 		PerlbrewBg: 15,
 
+		PlEnvFg: 20, // a mid-tone blue
+		PlEnvBg: 15,
+
 		TimeFg: 236,
 		TimeBg: 15,
 
@@ -849,6 +855,8 @@ var themes = map[string]Theme{
 		VirtualEnvBg:       6,
 		PerlbrewFg:         8,
 		PerlbrewBg:         4,
+		PlEnvFg:            8,
+		PlEnvBg:            4,
 		TimeFg:             15,
 		TimeBg:             0,
 		ShellVarFg:         1,
@@ -1175,6 +1183,8 @@ var themes = map[string]Theme{
 		VirtualEnvBg:       6,
 		PerlbrewFg:         8,
 		PerlbrewBg:         4,
+		PlEnvFg:            8,
+		PlEnvBg:            4,
 		TimeFg:             15,
 		TimeBg:             0,
 		ShellVarFg:         1,
