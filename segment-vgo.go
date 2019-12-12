@@ -12,12 +12,6 @@ func segmentVirtualGo(p *powerline) {
 	}
 	if env == "" {
 		return
-	} else {
-		p.appendSegment("vgo", pwl.Segment{
-			Content:    env,
-			Foreground: p.theme.VirtualGoFg,
-			Background: p.theme.VirtualGoBg,
-		})
 	}
 	p.appendSegment("vgo", pwl.Segment{
 		Content:    env,
