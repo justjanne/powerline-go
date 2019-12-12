@@ -175,7 +175,7 @@ func main() {
 				"(valid choices: bare, bash, zsh)")),
 		Modules: flag.String(
 			"modules",
-			"nix-shell,venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root,vgo",
+			"venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root",
 			commentsWithDefaults("The list of modules to load, separated by ','",
 				"(valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
 		ModulesRight: flag.String(
