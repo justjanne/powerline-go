@@ -81,6 +81,9 @@ var themes = map[string]Theme{
 	"default": {
 		Reset: 0xFF,
 
+		DefaultFg: 250,
+		DefaultBg: 240,
+
 		UsernameFg:     250,
 		UsernameBg:     240,
 		UsernameRootBg: 124,
@@ -444,6 +447,9 @@ var themes = map[string]Theme{
 	"low-contrast": {
 		Reset: 0xFF,
 
+		DefaultFg: 234,
+		DefaultBg: 250,
+
 		UsernameFg:     234,
 		UsernameBg:     250,
 		UsernameRootBg: 198,
@@ -791,6 +797,8 @@ var themes = map[string]Theme{
 	},
 	"solarized-dark16": {
 		Reset:              8,
+		DefaultFg:          15,
+		DefaultBg:          4,
 		UsernameFg:         15,
 		UsernameBg:         4,
 		UsernameRootBg:     1,
@@ -1115,6 +1123,8 @@ var themes = map[string]Theme{
 	},
 	"solarized-light16": {
 		Reset:              0,
+		DefaultFg:          15,
+		DefaultBg:          4,
 		UsernameFg:         15,
 		UsernameBg:         4,
 		UsernameRootBg:     1,

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	pwl "github.com/justjanne/powerline-go/powerline"
 	"runtime"
 
 	"github.com/shirou/gopsutil/load"
@@ -27,9 +28,9 @@ func segmentLoad(p *powerline) {
 		bg = p.theme.LoadHighBg
 	}
 
-	p.appendSegment("load", segment{
-		content:    fmt.Sprintf("%.2f", a.Load5),
-		foreground: p.theme.LoadFg,
-		background: bg,
+	p.appendSegment("load", pwl.Segment{
+		Content:    fmt.Sprintf("%.2f", a.Load5),
+		Foreground: p.theme.LoadFg,
+		Background: bg,
 	})
 }

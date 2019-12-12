@@ -3,11 +3,11 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"strings"
-
 	"os"
 	"strconv"
+	"strings"
 
+	pwl "github.com/justjanne/powerline-go/powerline"
 	"github.com/mattn/go-runewidth"
 	"golang.org/x/crypto/ssh/terminal"
 	"golang.org/x/text/width"
@@ -36,7 +36,7 @@ type powerline struct {
 	symbolTemplates        Symbols
 	priorities             map[string]int
 	ignoreRepos            map[string]bool
-	Segments               [][]segment
+	Segments               [][]pwl.Segment
 	curSegment             int
 	align                  alignment
 	rightPowerline         *powerline
@@ -68,7 +68,7 @@ func newPowerline(args args, cwd string, priorities map[string]int, align alignm
 		kv := strings.SplitN(pa, "=", 2)
 		p.pathAliases[kv[0]] = kv[1]
 	}
-	p.Segments = make([][]segment, 1)
+	p.Segments = make([][]pwl.Segment, 1)
 	var mods string
 	if p.align == alignLeft {
 		mods = *args.Modules
@@ -84,11 +84,13 @@ func newPowerline(args args, cwd string, priorities map[string]int, align alignm
 	}
 	for _, module := range strings.Split(mods, ",") {
 		elem, ok := modules[module]
-		if !ok {
-			println("Module not found: " + module)
-			continue
+		if ok {
+			elem(p)
+		} else {
+			if ok := segmentPlugin(p, module); !ok {
+				println("Module not found: " + module)
+			}
 		}
-		elem(p)
 	}
 	return p
 }
@@ -108,25 +110,29 @@ func (p *powerline) bgColor(code uint8) string {
 	return p.color("48", code)
 }
 
-func (p *powerline) appendSegment(origin string, segment segment) {
-	if segment.separator == "" {
+func (p *powerline) appendSegment(origin string, segment pwl.Segment) {
+	if segment.Foreground == segment.Background && segment.Background == 0 {
+		segment.Background = p.theme.DefaultBg
+		segment.Foreground = p.theme.DefaultFg
+	}
+	if segment.Separator == "" {
 		if p.isRightPrompt() {
-			segment.separator = p.symbolTemplates.SeparatorReverse
+			segment.Separator = p.symbolTemplates.SeparatorReverse
 		} else {
-			segment.separator = p.symbolTemplates.Separator
+			segment.Separator = p.symbolTemplates.Separator
 		}
 	}
-	if segment.separatorForeground == 0 {
-		segment.separatorForeground = segment.background
+	if segment.SeparatorForeground == 0 {
+		segment.SeparatorForeground = segment.Background
 	}
 	priority, _ := p.priorities[origin]
-	segment.priority += priority
-	segment.width = segment.computeWidth(*p.args.Condensed)
+	segment.Priority += priority
+	segment.Width = segment.ComputeWidth(*p.args.Condensed)
 	p.Segments[p.curSegment] = append(p.Segments[p.curSegment], segment)
 }
 
 func (p *powerline) newRow() {
-	p.Segments = append(p.Segments, make([]segment, 0))
+	p.Segments = append(p.Segments, make([]pwl.Segment, 0))
 	p.curSegment = p.curSegment + 1
 }
 
@@ -157,34 +163,34 @@ func (p *powerline) truncateRow(rowNum int) {
 
 	if shellMaxLength > 0 {
 		for _, segment := range row {
-			rowLength += segment.width
+			rowLength += segment.Width
 		}
 
 		if rowLength > shellMaxLength && *p.args.TruncateSegmentWidth > 0 {
 			minPriorityNotTruncated := MaxInteger
 			minPriorityNotTruncatedSegmentID := -1
 			for idx, segment := range row {
-				if segment.width > *p.args.TruncateSegmentWidth && segment.priority < minPriorityNotTruncated {
-					minPriorityNotTruncated = segment.priority
+				if segment.Width > *p.args.TruncateSegmentWidth && segment.Priority < minPriorityNotTruncated {
+					minPriorityNotTruncated = segment.Priority
 					minPriorityNotTruncatedSegmentID = idx
 				}
 			}
 			for minPriorityNotTruncatedSegmentID != -1 && rowLength > shellMaxLength {
 				segment := row[minPriorityNotTruncatedSegmentID]
 
-				rowLength -= segment.width
+				rowLength -= segment.Width
 
-				segment.content = runewidth.Truncate(segment.content, *p.args.TruncateSegmentWidth-runewidth.StringWidth(segment.separator)-3, "…")
-				segment.width = segment.computeWidth(*p.args.Condensed)
+				segment.Content = runewidth.Truncate(segment.Content, *p.args.TruncateSegmentWidth-runewidth.StringWidth(segment.Separator)-3, "…")
+				segment.Width = segment.ComputeWidth(*p.args.Condensed)
 
 				row = append(append(row[:minPriorityNotTruncatedSegmentID], segment), row[minPriorityNotTruncatedSegmentID+1:]...)
-				rowLength += segment.width
+				rowLength += segment.Width
 
 				minPriorityNotTruncated = MaxInteger
 				minPriorityNotTruncatedSegmentID = -1
 				for idx, segment := range row {
-					if segment.width > *p.args.TruncateSegmentWidth && segment.priority < minPriorityNotTruncated {
-						minPriorityNotTruncated = segment.priority
+					if segment.Width > *p.args.TruncateSegmentWidth && segment.Priority < minPriorityNotTruncated {
+						minPriorityNotTruncated = segment.Priority
 						minPriorityNotTruncatedSegmentID = idx
 					}
 				}
@@ -195,15 +201,15 @@ func (p *powerline) truncateRow(rowNum int) {
 			minPriority := MaxInteger
 			minPrioritySegmentID := -1
 			for idx, segment := range row {
-				if segment.priority < minPriority {
-					minPriority = segment.priority
+				if segment.Priority < minPriority {
+					minPriority = segment.Priority
 					minPrioritySegmentID = idx
 				}
 			}
 			if minPrioritySegmentID != -1 {
 				segment := row[minPrioritySegmentID]
 				row = append(row[:minPrioritySegmentID], row[minPrioritySegmentID+1:]...)
-				rowLength -= segment.width
+				rowLength -= segment.Width
 			}
 		}
 	}
@@ -238,8 +244,8 @@ func (p *powerline) drawRow(rowNum int, buffer *bytes.Buffer) {
 		buffer.WriteRune(' ')
 	}
 	for idx, segment := range row {
-		if segment.hideSeparators {
-			buffer.WriteString(segment.content)
+		if segment.HideSeparators {
+			buffer.WriteString(segment.Content)
 			continue
 		}
 		var separatorBackground string
@@ -248,38 +254,38 @@ func (p *powerline) drawRow(rowNum int, buffer *bytes.Buffer) {
 				separatorBackground = p.reset
 			} else {
 				prevSegment := row[idx-1]
-				separatorBackground = p.bgColor(prevSegment.background)
+				separatorBackground = p.bgColor(prevSegment.Background)
 			}
 			buffer.WriteString(separatorBackground)
-			buffer.WriteString(p.fgColor(segment.separatorForeground))
-			buffer.WriteString(segment.separator)
+			buffer.WriteString(p.fgColor(segment.SeparatorForeground))
+			buffer.WriteString(segment.Separator)
 		} else {
 			if idx >= len(row)-1 {
 				if !p.hasRightModules() || p.supportsRightModules() {
 					separatorBackground = p.reset
 				} else if p.hasRightModules() && rowNum >= len(p.Segments)-1 {
 					nextSegment := p.rightPowerline.Segments[0][0]
-					separatorBackground = p.bgColor(nextSegment.background)
+					separatorBackground = p.bgColor(nextSegment.Background)
 				}
 			} else {
 				nextSegment := row[idx+1]
-				separatorBackground = p.bgColor(nextSegment.background)
+				separatorBackground = p.bgColor(nextSegment.Background)
 			}
 		}
-		buffer.WriteString(p.fgColor(segment.foreground))
-		buffer.WriteString(p.bgColor(segment.background))
+		buffer.WriteString(p.fgColor(segment.Foreground))
+		buffer.WriteString(p.bgColor(segment.Background))
 		if !*p.args.Condensed {
 			buffer.WriteRune(' ')
 		}
-		buffer.WriteString(segment.content)
-		numEastAsianRunes += p.numEastAsianRunes(&segment.content)
+		buffer.WriteString(segment.Content)
+		numEastAsianRunes += p.numEastAsianRunes(&segment.Content)
 		if !*p.args.Condensed {
 			buffer.WriteRune(' ')
 		}
 		if !p.isRightPrompt() {
 			buffer.WriteString(separatorBackground)
-			buffer.WriteString(p.fgColor(segment.separatorForeground))
-			buffer.WriteString(segment.separator)
+			buffer.WriteString(p.fgColor(segment.SeparatorForeground))
+			buffer.WriteString(segment.Separator)
 		}
 		buffer.WriteString(p.reset)
 	}

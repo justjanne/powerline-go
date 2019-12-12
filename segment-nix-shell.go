@@ -1,6 +1,7 @@
 package main
 
 import (
+	pwl "github.com/justjanne/powerline-go/powerline"
 	"os"
 )
 
@@ -10,9 +11,9 @@ func segmentNixShell(p *powerline) {
 	if nixShell == "" {
 		return
 	}
-	p.appendSegment("nix-shell", segment{
-		content:    nixShell,
-		foreground: p.theme.NixShellFg,
-		background: p.theme.NixShellBg,
+	p.appendSegment("nix-shell", pwl.Segment{
+		Content:    nixShell,
+		Foreground: p.theme.NixShellFg,
+		Background: p.theme.NixShellBg,
 	})
 }

@@ -3,6 +3,8 @@ package main
 import (
 	"os"
 	"path"
+
+	pwl "github.com/justjanne/powerline-go/powerline"
 )
 
 func segmentVirtualEnv(p *powerline) {
@@ -18,11 +20,18 @@ func segmentVirtualEnv(p *powerline) {
 	}
 	if env == "" {
 		return
+	} else {
+		envName := path.Base(env)
+		p.appendSegment("venv", pwl.Segment{
+			Content:    envName,
+			Foreground: p.theme.VirtualEnvFg,
+			Background: p.theme.VirtualEnvBg,
+		})
 	}
 	envName := path.Base(env)
-	p.appendSegment("venv", segment{
-		content:    envName,
-		foreground: p.theme.VirtualEnvFg,
-		background: p.theme.VirtualEnvBg,
+	p.appendSegment("venv", pwl.Segment{
+		Content:    envName,
+		Foreground: p.theme.VirtualEnvFg,
+		Background: p.theme.VirtualEnvBg,
 	})
 }

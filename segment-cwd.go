@@ -4,6 +4,8 @@ import (
 	"os"
 	"sort"
 	"strings"
+
+	pwl "github.com/justjanne/powerline-go/powerline"
 )
 
 const ellipsis = "\u2026"
@@ -166,10 +168,10 @@ func segmentCwd(p *powerline) {
 			cwd = "~" + cwd[len(home):]
 		}
 
-		p.appendSegment("cwd", segment{
-			content:    cwd,
-			foreground: p.theme.CwdFg,
-			background: p.theme.PathBg,
+		p.appendSegment("cwd", pwl.Segment{
+			Content:    cwd,
+			Foreground: p.theme.CwdFg,
+			Background: p.theme.PathBg,
 		})
 	} else {
 		pathSegments := cwdToPathSegments(p, cwd)
@@ -204,19 +206,19 @@ func segmentCwd(p *powerline) {
 			isLastDir := idx == len(pathSegments)-1
 			foreground, background, special := getColor(p, pathSegment, isLastDir)
 
-			segment := segment{
-				content:    escapeVariables(p, maybeShortenName(p, pathSegment.path)),
-				foreground: foreground,
-				background: background,
+			segment := pwl.Segment{
+				Content:    escapeVariables(p, maybeShortenName(p, pathSegment.path)),
+				Foreground: foreground,
+				Background: background,
 			}
 
 			if !special {
 				if p.align == alignRight && p.supportsRightModules() && idx != 0 {
-					segment.separator = p.symbolTemplates.SeparatorReverseThin
-					segment.separatorForeground = p.theme.SeparatorFg
+					segment.Separator = p.symbolTemplates.SeparatorReverseThin
+					segment.SeparatorForeground = p.theme.SeparatorFg
 				} else if (p.align == alignLeft || !p.supportsRightModules()) && !isLastDir {
-					segment.separator = p.symbolTemplates.SeparatorThin
-					segment.separatorForeground = p.theme.SeparatorFg
+					segment.Separator = p.symbolTemplates.SeparatorThin
+					segment.SeparatorForeground = p.theme.SeparatorFg
 				}
 			}
 
