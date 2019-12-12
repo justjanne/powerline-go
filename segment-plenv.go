@@ -1,6 +1,7 @@
 package main
 
 import (
+	pwl "github.com/justjanne/powerline-go/powerline"
 	"os"
 	"path"
 )
@@ -14,10 +15,10 @@ func segmentPlEnv(p *powerline) {
 		return
 	} else {
 		envName := path.Base(env)
-		p.appendSegment("plenv", segment{
-			content:    envName,
-			foreground: p.theme.PlEnvFg,
-			background: p.theme.PlEnvBg,
+		p.appendSegment("plenv", pwl.Segment{
+			Content:    envName,
+			Foreground: p.theme.PlEnvFg,
+			Background: p.theme.PlEnvBg,
 		})
 	}
 }
