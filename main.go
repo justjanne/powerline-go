@@ -109,6 +109,7 @@ var modules = map[string]func(*powerline){
 	"perms":               segmentPerms,
 	"root":                segmentRoot,
 	"shell-var":           segmentShellVar,
+	"shenv":               segmentShEnv,
 	"ssh":                 segmentSSH,
 	"termtitle":           segmentTermTitle,
 	"terraform-workspace": segmentTerraformWorkspace,
@@ -178,17 +179,17 @@ func main() {
 			"modules",
 			"venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root",
 			commentsWithDefaults("The list of modules to load, separated by ','",
-				"(valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
+				"(valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
 		ModulesRight: flag.String(
 			"modules-right",
 			"",
 			comments("The list of modules to load anchored to the right, for shells that support it, separated by ','",
-				"(valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
+				"(valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
 		Priority: flag.String(
 			"priority",
 			"root,cwd,user,host,ssh,perms,git-branch,git-status,hg,jobs,exit,cwd-path",
 			commentsWithDefaults("Segments sorted by priority, if not enough space exists, the least priorized segments are removed first. Separate with ','",
-				"(valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
+				"(valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
 		MaxWidthPercentage: flag.Int(
 			"max-width",
 			0,
