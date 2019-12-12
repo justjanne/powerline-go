@@ -7,6 +7,8 @@ import (
 	"io/ioutil"
 	"os"
 	"strings"
+
+	pwl "github.com/justjanne/powerline-go/powerline"
 )
 
 type alignment int
@@ -88,7 +90,7 @@ func getValidCwd() string {
 	return cwd
 }
 
-var modules = map[string]func(*powerline){
+var modules = map[string]func(*powerline) []pwl.Segment{
 	"aws":                 segmentAWS,
 	"cwd":                 segmentCwd,
 	"docker":              segmentDocker,

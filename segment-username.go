@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-func segmentUser(p *powerline) {
+func segmentUser(p *powerline) []pwl.Segment {
 	var userPrompt string
 	if *p.args.Shell == "bash" {
 		userPrompt = "\\u"
@@ -23,9 +23,10 @@ func segmentUser(p *powerline) {
 		background = p.theme.UsernameBg
 	}
 
-	p.appendSegment("user", pwl.Segment{
+	return []pwl.Segment{{
+		Name:       "user",
 		Content:    userPrompt,
 		Foreground: p.theme.UsernameFg,
 		Background: background,
-	})
+	}}
 }

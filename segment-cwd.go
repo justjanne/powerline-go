@@ -156,7 +156,7 @@ func getColor(p *powerline, pathSegment pathSegment, isLastDir bool) (uint8, uin
 	return p.theme.PathFg, p.theme.PathBg, false
 }
 
-func segmentCwd(p *powerline) {
+func segmentCwd(p *powerline) (segments []pwl.Segment) {
 	cwd := p.cwd
 	if cwd == "" {
 		cwd, _ = os.LookupEnv("PWD")
@@ -168,7 +168,8 @@ func segmentCwd(p *powerline) {
 			cwd = "~" + cwd[len(home):]
 		}
 
-		p.appendSegment("cwd", pwl.Segment{
+		segments = append(segments, pwl.Segment{
+			Name:       "cwd",
 			Content:    cwd,
 			Foreground: p.theme.CwdFg,
 			Background: p.theme.PathBg,
@@ -222,12 +223,13 @@ func segmentCwd(p *powerline) {
 				}
 			}
 
-			origin := "cwd-path"
+			segment.Name = "cwd-path"
 			if isLastDir {
-				origin = "cwd"
+				segment.Name = "cwd"
 			}
 
-			p.appendSegment(origin, segment)
+			segments = append(segments, segment)
 		}
 	}
+	return segments
 }

@@ -6,16 +6,17 @@ import (
 	"path"
 )
 
-func segmentPerlbrew(p *powerline) {
+func segmentPerlbrew(p *powerline) []pwl.Segment {
 	env, _ := os.LookupEnv("PERLBREW_PERL")
 	if env == "" {
-		return
+		return []pwl.Segment{}
 	}
 
 	envName := path.Base(env)
-	p.appendSegment("perlbrew", pwl.Segment{
+	return []pwl.Segment{{
+		Name:       "perlbrew",
 		Content:    envName,
 		Foreground: p.theme.PerlbrewFg,
 		Background: p.theme.PerlbrewBg,
-	})
+	}}
 }

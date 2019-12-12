@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-func segmentDotEnv(p *powerline) {
+func segmentDotEnv(p *powerline) []pwl.Segment {
 	files := []string{".env", ".envrc"}
 	dotEnv := false
 	for _, file := range files {
@@ -16,10 +16,12 @@ func segmentDotEnv(p *powerline) {
 		}
 	}
 	if dotEnv {
-		p.appendSegment("dotenv", pwl.Segment{
+		return []pwl.Segment{{
+			Name:       "dotenv",
 			Content:    "\u2235",
 			Foreground: p.theme.DotEnvFg,
 			Background: p.theme.DotEnvBg,
-		})
+		}}
 	}
+	return []pwl.Segment{}
 }
