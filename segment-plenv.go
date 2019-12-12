@@ -13,12 +13,11 @@ func segmentPlEnv(p *powerline) {
 	}
 	if env == "" {
 		return
-	} else {
-		envName := path.Base(env)
-		p.appendSegment("plenv", pwl.Segment{
-			Content:    envName,
-			Foreground: p.theme.PlEnvFg,
-			Background: p.theme.PlEnvBg,
-		})
 	}
+	envName := path.Base(env)
+	p.appendSegment("plenv", pwl.Segment{
+		Content:    envName,
+		Foreground: p.theme.PlEnvFg,
+		Background: p.theme.PlEnvBg,
+	})
 }
