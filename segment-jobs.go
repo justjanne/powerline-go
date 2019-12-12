@@ -19,7 +19,7 @@ func segmentJobs(p *powerline) {
 		ppid = int(pppid)
 	}
 
-	out, _ := exec.Command("ps", "-a", "-oppid=").Output()
+	out, _ := exec.Command("ps", "-oppid=").Output()
 	processes := strings.Split(string(out), "\n")
 	for _, processPpidStr := range processes {
 		processPpid, _ := strconv.ParseInt(strings.TrimSpace(processPpidStr), 10, 64)
