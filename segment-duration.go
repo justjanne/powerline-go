@@ -37,16 +37,22 @@ func segmentDuration(p *powerline) {
 	}
 
 	durationValue := strings.Trim(*p.args.Duration, "'\"")
+	durationMinValue := strings.Trim(*p.args.DurationMin, "'\"")
 
 	hasPrecision := strings.Index(durationValue, ".") != -1
 
 	durationFloat, err := strconv.ParseFloat(durationValue, 64)
+	durationMinFloat, _ := strconv.ParseFloat(durationMinValue, 64)
 	if err != nil {
 		p.appendSegment("duration", pwl.Segment{
 			Content:    fmt.Sprintf("Failed to convert '%s' to a number", *p.args.Duration),
 			Foreground: p.theme.DurationFg,
 			Background: p.theme.DurationBg,
 		})
+		return
+	}
+
+	if durationFloat < durationMinFloat {
 		return
 	}
 

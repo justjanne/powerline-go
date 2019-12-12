@@ -51,6 +51,7 @@ type args struct {
 	ShellVar              *string
 	PathAliases           *string
 	Duration              *string
+	DurationMin           *string
 	Eval                  *bool
 	Condensed             *bool
 }
@@ -232,6 +233,10 @@ func main() {
 			"duration",
 			"",
 			comments("The elapsed clock-time of the previous command")),
+		DurationMin: flag.String(
+			"duration-min",
+			"0",
+			comments("The minimal time a command has to take before the duration segment is shown")),
 		Eval: flag.Bool(
 			"eval",
 			false,
