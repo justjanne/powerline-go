@@ -128,6 +128,7 @@ func segmentGit(p *powerline) {
 	if len(p.ignoreRepos) > 0 {
 		out, err := runGitCommand("git", "rev-parse", "--show-toplevel")
 		if err != nil {
+			panic(err)
 			return
 		}
 		out = strings.TrimSpace(out)
@@ -138,6 +139,7 @@ func segmentGit(p *powerline) {
 
 	out, err := runGitCommand("git", "status", "--porcelain", "-b", "--ignore-submodules")
 	if err != nil {
+		panic(err)
 		return
 	}
 
@@ -167,11 +169,8 @@ func segmentGit(p *powerline) {
 		background = p.theme.RepoCleanBg
 	}
 
-	out, err = runGitCommand("git", "stash", "list")
-	if err != nil {
-		return
-	}
-	if len(out) > 0 {
+	out, err = runGitCommand("git", "rev-list", "-g", "refs/stash")
+	if err == nil && len(out) > 0 {
 		stats.stashed = len(strings.Split(out, "\n")) - 1
 	}
 
