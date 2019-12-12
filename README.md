@@ -149,7 +149,7 @@ There are a few optional arguments which can be seen by running
 in your shell’s init file.
 
 ```
-Usage of powerline-go:
+Usage of ./powerline-go:
   -colorize-hostname
          Colorize the hostname based on a hash of itself
   -condensed
@@ -166,6 +166,8 @@ Usage of powerline-go:
          (default "fancy")
   -duration string
          The elapsed clock-time of the previous command
+  -duration-min string
+         The minimal time a command has to take before the duration segment is shown (default "0")
   -east-asian-width
          Use East Asian Ambiguous Widths
   -error int
