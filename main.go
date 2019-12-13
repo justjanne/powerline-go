@@ -91,6 +91,7 @@ func getValidCwd() string {
 var modules = map[string]func(*powerline){
 	"aws":                 segmentAWS,
 	"cwd":                 segmentCwd,
+	"dcount":              segmentDcount,
 	"docker":              segmentDocker,
 	"dotenv":              segmentDotEnv,
 	"duration":            segmentDuration,

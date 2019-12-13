@@ -137,6 +137,9 @@ var themes = map[string]Theme{
 		SvnChangesFg: 22, // dark green
 		SvnChangesBg: 148,
 
+		DirCountFg: 250, // dark green
+		DirCountBg: 237,
+
 		GitAheadFg:      250,
 		GitAheadBg:      240,
 		GitBehindFg:     250,

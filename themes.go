@@ -26,6 +26,9 @@ type Theme struct {
 	DefaultFg uint8
 	DefaultBg uint8
 
+	DirCountFg uint8
+	DirCountBg uint8
+
 	UsernameFg     uint8
 	UsernameBg     uint8
 	UsernameRootBg uint8

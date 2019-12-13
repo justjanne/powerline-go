@@ -185,11 +185,11 @@ Usage of ./powerline-go:
          (default "patched")
   -modules string
          The list of modules to load, separated by ','
-         (valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)
+         (valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, ssh, svn, decount, termtitle, terraform-workspace, time, user, venv, vgo)
          (default "venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root")
   -modules-right string
          The list of modules to load anchored to the right, for shells that support it, separated by ','
-         (valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)
+         (valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, ssh, svn, decount, termtitle, terraform-workspace, time, user, venv, vgo)
   -newline
          Show the prompt on a new line
   -numeric-exit-codes
