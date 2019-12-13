@@ -50,6 +50,7 @@ type args struct {
 	ShortenEKSNames       *bool
 	ShellVar              *string
 	PathAliases           *string
+	Indicators            *string
 	Duration              *string
 	DurationMin           *string
 	Eval                  *bool
@@ -229,6 +230,12 @@ func main() {
 				"An alias maps a path like foo/bar/baz to a short name like FBB.",
 				"Specify these as key/value pairs like foo/bar/baz=FBB.",
 				"Use '~' for your home dir. You may need to escape this character to avoid shell substitution.")),
+		Indicators: flag.String(
+			"indicators",
+			"",
+			comments("One or more indicator from a path. Separate with ','.",
+				"An indicator add to default indicator from a path like /python a char.",
+				"Specify these as key/value pairs like /python=🐍.")),
 		Duration: flag.String(
 			"duration",
 			"",

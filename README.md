@@ -177,6 +177,10 @@ Usage of ./powerline-go:
   -ignore-repos string
          A list of git repos to ignore. Separate with ','.
          Repos are identified by their root directory.
+  -indicators string
+         One or more indicator from a path. Separate with ','.
+         An indicator add to default indicator from a path like /python a char.
+         Specify these as key/value pairs like /python=🐍.
   -max-width int
          Maximum width of the shell that the prompt may use, in percent. Setting this to 0 disables the shrinking subsystem.
   -mode string
