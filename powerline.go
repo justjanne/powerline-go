@@ -68,14 +68,19 @@ func newPowerline(args args, cwd string, priorities map[string]int, align alignm
 		kv := strings.SplitN(pa, "=", 2)
 		p.pathAliases[kv[0]] = kv[1]
 	}
+	ico := ""
+	cwdl := strings.ToLower(cwd)
 	for _, pa := range strings.Split(*args.Indicators, ",") {
 		if pa == "" {
 			continue
 		}
 		kv := strings.SplitN(pa, "=", 2)
-		if strings.Index(cwd, kv[0]) > -1 {
-			p.shellInfo.rootIndicator = fmt.Sprintf("%s %s", kv[1], p.shellInfo.rootIndicator)
+		if strings.Index(cwdl, kv[0]) > -1 {
+			ico = kv[1]
 		}
+	}
+	if ico != "" {
+		p.shellInfo.rootIndicator = fmt.Sprintf("%s %s", ico, p.shellInfo.rootIndicator)
 	}
 	p.Segments = make([][]pwl.Segment, 1)
 	var mods string
