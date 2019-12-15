@@ -4,6 +4,8 @@ import (
 	"os"
 	"sort"
 	"strings"
+
+	pwl "github.com/justjanne/powerline-go/powerline"
 )
 
 const ellipsis = "\u2026"
@@ -132,9 +134,8 @@ func cwdToPathSegments(p *powerline, cwd string) []pathSegment {
 func maybeShortenName(p *powerline, pathSegment string) string {
 	if *p.args.CwdMaxDirSize > 0 && len(pathSegment) > *p.args.CwdMaxDirSize {
 		return pathSegment[:*p.args.CwdMaxDirSize]
-	} else {
-		return pathSegment
 	}
+	return pathSegment
 }
 
 func escapeVariables(p *powerline, pathSegment string) string {
@@ -151,9 +152,8 @@ func getColor(p *powerline, pathSegment pathSegment, isLastDir bool) (uint8, uin
 		return p.theme.AliasFg, p.theme.AliasBg, true
 	} else if isLastDir {
 		return p.theme.CwdFg, p.theme.PathBg, false
-	} else {
-		return p.theme.PathFg, p.theme.PathBg, false
 	}
+	return p.theme.PathFg, p.theme.PathBg, false
 }
 
 func segmentCwd(p *powerline) {
@@ -168,10 +168,10 @@ func segmentCwd(p *powerline) {
 			cwd = "~" + cwd[len(home):]
 		}
 
-		p.appendSegment("cwd", segment{
-			content:    cwd,
-			foreground: p.theme.CwdFg,
-			background: p.theme.PathBg,
+		p.appendSegment("cwd", pwl.Segment{
+			Content:    cwd,
+			Foreground: p.theme.CwdFg,
+			Background: p.theme.PathBg,
 		})
 	} else {
 		pathSegments := cwdToPathSegments(p, cwd)
@@ -206,19 +206,19 @@ func segmentCwd(p *powerline) {
 			isLastDir := idx == len(pathSegments)-1
 			foreground, background, special := getColor(p, pathSegment, isLastDir)
 
-			segment := segment{
-				content:    escapeVariables(p, maybeShortenName(p, pathSegment.path)),
-				foreground: foreground,
-				background: background,
+			segment := pwl.Segment{
+				Content:    escapeVariables(p, maybeShortenName(p, pathSegment.path)),
+				Foreground: foreground,
+				Background: background,
 			}
 
 			if !special {
 				if p.align == alignRight && p.supportsRightModules() && idx != 0 {
-					segment.separator = p.symbolTemplates.SeparatorReverseThin
-					segment.separatorForeground = p.theme.SeparatorFg
+					segment.Separator = p.symbolTemplates.SeparatorReverseThin
+					segment.SeparatorForeground = p.theme.SeparatorFg
 				} else if (p.align == alignLeft || !p.supportsRightModules()) && !isLastDir {
-					segment.separator = p.symbolTemplates.SeparatorThin
-					segment.separatorForeground = p.theme.SeparatorFg
+					segment.Separator = p.symbolTemplates.SeparatorThin
+					segment.SeparatorForeground = p.theme.SeparatorFg
 				}
 			}
 

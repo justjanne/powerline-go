@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	pwl "github.com/justjanne/powerline-go/powerline"
 	"io/ioutil"
 	"os"
 	"path"
@@ -9,11 +11,10 @@ import (
 	"runtime"
 	"strings"
 
-	"fmt"
-
 	"gopkg.in/yaml.v2"
 )
 
+// KubeContext holds the kubernetes context
 type KubeContext struct {
 	Context struct {
 		Cluster   string
@@ -23,6 +24,7 @@ type KubeContext struct {
 	Name string
 }
 
+// KubeConfig is the kubernetes configuration
 type KubeConfig struct {
 	Contexts       []KubeContext `yaml:"contexts"`
 	CurrentContext string        `yaml:"current-context"`
@@ -70,7 +72,7 @@ func segmentKube(p *powerline) {
 	namespace := ""
 	for _, context := range config.Contexts {
 		if context.Name == config.CurrentContext {
-			cluster = context.Context.Cluster
+			cluster = context.Name
 			namespace = context.Context.Namespace
 			break
 		}
@@ -99,10 +101,10 @@ func segmentKube(p *powerline) {
 	kubeIconHasBeenDrawnYet := false
 	if cluster != "" {
 		kubeIconHasBeenDrawnYet = true
-		p.appendSegment("kube-cluster", segment{
-			content:    fmt.Sprintf("⎈ %s", cluster),
-			foreground: p.theme.KubeClusterFg,
-			background: p.theme.KubeClusterBg,
+		p.appendSegment("kube-cluster", pwl.Segment{
+			Content:    fmt.Sprintf("⎈ %s", cluster),
+			Foreground: p.theme.KubeClusterFg,
+			Background: p.theme.KubeClusterBg,
 		})
 	}
 
@@ -111,10 +113,10 @@ func segmentKube(p *powerline) {
 		if !kubeIconHasBeenDrawnYet {
 			content = fmt.Sprintf("⎈ %s", content)
 		}
-		p.appendSegment("kube-namespace", segment{
-			content:    content,
-			foreground: p.theme.KubeNamespaceFg,
-			background: p.theme.KubeNamespaceBg,
+		p.appendSegment("kube-namespace", pwl.Segment{
+			Content:    content,
+			Foreground: p.theme.KubeNamespaceFg,
+			Background: p.theme.KubeNamespaceBg,
 		})
 	}
 }

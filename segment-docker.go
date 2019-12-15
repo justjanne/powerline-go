@@ -3,6 +3,8 @@ package main
 import (
 	"net/url"
 	"os"
+
+	pwl "github.com/justjanne/powerline-go/powerline"
 )
 
 func segmentDocker(p *powerline) {
@@ -20,10 +22,10 @@ func segmentDocker(p *powerline) {
 	}
 
 	if docker != "" {
-		p.appendSegment("docker", segment{
-			content:    docker,
-			foreground: p.theme.DockerMachineFg,
-			background: p.theme.DockerMachineBg,
+		p.appendSegment("docker", pwl.Segment{
+			Content:    docker,
+			Foreground: p.theme.DockerMachineFg,
+			Background: p.theme.DockerMachineBg,
 		})
 	}
 }

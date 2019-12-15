@@ -1,6 +1,7 @@
 package main
 
 import (
+	pwl "github.com/justjanne/powerline-go/powerline"
 	"strings"
 )
 
@@ -30,9 +31,9 @@ func segmentGitLite(p *powerline) {
 		branch = getGitDetachedBranch(p)
 	}
 
-	p.appendSegment("git-branch", segment{
-		content:    branch,
-		foreground: p.theme.RepoCleanFg,
-		background: p.theme.RepoCleanBg,
+	p.appendSegment("git-branch", pwl.Segment{
+		Content:    branch,
+		Foreground: p.theme.RepoCleanFg,
+		Background: p.theme.RepoCleanBg,
 	})
 }

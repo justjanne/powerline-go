@@ -20,7 +20,7 @@ var symbolTemplates = map[string]Symbols{
 	},
 	"patched": {
 		Lock:                 "\uE0A2",
-		Network:              "\uE0A2",
+		Network:              "\u260E",
 		Separator:            "\uE0B0",
 		SeparatorThin:        "\uE0B1",
 		SeparatorReverse:     "\uE0B2",
@@ -81,6 +81,9 @@ var themes = map[string]Theme{
 	"default": {
 		Reset: 0xFF,
 
+		DefaultFg: 250,
+		DefaultBg: 240,
+
 		UsernameFg:     250,
 		UsernameBg:     240,
 		UsernameRootBg: 124,
@@ -101,8 +104,8 @@ var themes = map[string]Theme{
 		ReadonlyFg: 254,
 		ReadonlyBg: 124,
 
-		SshFg: 254,
-		SshBg: 166, // medium orange
+		SSHFg: 254,
+		SSHBg: 166, // medium orange
 
 		DockerMachineFg: 177, // light purple
 		DockerMachineBg: 55,  // purple
@@ -115,7 +118,7 @@ var themes = map[string]Theme{
 		DotEnvFg: 15, // white
 		DotEnvBg: 55, // purple
 
-		AWSFg: 15, // white
+		AWSFg: 15,  // white
 		AWSBg: 172, // AWS orange
 
 		RepoCleanFg: 0,   // black
@@ -157,6 +160,9 @@ var themes = map[string]Theme{
 
 		PerlbrewFg: 00,
 		PerlbrewBg: 20, // a mid-tone blue
+
+		PlEnvFg: 00,
+		PlEnvBg: 32,
 
 		TFWsFg: 15, // white
 		TFWsBg: 26, // blue
@@ -444,6 +450,9 @@ var themes = map[string]Theme{
 	"low-contrast": {
 		Reset: 0xFF,
 
+		DefaultFg: 234,
+		DefaultBg: 250,
+
 		UsernameFg:     234,
 		UsernameBg:     250,
 		UsernameRootBg: 198,
@@ -464,8 +473,8 @@ var themes = map[string]Theme{
 		ReadonlyFg: 124,
 		ReadonlyBg: 253,
 
-		SshFg: 166, // medium orange
-		SshBg: 254,
+		SSHFg: 166, // medium orange
+		SSHBg: 254,
 
 		DockerMachineFg: 55,  // purple
 		DockerMachineBg: 177, // light purple
@@ -517,6 +526,9 @@ var themes = map[string]Theme{
 
 		PerlbrewFg: 20, // a mid-tone blue
 		PerlbrewBg: 15,
+
+		PlEnvFg: 20, // a mid-tone blue
+		PlEnvBg: 15,
 
 		TimeFg: 236,
 		TimeBg: 15,
@@ -791,6 +803,8 @@ var themes = map[string]Theme{
 	},
 	"solarized-dark16": {
 		Reset:              8,
+		DefaultFg:          15,
+		DefaultBg:          4,
 		UsernameFg:         15,
 		UsernameBg:         4,
 		UsernameRootBg:     1,
@@ -805,8 +819,8 @@ var themes = map[string]Theme{
 		SeparatorFg:        15,
 		ReadonlyFg:         8,
 		ReadonlyBg:         1,
-		SshFg:              8,
-		SshBg:              9,
+		SSHFg:              8,
+		SSHBg:              9,
 		DockerMachineFg:    13,
 		DockerMachineBg:    55,
 		DotEnvFg:           15,
@@ -841,6 +855,8 @@ var themes = map[string]Theme{
 		VirtualEnvBg:       6,
 		PerlbrewFg:         8,
 		PerlbrewBg:         4,
+		PlEnvFg:            8,
+		PlEnvBg:            4,
 		TimeFg:             15,
 		TimeBg:             0,
 		ShellVarFg:         1,
@@ -1115,6 +1131,8 @@ var themes = map[string]Theme{
 	},
 	"solarized-light16": {
 		Reset:              0,
+		DefaultFg:          15,
+		DefaultBg:          4,
 		UsernameFg:         15,
 		UsernameBg:         4,
 		UsernameRootBg:     1,
@@ -1129,8 +1147,8 @@ var themes = map[string]Theme{
 		SeparatorFg:        15,
 		ReadonlyFg:         8,
 		ReadonlyBg:         1,
-		SshFg:              8,
-		SshBg:              9,
+		SSHFg:              8,
+		SSHBg:              9,
 		DockerMachineFg:    13,
 		DockerMachineBg:    55,
 		DotEnvFg:           15,
@@ -1165,6 +1183,8 @@ var themes = map[string]Theme{
 		VirtualEnvBg:       6,
 		PerlbrewFg:         8,
 		PerlbrewBg:         4,
+		PlEnvFg:            8,
+		PlEnvBg:            4,
 		TimeFg:             15,
 		TimeBg:             0,
 		ShellVarFg:         1,

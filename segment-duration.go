@@ -5,6 +5,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	pwl "github.com/justjanne/powerline-go/powerline"
 )
 
 const (
@@ -26,29 +28,35 @@ const (
 
 func segmentDuration(p *powerline) {
 	if p.args.Duration == nil || *p.args.Duration == "" {
-		p.appendSegment("duration", segment{
-			content:    "No duration",
-			foreground: p.theme.DurationFg,
-			background: p.theme.DurationBg,
+		p.appendSegment("duration", pwl.Segment{
+			Content:    "No duration",
+			Foreground: p.theme.DurationFg,
+			Background: p.theme.DurationBg,
 		})
 		return
 	}
 
 	durationValue := strings.Trim(*p.args.Duration, "'\"")
+	durationMinValue := strings.Trim(*p.args.DurationMin, "'\"")
 
 	hasPrecision := strings.Index(durationValue, ".") != -1
 
 	durationFloat, err := strconv.ParseFloat(durationValue, 64)
+	durationMinFloat, _ := strconv.ParseFloat(durationMinValue, 64)
 	if err != nil {
-		p.appendSegment("duration", segment{
-			content:    fmt.Sprintf("Failed to convert '%s' to a number", *p.args.Duration),
-			foreground: p.theme.DurationFg,
-			background: p.theme.DurationBg,
+		p.appendSegment("duration", pwl.Segment{
+			Content:    fmt.Sprintf("Failed to convert '%s' to a number", *p.args.Duration),
+			Foreground: p.theme.DurationFg,
+			Background: p.theme.DurationBg,
 		})
 		return
 	}
 
-	duration := time.Duration(durationFloat) * time.Second
+	if durationFloat < durationMinFloat {
+		return
+	}
+
+	duration := time.Duration(durationFloat * float64(time.Second.Nanoseconds()))
 
 	if duration > 0 {
 		var content string
@@ -80,10 +88,10 @@ func segmentDuration(p *powerline) {
 			content = fmt.Sprintf("%d\u00B5s", ns/microseconds)
 		}
 
-		p.appendSegment("duration", segment{
-			content:    content,
-			foreground: p.theme.DurationFg,
-			background: p.theme.DurationBg,
+		p.appendSegment("duration", pwl.Segment{
+			Content:    content,
+			Foreground: p.theme.DurationFg,
+			Background: p.theme.DurationBg,
 		})
 	}
 }

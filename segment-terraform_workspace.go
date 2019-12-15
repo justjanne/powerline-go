@@ -1,6 +1,7 @@
 package main
 
 import (
+	pwl "github.com/justjanne/powerline-go/powerline"
 	"io/ioutil"
 	"os"
 )
@@ -13,10 +14,10 @@ func segmentTerraformWorkspace(p *powerline) {
 	if err == nil && !stat.IsDir() {
 		workspace, err := ioutil.ReadFile(wsFile)
 		if err == nil {
-			p.appendSegment("terraform-workspace", segment{
-				content:    string(workspace),
-				foreground: p.theme.TFWsFg,
-				background: p.theme.TFWsBg,
+			p.appendSegment("terraform-workspace", pwl.Segment{
+				Content:    string(workspace),
+				Foreground: p.theme.TFWsFg,
+				Background: p.theme.TFWsBg,
 			})
 
 		}

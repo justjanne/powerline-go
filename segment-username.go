@@ -1,6 +1,7 @@
 package main
 
 import (
+	pwl "github.com/justjanne/powerline-go/powerline"
 	"os"
 )
 
@@ -22,9 +23,9 @@ func segmentUser(p *powerline) {
 		background = p.theme.UsernameBg
 	}
 
-	p.appendSegment("user", segment{
-		content:    userPrompt,
-		foreground: p.theme.UsernameFg,
-		background: background,
+	p.appendSegment("user", pwl.Segment{
+		Content:    userPrompt,
+		Foreground: p.theme.UsernameFg,
+		Background: background,
 	})
 }

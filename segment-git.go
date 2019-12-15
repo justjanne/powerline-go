@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	pwl "github.com/justjanne/powerline-go/powerline"
 	"os"
 	"os/exec"
 	"regexp"
@@ -25,10 +26,10 @@ func (r repoStats) dirty() bool {
 
 func addRepoStatsSegment(p *powerline, nChanges int, symbol string, foreground uint8, background uint8) {
 	if nChanges > 0 {
-		p.appendSegment("git-status", segment{
-			content:    fmt.Sprintf("%d%s", nChanges, symbol),
-			foreground: foreground,
-			background: background,
+		p.appendSegment("git-status", pwl.Segment{
+			Content:    fmt.Sprintf("%d%s", nChanges, symbol),
+			Foreground: foreground,
+			Background: background,
 		})
 	}
 }
@@ -90,13 +91,11 @@ func getGitDetachedBranch(p *powerline) string {
 		out, err := runGitCommand("git", "symbolic-ref", "--short", "HEAD")
 		if err != nil {
 			return "Error"
-		} else {
-			return strings.SplitN(out, "\n", 2)[0]
 		}
-	} else {
-		detachedRef := strings.SplitN(out, "\n", 2)
-		return fmt.Sprintf("%s %s", p.symbolTemplates.RepoDetached, detachedRef[0])
+		return strings.SplitN(out, "\n", 2)[0]
 	}
+	detachedRef := strings.SplitN(out, "\n", 2)
+	return fmt.Sprintf("%s %s", p.symbolTemplates.RepoDetached, detachedRef[0])
 }
 
 func parseGitStats(status []string) repoStats {
@@ -168,18 +167,15 @@ func segmentGit(p *powerline) {
 		background = p.theme.RepoCleanBg
 	}
 
-	out, err = runGitCommand("git", "stash", "list")
-	if err != nil {
-		return
-	}
-	if len(out) > 0 {
+	out, err = runGitCommand("git", "rev-list", "-g", "refs/stash")
+	if err == nil && len(out) > 0 {
 		stats.stashed = len(strings.Split(out, "\n")) - 1
 	}
 
-	p.appendSegment("git-branch", segment{
-		content:    branch,
-		foreground: foreground,
-		background: background,
+	p.appendSegment("git-branch", pwl.Segment{
+		Content:    branch,
+		Foreground: foreground,
+		Background: background,
 	})
 	stats.addToPowerline(p)
 }

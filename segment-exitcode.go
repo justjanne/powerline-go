@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	pwl "github.com/justjanne/powerline-go/powerline"
 	"strconv"
 )
 
@@ -72,10 +73,10 @@ func segmentExitCode(p *powerline) {
 		} else {
 			meaning = getMeaningFromExitCode(*p.args.PrevError)
 		}
-		p.appendSegment("exit", segment{
-			content:    meaning,
-			foreground: p.theme.CmdFailedFg,
-			background: p.theme.CmdFailedBg,
+		p.appendSegment("exit", pwl.Segment{
+			Content:    meaning,
+			Foreground: p.theme.CmdFailedFg,
+			Background: p.theme.CmdFailedBg,
 		})
 	}
 }

@@ -5,6 +5,7 @@ package main
 
 import (
 	"fmt"
+	pwl "github.com/justjanne/powerline-go/powerline"
 	"os"
 	"strings"
 )
@@ -28,9 +29,9 @@ func segmentTermTitle(p *powerline) {
 		title = fmt.Sprintf("\033]0;%s@%s: %s\007", user, host, cwd)
 	}
 
-	p.appendSegment("termtitle", segment{
-		content:        title,
-		priority:       MaxInteger, // do not truncate
-		hideSeparators: true,       // do not draw separators
+	p.appendSegment("termtitle", pwl.Segment{
+		Content:        title,
+		Priority:       MaxInteger, // do not truncate
+		HideSeparators: true,       // do not draw separators
 	})
 }

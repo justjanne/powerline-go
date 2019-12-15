@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	pwl "github.com/justjanne/powerline-go/powerline"
 	"os/exec"
 	"strings"
 )
@@ -60,10 +61,10 @@ func segmentHg(p *powerline) {
 			content = fmt.Sprintf(branch)
 		}
 
-		p.appendSegment("hg", segment{
-			content:    content,
-			foreground: foreground,
-			background: background,
+		p.appendSegment("hg", pwl.Segment{
+			Content:    content,
+			Foreground: foreground,
+			Background: background,
 		})
 	}
 }

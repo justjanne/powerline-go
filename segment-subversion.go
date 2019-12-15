@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	pwl "github.com/justjanne/powerline-go/powerline"
 	"os/exec"
 	"strings"
 )
@@ -11,10 +12,10 @@ var otherModified int
 
 func addSvnRepoStatsSegment(p *powerline, nChanges int, symbol string, foreground uint8, background uint8) {
 	if nChanges > 0 {
-		p.appendSegment("svn-status", segment{
-			content:    fmt.Sprintf("%d%s", nChanges, symbol),
-			foreground: foreground,
-			background: background,
+		p.appendSegment("svn-status", pwl.Segment{
+			Content:    fmt.Sprintf("%d%s", nChanges, symbol),
+			Foreground: foreground,
+			Background: background,
 		})
 	}
 }
@@ -135,10 +136,10 @@ func segmentSubversion(p *powerline) {
 		background = p.theme.RepoCleanBg
 	}
 
-	p.appendSegment("svn-branch", segment{
-		content:    svnInfo["Relative URL"],
-		foreground: foreground,
-		background: background,
+	p.appendSegment("svn-branch", pwl.Segment{
+		Content:    svnInfo["Relative URL"],
+		Foreground: foreground,
+		Background: background,
 	})
 
 	svnStats.addSvnToPowerline(p)
