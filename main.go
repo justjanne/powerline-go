@@ -54,6 +54,7 @@ type args struct {
 	DurationMin           *string
 	Eval                  *bool
 	Condensed             *bool
+	VCSTimeout            *int
 }
 
 func warn(msg string) {
@@ -245,6 +246,12 @@ func main() {
 			"condensed",
 			false,
 			comments("Remove spacing between segments")),
+		VCSTimeout: flag.Int(
+			"vcs-timeout",
+			0,
+			comments("Maximum time in milliseconds to spend generating vcs segments.",
+				"If generating a vcs segment takes longer than the timeout some elements will be skipped.",
+				"Setting this to 0 disables the timeout.")),
 	}
 	flag.Parse()
 	if strings.HasSuffix(*args.Theme, ".json") {

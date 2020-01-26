@@ -222,6 +222,10 @@ Usage of ./powerline-go:
   -truncate-segment-width int
          Minimum width of a segment, segments longer than this will be shortened if space is limited. Setting this to 0 disables it.
          (default 16)
+  -vcs-timeout int
+         Maximum time in milliseconds to spend generating vcs segments.
+         If generating a vcs segment takes longer than the timeout some elements will be skipped.
+         Setting this to 0 disables the timeout.
 ```
 ### Eval
 

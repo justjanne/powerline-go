@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	pwl "github.com/justjanne/powerline-go/powerline"
@@ -30,14 +31,14 @@ func (r repoStats) addSvnToPowerline(p *powerline) {
 	addSvnRepoStatsSegment(p, r.stashed, p.symbolTemplates.RepoStashed, p.theme.GitStashedFg, p.theme.GitStashedBg)
 }
 
-func runSvnCommand(cmd string, args ...string) (string, error) {
-	command := exec.Command(cmd, args...)
+func runSvnCommand(ctx context.Context, cmd string, args ...string) (string, error) {
+	command := exec.CommandContext(ctx, cmd, args...)
 	out, err := command.Output()
 	return string(out), err
 }
 
-func parseSvnURL() (map[string]string, error) {
-	info, err := runSvnCommand("svn", "info")
+func parseSvnURL(ctx context.Context) (map[string]string, error) {
+	info, err := runSvnCommand(ctx, "svn", "info")
 	if err != nil {
 		return nil, errors.New("not a working copy")
 	}
@@ -62,9 +63,9 @@ func ensureUnmodified(code string, stats repoStats) {
 	}
 }
 
-func parseSvnStatus() repoStats {
+func parseSvnStatus(ctx context.Context) repoStats {
 	stats := repoStats{}
-	info, err := runSvnCommand("svn", "status", "-u")
+	info, err := runSvnCommand(ctx, "svn", "status", "-u")
 	if err != nil {
 		return stats
 	}
@@ -113,8 +114,10 @@ func parseSvnStatus() repoStats {
 }
 
 func segmentSubversion(p *powerline) {
+	ctx, cancel := newVCSContext(p)
+	defer cancel()
 
-	svnInfo, err := parseSvnURL()
+	svnInfo, err := parseSvnURL(ctx)
 	if err != nil {
 		return
 	}
@@ -125,7 +128,7 @@ func segmentSubversion(p *powerline) {
 		}
 	}
 
-	svnStats := parseSvnStatus()
+	svnStats := parseSvnStatus(ctx)
 
 	var foreground, background uint8
 	if svnStats.dirty() || otherModified > 0 {

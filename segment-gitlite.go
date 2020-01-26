@@ -6,8 +6,11 @@ import (
 )
 
 func segmentGitLite(p *powerline) {
+	ctx, cancel := newVCSContext(p)
+	defer cancel()
+
 	if len(p.ignoreRepos) > 0 {
-		out, err := runGitCommand("git", "rev-parse", "--show-toplevel")
+		out, err := runGitCommand(ctx, "git", "rev-parse", "--show-toplevel")
 		if err != nil {
 			return
 		}
@@ -17,7 +20,7 @@ func segmentGitLite(p *powerline) {
 		}
 	}
 
-	out, err := runGitCommand("git", "rev-parse", "--abbrev-ref", "HEAD")
+	out, err := runGitCommand(ctx, "git", "rev-parse", "--abbrev-ref", "HEAD")
 	if err != nil {
 		return
 	}
@@ -28,7 +31,7 @@ func segmentGitLite(p *powerline) {
 	if status != "HEAD" {
 		branch = status
 	} else {
-		branch = getGitDetachedBranch(p)
+		branch = getGitDetachedBranch(ctx, p)
 	}
 
 	p.appendSegment("git-branch", pwl.Segment{

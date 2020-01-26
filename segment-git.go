@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	pwl "github.com/justjanne/powerline-go/powerline"
 	"os"
@@ -8,6 +9,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type repoStats struct {
@@ -59,6 +61,15 @@ func groupDict(pattern *regexp.Regexp, haystack string) map[string]string {
 	return result
 }
 
+func newVCSContext(p *powerline) (context.Context, context.CancelFunc) {
+	if *p.args.VCSTimeout != 0 {
+		return context.WithTimeout(context.Background(),
+			time.Duration(*p.args.VCSTimeout)*time.Millisecond)
+	} else {
+		return context.WithCancel(context.Background())
+	}
+}
+
 func gitProcessEnv() []string {
 	home, _ := os.LookupEnv("HOME")
 	path, _ := os.LookupEnv("PATH")
@@ -74,8 +85,8 @@ func gitProcessEnv() []string {
 	return result
 }
 
-func runGitCommand(cmd string, args ...string) (string, error) {
-	command := exec.Command(cmd, args...)
+func runGitCommand(ctx context.Context, cmd string, args ...string) (string, error) {
+	command := exec.CommandContext(ctx, cmd, args...)
 	command.Env = gitProcessEnv()
 	out, err := command.Output()
 	return string(out), err
@@ -85,10 +96,10 @@ func parseGitBranchInfo(status []string) map[string]string {
 	return groupDict(branchRegex, status[0])
 }
 
-func getGitDetachedBranch(p *powerline) string {
-	out, err := runGitCommand("git", "rev-parse", "--short", "HEAD")
+func getGitDetachedBranch(ctx context.Context, p *powerline) string {
+	out, err := runGitCommand(ctx, "git", "rev-parse", "--short", "HEAD")
 	if err != nil {
-		out, err := runGitCommand("git", "symbolic-ref", "--short", "HEAD")
+		out, err := runGitCommand(ctx, "git", "symbolic-ref", "--short", "HEAD")
 		if err != nil {
 			return "Error"
 		}
@@ -125,8 +136,11 @@ func parseGitStats(status []string) repoStats {
 }
 
 func segmentGit(p *powerline) {
+	ctx, cancel := newVCSContext(p)
+	defer cancel()
+
 	if len(p.ignoreRepos) > 0 {
-		out, err := runGitCommand("git", "rev-parse", "--show-toplevel")
+		out, err := runGitCommand(ctx, "git", "rev-parse", "--show-toplevel")
 		if err != nil {
 			return
 		}
@@ -136,7 +150,7 @@ func segmentGit(p *powerline) {
 		}
 	}
 
-	out, err := runGitCommand("git", "status", "--porcelain", "-b", "--ignore-submodules")
+	out, err := runGitCommand(ctx, "git", "status", "--porcelain", "-b", "--ignore-submodules")
 	if err != nil {
 		return
 	}
@@ -155,7 +169,7 @@ func segmentGit(p *powerline) {
 
 		branch = branchInfo["local"]
 	} else {
-		branch = getGitDetachedBranch(p)
+		branch = getGitDetachedBranch(ctx, p)
 	}
 
 	var foreground, background uint8
@@ -167,7 +181,7 @@ func segmentGit(p *powerline) {
 		background = p.theme.RepoCleanBg
 	}
 
-	out, err = runGitCommand("git", "rev-list", "-g", "refs/stash")
+	out, err = runGitCommand(ctx, "git", "rev-list", "-g", "refs/stash")
 	if err == nil && len(out) > 0 {
 		stats.stashed = len(strings.Split(out, "\n")) - 1
 	}
