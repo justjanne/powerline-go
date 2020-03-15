@@ -32,6 +32,7 @@ type args struct {
 	CwdMaxDepth           *int
 	CwdMaxDirSize         *int
 	ColorizeHostname      *bool
+	HostnameOnlyIfSSH     *bool
 	EastAsianWidth        *bool
 	PromptOnNewLine       *bool
 	StaticPromptIndicator *bool
@@ -147,6 +148,10 @@ func main() {
 			"colorize-hostname",
 			false,
 			comments("Colorize the hostname based on a hash of itself")),
+		HostnameOnlyIfSSH: flag.Bool(
+			"hostname-only-if-ssh",
+			false,
+			comments("Show hostname only for SSH connection")),
 		EastAsianWidth: flag.Bool(
 			"east-asian-width",
 			false,

@@ -21,6 +21,14 @@ func getMd5(text string) []byte {
 func segmentHost(p *powerline) {
 	var hostPrompt string
 	var foreground, background uint8
+
+	if *p.args.HostnameOnlyIfSSH {
+		if os.Getenv("SSH_CLIENT") == "" {
+			// It's not an ssh connection do nothing
+			return
+		}
+	}
+
 	if *p.args.ColorizeHostname {
 		hostName := getHostName()
 		hostPrompt = hostName
