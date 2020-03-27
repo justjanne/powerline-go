@@ -1,8 +1,10 @@
 package main
 
 import (
-	pwl "github.com/justjanne/powerline-go/powerline"
 	"os"
+	"os/user"
+
+	pwl "github.com/justjanne/powerline-go/powerline"
 )
 
 func segmentUser(p *powerline) {
@@ -12,8 +14,14 @@ func segmentUser(p *powerline) {
 	} else if *p.args.Shell == "zsh" {
 		userPrompt = "%n"
 	} else {
-		user, _ := os.LookupEnv("USER")
-		userPrompt = user
+		if userName, found := os.LookupEnv("USER"); found {
+			userPrompt = userName
+		} else {
+			userInfo, err := user.Current()
+			if err == nil {
+				userPrompt = userInfo.Username
+			}
+		}
 	}
 
 	var background uint8
