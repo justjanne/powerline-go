@@ -23,6 +23,7 @@ Ported to golang by @justjanne.
   - [ZSH](#zsh)
   - [Fish](#fish)
   - [Nix](#nix)
+  - [PowerShell](#powershell)
 - [Customization](#customization)
 - [License](#license)
 
@@ -141,6 +142,37 @@ if [ "$IN_NIX_SHELL" == "pure" ]; then
     fi
 fi
 ```
+
+### Powershell
+
+Redefine `prompt` function on your profile:
+
+```powershell
+# Load powerline-go prompt
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+function global:prompt {
+    $pwd = $ExecutionContext.SessionState.Path.CurrentLocation
+    $startInfo = New-Object System.Diagnostics.ProcessStartInfo
+    $startInfo.FileName = "powerline-go"
+    $startInfo.Arguments = "-shell bare"
+    $startInfo.Environment["USER"] = $env:USERNAME
+    $startInfo.Environment["HOME"] = $env:USERPROFILE
+    $startInfo.Environment["PWD"] = $pwd
+    $startInfo.Environment["TERM"] = "xterm-256color"
+    $startInfo.CreateNoWindow = $true
+    $startInfo.RedirectStandardOutput = $true
+    $startInfo.UseShellExecute = $false
+    $startInfo.WorkingDirectory = $pwd
+    $process = New-Object System.Diagnostics.Process
+    $process.StartInfo = $startInfo
+    $process.Start() | Out-Null
+    $standardOut = $process.StandardOutput.ReadToEnd()
+    $process.WaitForExit()
+    $standardOut
+}
+```
+
+Use `ProcessStartInfo` is needed to allow fill the enviromnet variables required by powerline-go.
 
 ## Customization
 
