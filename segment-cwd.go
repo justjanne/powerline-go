@@ -31,6 +31,8 @@ func (s byRevLength) Less(i, j int) bool {
 }
 
 func maybeAliasPathSegments(p *powerline, pathSegments []pathSegment) []pathSegment {
+	pathSeparator := string(os.PathSeparator)
+
 	if p.pathAliases == nil {
 		return pathSegments
 	}
@@ -44,7 +46,7 @@ func maybeAliasPathSegments(p *powerline, pathSegments []pathSegment) []pathSegm
 Aliases:
 	for _, k := range keys {
 		// This turns a string like "foo/bar/baz" into an array of strings.
-		path := strings.Split(strings.Trim(k, "/"), "/")
+		path := strings.Split(strings.Trim(k, pathSeparator), pathSeparator)
 
 		// If the path has 3 elements, we know we should look at pathSegments
 		// in 3-element chunks.
@@ -100,6 +102,7 @@ Aliases:
 }
 
 func cwdToPathSegments(p *powerline, cwd string) []pathSegment {
+	pathSeparator := string(os.PathSeparator)
 	pathSegments := make([]pathSegment, 0)
 
 	home, _ := os.LookupEnv("HOME")
@@ -109,15 +112,15 @@ func cwdToPathSegments(p *powerline, cwd string) []pathSegment {
 			home: true,
 		})
 		cwd = cwd[len(home):]
-	} else if cwd == "/" {
+	} else if cwd == pathSeparator {
 		pathSegments = append(pathSegments, pathSegment{
-			path: "/",
+			path: pathSeparator,
 			root: true,
 		})
 	}
 
-	cwd = strings.Trim(cwd, "/")
-	names := strings.Split(cwd, "/")
+	cwd = strings.Trim(cwd, pathSeparator)
+	names := strings.Split(cwd, pathSeparator)
 	if names[0] == "" {
 		names = names[1:]
 	}
