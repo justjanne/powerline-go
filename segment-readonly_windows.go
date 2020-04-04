@@ -10,7 +10,11 @@ import (
 func segmentPerms(p *powerline) {
 	cwd := p.cwd
 	if cwd == "" {
-		cwd, _ = os.LookupEnv("PWD")
+		var exists bool
+		cwd, exists = os.LookupEnv("PWD")
+		if !exists {
+			cwd, _ = os.Getwd()
+		}
 	}
 
 	const W_USR = 0002
