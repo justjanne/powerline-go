@@ -146,7 +146,7 @@ func main() {
 		ColorizeHostname: flag.Bool(
 			"colorize-hostname",
 			false,
-			comments("Colorize the hostname based on a hash of itself")),
+			comments("Colorize the hostname based on a hash of itself, or use the PLGO_HOSTNAMEFG and/or PLGO_HOSTNAMEBG env vars.")),
 		EastAsianWidth: flag.Bool(
 			"east-asian-width",
 			false,

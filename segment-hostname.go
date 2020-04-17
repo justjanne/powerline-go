@@ -4,6 +4,7 @@ import (
 	"crypto/md5"
 	pwl "github.com/justjanne/powerline-go/powerline"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -25,9 +26,33 @@ func segmentHost(p *powerline) {
 		hostName := getHostName()
 		hostPrompt = hostName
 
-		hash := getMd5(hostName)
-		background = hash[0]
-		foreground = p.theme.HostnameColorizedFgMap[background]
+		foregroundEnvStr := os.Getenv("PLGO_HOSTNAMEFG")
+		backgroundEnvStr := os.Getenv("PLGO_HOSTNAMEBG")
+		foregroundEnv, foregroundErr := strconv.ParseInt(foregroundEnvStr, 0, 64)
+		backgroundEnv, backgroundErr := strconv.ParseInt(backgroundEnvStr, 0, 64)
+
+		if foregroundErr == nil || backgroundErr == nil {
+			if foregroundErr != nil {
+				foreground = p.theme.HostnameFg
+			} else {
+				foreground = uint8(foregroundEnv)
+			}
+			if backgroundErr != nil {
+				background = p.theme.HostnameBg
+			} else {
+				background = uint8(backgroundEnv)
+			}
+		} else {
+			hash := getMd5(hostName)
+			background = hash[0]
+
+			if foregroundMap, exists := p.theme.HostnameColorizedFgMap[background]; !exists {
+				foreground = p.theme.HostnameFg
+				background = p.theme.HostnameBg
+			} else {
+				foreground = foregroundMap
+			}
+		}
 	} else {
 		if *p.args.Shell == "bash" {
 			hostPrompt = "\\h"
