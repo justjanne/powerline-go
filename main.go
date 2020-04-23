@@ -71,8 +71,8 @@ func pathExists(path string) bool {
 }
 
 func getValidCwd() string {
-	cwd, exists := os.LookupEnv("PWD")
-	if !exists {
+	cwd, err := os.Getwd()
+	if err != nil {
 		warn("Your current directory is invalid.")
 		print("> ")
 		os.Exit(1)

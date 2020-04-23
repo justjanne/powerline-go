@@ -158,9 +158,6 @@ func getColor(p *powerline, pathSegment pathSegment, isLastDir bool) (uint8, uin
 
 func segmentCwd(p *powerline) (segments []pwl.Segment) {
 	cwd := p.cwd
-	if cwd == "" {
-		cwd, _ = os.LookupEnv("PWD")
-	}
 
 	if *p.args.CwdMode == "plain" {
 		home, _ := os.LookupEnv("HOME")
