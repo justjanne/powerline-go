@@ -1,5 +1,7 @@
-sudo: false
 language: go
+
+os: linux
+dist: xenial
 
 go:
   - "1.14"
@@ -13,12 +15,12 @@ before_deploy:
 
 deploy:
   provider: releases
-  api_key:
-    secure: "$GITHUB_API_KEY"
+  token:
+    secure: "J4GNwIWrjHuAGhWyc1LNKbFbVc5XiS/zfnAV79SwSMYQsR0BzNf9A004NJWTpAjDrZohTD9npSx3pUN9QbrrGCk4B1qI+UEoxOYH7bH05Cg4lGpRU8hoL0lXUqLRHAlu5DLQ443GbJPcTSobsY4jKyHGc49nC7TgpGqdDH41ToYHKtWjOzXWLB49HF2Iug8NbE0mPwWmbgLDd7gocIBL7ak1E/LgqUBrILtjW8m1J/A85okp5zMpBTgcslRp5SUOhkqw4iwZFdxQOGplwv2c6MCyHWI8YzOcEtwpKDcj7ergdCZQTtJHiX/kCv73JHB8l4+I/hom2QJou+42fWRLlo8b/fdcs1BWukN+k1h2z2MA63RyXIFFjhY12gJQEr45KmeADKGWN9+kDWm7Rfjnh8XTQVJJKpIx9IO6gq2C/gSGPwMa5RKQErSYQMLrho4xExuluIHTFk7TdDQ0nQ0oCSQy1g+4rnNGcH90PhvXeGuXfTlh+Ub4i5QXYwJDFYVfcczNfmjVmvp60szn9xRT0M8ugcV7Fx+70zM0+oXcHMenCNdU4cR29oXj6eofaGc94f91QygDBBKFb6rQFiqddjlTx9denTB5OeQ+mhMhsvlWxkiYzLPuu/If9hWOIHbSIoUAy5aLl5beGT3S8g0suI00Vu+/mRAz+XigaRlHjOY="
   file:
     - "release/powerline-go-linux-amd64"
     - "release/powerline-go-darwin-amd64"
     - "release/powerline-go-windows-amd64"
-  skip_cleanup: true
+  cleanup: false
   on:
     tags: true
