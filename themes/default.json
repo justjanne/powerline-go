@@ -58,6 +58,8 @@
   "TimeBg": 236,
   "ShellVarFg": 52,
   "ShellVarBg": 11,
+  "ShEnvFg": 15,
+  "ShEnvBg": 130,
   "NodeFg": 15,
   "NodeBg": 40,
   "LoadFg": 15,

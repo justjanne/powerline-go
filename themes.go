@@ -122,6 +122,9 @@ type Theme struct {
 	ShellVarFg uint8
 	ShellVarBg uint8
 
+	ShEnvFg uint8
+	ShEnvBg uint8
+
 	NodeFg uint8
 	NodeBg uint8
 
