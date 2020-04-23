@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"os"
+	"os/user"
 	"strconv"
 	"strings"
 	"sync"
@@ -28,18 +29,21 @@ type ShellInfo struct {
 }
 
 type powerline struct {
-	args                   args
-	cwd                    string
-	pathAliases            map[string]string
-	theme                  Theme
-	shellInfo              ShellInfo
-	reset                  string
-	symbolTemplates        Symbols
-	priorities             map[string]int
-	ignoreRepos            map[string]bool
-	Segments               [][]pwl.Segment
-	curSegment             int
-	align                  alignment
+	args            args
+	cwd             string
+	userInfo        user.User
+	hostname        string
+	username        string
+	pathAliases     map[string]string
+	theme           Theme
+	shellInfo       ShellInfo
+	reset           string
+	symbolTemplates Symbols
+	priorities      map[string]int
+	ignoreRepos     map[string]bool
+	Segments        [][]pwl.Segment
+	curSegment      int
+	align           alignment
 	rightPowerline         *powerline
 	appendEastAsianPadding int
 }
@@ -53,6 +57,19 @@ func newPowerline(args args, cwd string, priorities map[string]int, align alignm
 	p := new(powerline)
 	p.args = args
 	p.cwd = cwd
+	userInfo, err := user.Current()
+	if userInfo != nil && err == nil {
+		p.userInfo = *userInfo
+	}
+	p.hostname, _ = os.Hostname()
+
+	hostnamePrefix := fmt.Sprintf("%s%c", p.hostname, os.PathSeparator)
+	if strings.HasPrefix(p.userInfo.Username, hostnamePrefix) {
+		p.username = p.userInfo.Username[len(hostnamePrefix):]
+	} else {
+		p.username = p.userInfo.Username
+	}
+
 	p.theme = themes[*args.Theme]
 	p.shellInfo = shellInfos[*args.Shell]
 	p.reset = fmt.Sprintf(p.shellInfo.colorTemplate, "[0m")

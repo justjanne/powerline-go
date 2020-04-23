@@ -6,7 +6,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"os/user"
 	"strings"
 
 	pwl "github.com/justjanne/powerline-go/powerline"
@@ -25,16 +24,8 @@ func segmentTermTitle(p *powerline) []pwl.Segment {
 	} else if *p.args.Shell == "zsh" {
 		title = "%{\033]0;%n@%m: %~\007%}"
 	} else {
-		userName, found := os.LookupEnv("USER")
-		if !found {
-			userInfo, err := user.Current()
-			if err == nil {
-				userName = userInfo.Username
-			}
-		}
-		hostName, _ := os.Hostname()
 		cwd := p.cwd
-		title = fmt.Sprintf("\033]0;%s@%s: %s\007", userName, hostName, cwd)
+		title = fmt.Sprintf("\033]0;%s@%s: %s\007", p.username, p.hostname, cwd)
 	}
 
 	return []pwl.Segment{{
