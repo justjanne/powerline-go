@@ -8,19 +8,20 @@ go:
 
 # before we deploy, we go build for all operating systems we would like to support
 before_deploy:
-  - mkdir -p release
+  - "mkdir -p release"
   - "GOOS=linux  GOARCH=amd64 go build -o release/powerline-go-linux-amd64"
   - "GOOS=darwin GOARCH=amd64 go build -o release/powerline-go-darwin-amd64"
   - "GOOS=windows GOARCH=amd64 go build -o release/powerline-go-windows-amd64"
 
 deploy:
   provider: releases
-  token:
-    secure: "J4GNwIWrjHuAGhWyc1LNKbFbVc5XiS/zfnAV79SwSMYQsR0BzNf9A004NJWTpAjDrZohTD9npSx3pUN9QbrrGCk4B1qI+UEoxOYH7bH05Cg4lGpRU8hoL0lXUqLRHAlu5DLQ443GbJPcTSobsY4jKyHGc49nC7TgpGqdDH41ToYHKtWjOzXWLB49HF2Iug8NbE0mPwWmbgLDd7gocIBL7ak1E/LgqUBrILtjW8m1J/A85okp5zMpBTgcslRp5SUOhkqw4iwZFdxQOGplwv2c6MCyHWI8YzOcEtwpKDcj7ergdCZQTtJHiX/kCv73JHB8l4+I/hom2QJou+42fWRLlo8b/fdcs1BWukN+k1h2z2MA63RyXIFFjhY12gJQEr45KmeADKGWN9+kDWm7Rfjnh8XTQVJJKpIx9IO6gq2C/gSGPwMa5RKQErSYQMLrho4xExuluIHTFk7TdDQ0nQ0oCSQy1g+4rnNGcH90PhvXeGuXfTlh+Ub4i5QXYwJDFYVfcczNfmjVmvp60szn9xRT0M8ugcV7Fx+70zM0+oXcHMenCNdU4cR29oXj6eofaGc94f91QygDBBKFb6rQFiqddjlTx9denTB5OeQ+mhMhsvlWxkiYzLPuu/If9hWOIHbSIoUAy5aLl5beGT3S8g0suI00Vu+/mRAz+XigaRlHjOY="
+  api_key:
+    secure: OA/pzHmOxhimxGvcTuLdBXc4g/cAJTKCJcvMSXFTp6pIYTxOaiLR11r4mGJSHkILCQWjRHxBTUzy5XDja9jqkApgpTaAMmuDZrJJstN4yryxBTRee25uaTc02sPiTgCyDo8MnQJ36C3+5A2T+D0yTLWGAiXLrGYrZCN+plnQfC6uVeLGWXQ5CaqNOwxZ62KSxGLHfkVR44MVFYZVJqXlMoSEYUlAqZ7Q3fqdzZFtsR9ErGg22W/faVyT/R6Lkr9rpJUFWupU71GhNeCcKkpIbv1EcDN3BEVfSmgKpxNq1fQ8ajgfkEfARUoFv3DjYAo5260CGgTXCYWaH1qFZRP/zUT+Hk4Eo8R8a8aCPwbwO0mBuQ5B8DljWLE7JO+cvSPCLEZEGvdrUEMODE60/WYsJhW6ljFxY57yzZXXhgi7cFGgauwu5SyhL8zMfZBFXADx7CAWgIwmwGaX9T/iKSH3sxsfKNbVsYvVmu2oxNbykXSxrLD4a/qb1bWOKiTvs7lN+Y3iRWNqUfzu5tiTPHiOl6+AYHtm3ZpC1uaPVpopGaMnReH/Q194GsqVCOjMkLuYAV1eu9Y4mbdxnVnYYJT4Lic7TSALQ2q88fEP4MuzA5BkgVgtPf+XDHQmFBxOdEa8LwllBPUr8wfAQBP1ZkjQyPl77l1Ktt1bsAysv++1bZA=
   file:
     - "release/powerline-go-linux-amd64"
     - "release/powerline-go-darwin-amd64"
     - "release/powerline-go-windows-amd64"
-  cleanup: false
+  skip_cleanup: true
   on:
     tags: true
+    repo: justjanne/powerline-go
