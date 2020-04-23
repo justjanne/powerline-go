@@ -83,6 +83,9 @@ type Theme struct {
 	SvnChangesFg uint8
 	SvnChangesBg uint8
 
+	GCPFg uint8
+	GCPBg uint8
+
 	GitAheadFg      uint8
 	GitAheadBg      uint8
 	GitBehindFg     uint8
