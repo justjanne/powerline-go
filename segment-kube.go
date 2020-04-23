@@ -55,7 +55,7 @@ func readKubeConfig(config *KubeConfig, path string) (err error) {
 	return
 }
 
-func segmentKube(p *powerline) {
+func segmentKube(p *powerline) []pwl.Segment {
 	paths := append(strings.Split(os.Getenv("KUBECONFIG"), ":"), path.Join(homePath(), ".kube", "config"))
 	config := &KubeConfig{}
 	for _, configPath := range paths {
@@ -96,12 +96,13 @@ func segmentKube(p *powerline) {
 	if arnMatches := arnRe.FindStringSubmatch(cluster); arnMatches != nil && *p.args.ShortenEKSNames {
 		cluster = arnMatches[1]
 	}
-
+	segments := []pwl.Segment{}
 	// Only draw the icon once
 	kubeIconHasBeenDrawnYet := false
 	if cluster != "" {
 		kubeIconHasBeenDrawnYet = true
-		p.appendSegment("kube-cluster", pwl.Segment{
+		segments = append(segments, pwl.Segment{
+			Name:       "kube-cluster",
 			Content:    fmt.Sprintf("⎈ %s", cluster),
 			Foreground: p.theme.KubeClusterFg,
 			Background: p.theme.KubeClusterBg,
@@ -113,10 +114,12 @@ func segmentKube(p *powerline) {
 		if !kubeIconHasBeenDrawnYet {
 			content = fmt.Sprintf("⎈ %s", content)
 		}
-		p.appendSegment("kube-namespace", pwl.Segment{
+		segments = append(segments, pwl.Segment{
+			Name:       "kube-namespace",
 			Content:    content,
 			Foreground: p.theme.KubeNamespaceFg,
 			Background: p.theme.KubeNamespaceBg,
 		})
 	}
+	return segments
 }

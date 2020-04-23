@@ -6,6 +6,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"sync"
 
 	pwl "github.com/justjanne/powerline-go/powerline"
 	"github.com/mattn/go-runewidth"
@@ -41,6 +42,11 @@ type powerline struct {
 	align                  alignment
 	rightPowerline         *powerline
 	appendEastAsianPadding int
+}
+
+type prioritizedSegments struct {
+	i    int
+	segs []pwl.Segment
 }
 
 func newPowerline(args args, cwd string, priorities map[string]int, align alignment) *powerline {
@@ -82,17 +88,48 @@ func newPowerline(args args, cwd string, priorities map[string]int, align alignm
 	} else {
 		mods = *args.ModulesRight
 	}
-	for _, module := range strings.Split(mods, ",") {
-		elem, ok := modules[module]
-		if ok {
-			elem(p)
-		} else {
-			if ok := segmentPlugin(p, module); !ok {
-				println("Module not found: " + module)
+	initSegments(p, strings.Split(mods, ","))
+
+	return p
+}
+
+func initSegments(p *powerline, mods []string) {
+	orderedSegments := map[int][]pwl.Segment{}
+	c := make(chan prioritizedSegments, len(mods))
+	wg := sync.WaitGroup{}
+	for i, module := range mods {
+		wg.Add(1)
+		go func(w *sync.WaitGroup, i int, module string, c chan prioritizedSegments) {
+			elem, ok := modules[module]
+			if ok {
+				c <- prioritizedSegments{
+					i:    i,
+					segs: elem(p),
+				}
+			} else {
+				s, ok := segmentPlugin(p, module)
+				if ok {
+					c <- prioritizedSegments{
+						i:    i,
+						segs: s,
+					}
+				} else {
+					println("Module not found: " + module)
+				}
 			}
+			wg.Done()
+		}(&wg, i, module, c)
+	}
+	wg.Wait()
+	close(c)
+	for s := range c {
+		orderedSegments[s.i] = s.segs
+	}
+	for i := 0; i < len(mods); i++ {
+		for _, seg := range orderedSegments[i] {
+			p.appendSegment(seg.Name, seg)
 		}
 	}
-	return p
 }
 
 func (p *powerline) color(prefix string, code uint8) string {
@@ -128,7 +165,11 @@ func (p *powerline) appendSegment(origin string, segment pwl.Segment) {
 	priority, _ := p.priorities[origin]
 	segment.Priority += priority
 	segment.Width = segment.ComputeWidth(*p.args.Condensed)
-	p.Segments[p.curSegment] = append(p.Segments[p.curSegment], segment)
+	if segment.NewLine {
+		p.newRow()
+	} else {
+		p.Segments[p.curSegment] = append(p.Segments[p.curSegment], segment)
+	}
 }
 
 func (p *powerline) newRow() {

@@ -5,23 +5,19 @@ import (
 	"os"
 )
 
-func segmentVirtualGo(p *powerline) {
+func segmentVirtualGo(p *powerline) []pwl.Segment {
 	var env string
 	if env == "" {
 		env, _ = os.LookupEnv("VIRTUALGO")
 	}
-	if env == "" {
-		return
-	} else {
-		p.appendSegment("vgo", pwl.Segment{
+	segments := []pwl.Segment{}
+	if env != "" {
+		segments = append(segments, pwl.Segment{
+			Name:       "vgo",
 			Content:    env,
 			Foreground: p.theme.VirtualGoFg,
 			Background: p.theme.VirtualGoBg,
 		})
 	}
-	p.appendSegment("vgo", pwl.Segment{
-		Content:    env,
-		Foreground: p.theme.VirtualGoFg,
-		Background: p.theme.VirtualGoBg,
-	})
+	return segments
 }

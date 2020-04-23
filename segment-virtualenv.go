@@ -7,7 +7,7 @@ import (
 	pwl "github.com/justjanne/powerline-go/powerline"
 )
 
-func segmentVirtualEnv(p *powerline) {
+func segmentVirtualEnv(p *powerline) []pwl.Segment {
 	var env string
 	if env == "" {
 		env, _ = os.LookupEnv("VIRTUAL_ENV")
@@ -18,14 +18,15 @@ func segmentVirtualEnv(p *powerline) {
 	if env == "" {
 		env, _ = os.LookupEnv("CONDA_DEFAULT_ENV")
 	}
-	if env == "" {
-		return
-	} else {
+	segments := []pwl.Segment{}
+	if env != "" {
 		envName := path.Base(env)
-		p.appendSegment("venv", pwl.Segment{
+		segments = append(segments, pwl.Segment{
+			Name:       "venv",
 			Content:    envName,
 			Foreground: p.theme.VirtualEnvFg,
 			Background: p.theme.VirtualEnvBg,
 		})
 	}
+    return segments
 }

@@ -8,19 +8,20 @@ import (
 
 const wsFile = "./.terraform/environment"
 
-func segmentTerraformWorkspace(p *powerline) {
+func segmentTerraformWorkspace(p *powerline) []pwl.Segment {
 	stat, err := os.Stat(wsFile)
 
 	if err == nil && !stat.IsDir() {
 		workspace, err := ioutil.ReadFile(wsFile)
 		if err == nil {
-			p.appendSegment("terraform-workspace", pwl.Segment{
+			return []pwl.Segment{{
+				Name:       "terraform-workspace",
 				Content:    string(workspace),
 				Foreground: p.theme.TFWsFg,
 				Background: p.theme.TFWsBg,
-			})
+			}}
 
 		}
 	}
-
+	return []pwl.Segment{}
 }

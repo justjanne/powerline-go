@@ -10,12 +10,12 @@ import (
 	"strings"
 )
 
-func segmentTermTitle(p *powerline) {
+func segmentTermTitle(p *powerline) []pwl.Segment {
 	var title string
 
 	term := os.Getenv("TERM")
 	if !(strings.Contains(term, "xterm") || strings.Contains(term, "rxvt")) {
-		return
+		return []pwl.Segment{}
 	}
 
 	if *p.args.Shell == "bash" {
@@ -29,9 +29,10 @@ func segmentTermTitle(p *powerline) {
 		title = fmt.Sprintf("\033]0;%s@%s: %s\007", user, host, cwd)
 	}
 
-	p.appendSegment("termtitle", pwl.Segment{
+	return []pwl.Segment{{
+		Name:           "termtitle",
 		Content:        title,
 		Priority:       MaxInteger, // do not truncate
 		HideSeparators: true,       // do not draw separators
-	})
+	}}
 }

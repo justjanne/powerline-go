@@ -9,10 +9,10 @@ import (
 )
 
 type DockerContextConfig struct {
-	CurrentContext string `json:currentContext`
+	CurrentContext string `json:"currentContext"`
 }
 
-func segmentDockerContext(p *powerline) {
+func segmentDockerContext(p *powerline) []pwl.Segment {
 	context := "default"
 	home, _ := os.LookupEnv("HOME")
 	contextFolder := filepath.Join(home, ".docker", "contexts")
@@ -29,10 +29,11 @@ func segmentDockerContext(p *powerline) {
 			}
 		}
 	}
-	p.appendSegment("docker-context", pwl.Segment{
+
+	return []pwl.Segment{{
+		Name:       "docker-context",
 		Content:    "🐳" + context,
 		Foreground: p.theme.PlEnvFg,
 		Background: p.theme.PlEnvBg,
-	})
-
+	}}
 }

@@ -18,14 +18,14 @@ func getMd5(text string) []byte {
 	return hasher.Sum(nil)
 }
 
-func segmentHost(p *powerline) {
+func segmentHost(p *powerline) []pwl.Segment {
 	var hostPrompt string
 	var foreground, background uint8
 
 	if *p.args.HostnameOnlyIfSSH {
 		if os.Getenv("SSH_CLIENT") == "" {
 			// It's not an ssh connection do nothing
-			return
+			return []pwl.Segment{}
 		}
 	}
 
@@ -49,9 +49,10 @@ func segmentHost(p *powerline) {
 		background = p.theme.HostnameBg
 	}
 
-	p.appendSegment("host", pwl.Segment{
+	return []pwl.Segment{{
+		Name:       "host",
 		Content:    hostPrompt,
 		Foreground: foreground,
 		Background: background,
-	})
+	}}
 }

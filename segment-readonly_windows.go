@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-func segmentPerms(p *powerline) {
+func segmentPerms(p *powerline) []pwl.Segment {
 	cwd := p.cwd
 	if cwd == "" {
 		cwd, _ = os.LookupEnv("PWD")
@@ -17,10 +17,12 @@ func segmentPerms(p *powerline) {
 	// Check user's permissions on directory in a portable but probably slower way
 	fileInfo, _ := os.Stat(cwd)
 	if fileInfo.Mode()&W_USR != W_USR {
-		p.appendSegment("perms", pwl.Segment{
+		return []pwl.Segment{{
+			Name:       "perms",
 			Content:    p.symbolTemplates.Lock,
 			Foreground: p.theme.ReadonlyFg,
 			Background: p.theme.ReadonlyBg,
-		})
+		}}
 	}
+	return []pwl.Segment{}
 }

@@ -5,13 +5,15 @@ import (
 	"os"
 )
 
-func segmentSSH(p *powerline) {
+func segmentSSH(p *powerline) []pwl.Segment {
 	sshClient, _ := os.LookupEnv("SSH_CLIENT")
 	if sshClient != "" {
-		p.appendSegment("ssh", pwl.Segment{
+		return []pwl.Segment{{
+			Name:       "ssh",
 			Content:    p.symbolTemplates.Network,
 			Foreground: p.theme.SSHFg,
 			Background: p.theme.SSHBg,
-		})
+		}}
 	}
+	return []pwl.Segment{}
 }
