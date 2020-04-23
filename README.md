@@ -206,6 +206,8 @@ Usage of ./powerline-go:
          Exit code of previously executed command
   -eval
          Output prompt in 'eval' format.
+  -hostname-only-if-ssh
+         Show hostname only for SSH connection
   -ignore-repos string
          A list of git repos to ignore. Separate with ','.
          Repos are identified by their root directory.
