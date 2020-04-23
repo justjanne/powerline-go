@@ -9,10 +9,6 @@ import (
 
 func segmentPerms(p *powerline) []pwl.Segment {
 	cwd := p.cwd
-	if cwd == "" {
-		cwd, _ = os.LookupEnv("PWD")
-	}
-
 	const W_USR = 0002
 	// Check user's permissions on directory in a portable but probably slower way
 	fileInfo, _ := os.Stat(cwd)
