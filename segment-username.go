@@ -14,13 +14,9 @@ func segmentUser(p *powerline) []pwl.Segment {
 	} else if *p.args.Shell == "zsh" {
 		userPrompt = "%n"
 	} else {
-		if userName, found := os.LookupEnv("USER"); found {
-			userPrompt = userName
-		} else {
-			userInfo, err := user.Current()
-			if err == nil {
-				userPrompt = userInfo.Username
-			}
+		userInfo, err := user.Current()
+		if err == nil {
+			userPrompt = userInfo.Username
 		}
 	}
 
