@@ -32,6 +32,7 @@ type powerline struct {
 	args                   args
 	cwd                    string
 	userInfo               user.User
+	userIsAdmin            bool
 	hostname               string
 	username               string
 	pathAliases            map[string]string
@@ -76,6 +77,7 @@ func newPowerline(args args, cwd string, priorities map[string]int, align alignm
 			p.username = usernameWithAd[1]
 		}
 	}
+	p.userIsAdmin = userIsAdmin()
 
 	p.theme = themes[*args.Theme]
 	p.shellInfo = shellInfos[*args.Shell]
