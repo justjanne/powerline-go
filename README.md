@@ -149,17 +149,14 @@ Redefine `prompt` function on your profile:
 
 ```powershell
 # Load powerline-go prompt
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 function global:prompt {
     $pwd = $ExecutionContext.SessionState.Path.CurrentLocation
     $startInfo = New-Object System.Diagnostics.ProcessStartInfo
     $startInfo.FileName = "powerline-go"
     $startInfo.Arguments = "-shell bare"
-    $startInfo.Environment["USER"] = $env:USERNAME
-    $startInfo.Environment["HOME"] = $env:USERPROFILE
-    $startInfo.Environment["PWD"] = $pwd
     $startInfo.Environment["TERM"] = "xterm-256color"
     $startInfo.CreateNoWindow = $true
+    $startInfo.StandardOutputEncoding = [System.Text.Encoding]::UTF8
     $startInfo.RedirectStandardOutput = $true
     $startInfo.UseShellExecute = $false
     $startInfo.WorkingDirectory = $pwd
