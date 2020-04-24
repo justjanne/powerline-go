@@ -1,6 +1,7 @@
 package main
 
 import (
+	pwl "github.com/justjanne/powerline-go/powerline"
 	"os"
 )
 
@@ -15,10 +16,10 @@ func segmentDotEnv(p *powerline) {
 		}
 	}
 	if dotEnv {
-		p.appendSegment("dotenv", segment{
-			content:    "\u2235",
-			foreground: p.theme.DotEnvFg,
-			background: p.theme.DotEnvBg,
+		p.appendSegment("dotenv", pwl.Segment{
+			Content:    "\u2235",
+			Foreground: p.theme.DotEnvFg,
+			Background: p.theme.DotEnvBg,
 		})
 	}
 }

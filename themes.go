@@ -1,5 +1,6 @@
 package main
 
+// Symbols of the theme
 type Symbols struct {
 	Lock                 string
 	Network              string
@@ -18,8 +19,13 @@ type Symbols struct {
 	RepoStashed    string
 }
 
+// Theme definitions
 type Theme struct {
-	Reset          uint8
+	Reset uint8
+
+	DefaultFg uint8
+	DefaultBg uint8
+
 	UsernameFg     uint8
 	UsernameBg     uint8
 	UsernameRootBg uint8
@@ -44,8 +50,8 @@ type Theme struct {
 	ReadonlyFg uint8
 	ReadonlyBg uint8
 
-	SshFg uint8
-	SshBg uint8
+	SSHFg uint8
+	SSHBg uint8
 
 	DockerMachineFg uint8
 	DockerMachineBg uint8
@@ -100,6 +106,9 @@ type Theme struct {
 
 	PerlbrewFg uint8
 	PerlbrewBg uint8
+
+	PlEnvFg uint8
+	PlEnvBg uint8
 
 	TFWsFg uint8
 	TFWsBg uint8

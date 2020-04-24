@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/md5"
+	pwl "github.com/justjanne/powerline-go/powerline"
 	"os"
 	"strings"
 )
@@ -40,9 +41,9 @@ func segmentHost(p *powerline) {
 		background = p.theme.HostnameBg
 	}
 
-	p.appendSegment("host", segment{
-		content:    hostPrompt,
-		foreground: foreground,
-		background: background,
+	p.appendSegment("host", pwl.Segment{
+		Content:    hostPrompt,
+		Foreground: foreground,
+		Background: background,
 	})
 }

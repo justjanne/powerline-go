@@ -52,6 +52,8 @@
   "VirtualEnvBg": 35,
   "PerlbrewFg": 0,
   "PerlbrewBg": 20,
+  "PlEnvFg": 0,
+  "PlEnvBg": 32,
   "TimeFg": 15,
   "TimeBg": 236,
   "ShellVarFg": 52,

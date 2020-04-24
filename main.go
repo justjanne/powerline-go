@@ -7,8 +7,6 @@ import (
 	"io/ioutil"
 	"os"
 	"strings"
-
-	"github.com/mattn/go-runewidth"
 )
 
 type alignment int
@@ -19,22 +17,15 @@ const (
 )
 
 const (
+	// MinUnsignedInteger minimum unsigned integer
 	MinUnsignedInteger uint = 0
-	MaxUnsignedInteger      = ^MinUnsignedInteger
-	MaxInteger              = int(MaxUnsignedInteger >> 1)
-	MinInteger              = ^MaxInteger
+	// MaxUnsignedInteger maximum unsigned integer
+	MaxUnsignedInteger = ^MinUnsignedInteger
+	// MaxInteger maximum integer
+	MaxInteger = int(MaxUnsignedInteger >> 1)
+	// MinInteger minimum integer
+	MinInteger = ^MaxInteger
 )
-
-type segment struct {
-	content             string
-	foreground          uint8
-	background          uint8
-	separator           string
-	separatorForeground uint8
-	priority            int
-	width               int
-	hideSeparators      bool
-}
 
 type args struct {
 	CwdMode               *string
@@ -60,16 +51,9 @@ type args struct {
 	ShellVar              *string
 	PathAliases           *string
 	Duration              *string
+	DurationMin           *string
 	Eval                  *bool
 	Condensed             *bool
-}
-
-func (s segment) computeWidth(condensed bool) int {
-	if condensed {
-		return runewidth.StringWidth(s.content) + runewidth.StringWidth(s.separator)
-	} else {
-		return runewidth.StringWidth(s.content) + runewidth.StringWidth(s.separator) + 2
-	}
 }
 
 func warn(msg string) {
@@ -79,9 +63,8 @@ func warn(msg string) {
 func pathExists(path string) bool {
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		return false
-	} else {
-		return true
 	}
+	return true
 }
 
 func getValidCwd() string {
@@ -124,10 +107,11 @@ var modules = map[string]func(*powerline){
 	"load":                segmentLoad,
 	"newline":             segmentNewline,
 	"perlbrew":            segmentPerlbrew,
+	"plenv":               segmentPlEnv,
 	"perms":               segmentPerms,
 	"root":                segmentRoot,
 	"shell-var":           segmentShellVar,
-	"ssh":                 segmentSsh,
+	"ssh":                 segmentSSH,
 	"termtitle":           segmentTermTitle,
 	"terraform-workspace": segmentTerraformWorkspace,
 	"time":                segmentTime,
@@ -194,19 +178,19 @@ func main() {
 				"(valid choices: bare, bash, zsh)")),
 		Modules: flag.String(
 			"modules",
-			"nix-shell,venv,user,host,ssh,cwd,perms,git,hg,bzr,fossil,jobs,exit,root,vgo",
+			"venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root",
 			commentsWithDefaults("The list of modules to load, separated by ','",
-				"(valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, root, shell-var, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
+				"(valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
 		ModulesRight: flag.String(
 			"modules-right",
 			"",
 			comments("The list of modules to load anchored to the right, for shells that support it, separated by ','",
-				"(valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, root, shell-var, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
+				"(valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
 		Priority: flag.String(
 			"priority",
 			"root,cwd,user,host,ssh,perms,git-branch,git-status,hg,jobs,exit,cwd-path",
 			commentsWithDefaults("Segments sorted by priority, if not enough space exists, the least priorized segments are removed first. Separate with ','",
-				"(valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, root, shell-var, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
+				"(valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
 		MaxWidthPercentage: flag.Int(
 			"max-width",
 			0,
@@ -251,6 +235,10 @@ func main() {
 			"duration",
 			"",
 			comments("The elapsed clock-time of the previous command")),
+		DurationMin: flag.String(
+			"duration-min",
+			"0",
+			comments("The minimal time a command has to take before the duration segment is shown")),
 		Eval: flag.Bool(
 			"eval",
 			false,
@@ -271,6 +259,20 @@ func main() {
 				themes[*args.Theme] = jsonTheme
 			} else {
 				println("Error reading theme")
+				println(err.Error())
+			}
+		}
+	}
+	if strings.HasSuffix(*args.Mode, ".json") {
+		modeTheme := symbolTemplates["compatible"]
+
+		file, err := ioutil.ReadFile(*args.Mode)
+		if err == nil {
+			err = json.Unmarshal(file, &modeTheme)
+			if err == nil {
+				symbolTemplates[*args.Mode] = modeTheme
+			} else {
+				println("Error reading mode")
 				println(err.Error())
 			}
 		}
