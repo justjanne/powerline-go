@@ -5,6 +5,7 @@ import (
 	pwl "github.com/justjanne/powerline-go/powerline"
 	"os"
 	"os/exec"
+	"path"
 	"regexp"
 	"strconv"
 	"strings"
@@ -127,19 +128,43 @@ func parseGitStats(status []string) repoStats {
 	return stats
 }
 
-func segmentGit(p *powerline) []pwl.Segment {
-	if len(p.ignoreRepos) > 0 {
-		out, err := runGitCommand("git", "rev-parse", "--show-toplevel")
-		if err != nil {
-			return []pwl.Segment{}
-		}
-		out = strings.TrimSpace(out)
-		if p.ignoreRepos[out] {
-			return []pwl.Segment{}
-		}
+func repoRoot(path string) (string, error) {
+	out, err := runGitCommand("git", "rev-parse", "--show-toplevel")
+	if err != nil {
+		return "", err
+	}
+	return strings.TrimSpace(out), nil
+}
+
+func indexSize(root string) (int64, error) {
+	fileInfo, err := os.Stat(path.Join(root, ".git", "index"))
+	if err != nil {
+		return 0, err
 	}
 
-	out, err := runGitCommand("git", "status", "--porcelain", "-b", "--ignore-submodules")
+	return fileInfo.Size(), nil
+}
+
+func segmentGit(p *powerline) []pwl.Segment {
+	repoRoot, err := repoRoot(p.cwd)
+	if err != nil {
+		return []pwl.Segment{}
+	}
+
+	if len(p.ignoreRepos) > 0 && p.ignoreRepos[repoRoot] {
+		return []pwl.Segment{}
+	}
+
+	indexSize, err := indexSize(p.cwd)
+	args := []string{
+		"status", "--porcelain", "-b", "--ignore-submodules",
+	}
+
+	if *p.args.GitAssumeUnchangedSize > 0 && indexSize > (*p.args.GitAssumeUnchangedSize*1024) {
+		args = append(args, "-uno")
+	}
+
+	out, err := runGitCommand("git", args...)
 	if err != nil {
 		return []pwl.Segment{}
 	}

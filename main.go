@@ -30,34 +30,35 @@ const (
 )
 
 type args struct {
-	CwdMode               *string
-	CwdMaxDepth           *int
-	CwdMaxDirSize         *int
-	ColorizeHostname      *bool
-	HostnameOnlyIfSSH     *bool
-	SshAlternateIcon      *bool
-	EastAsianWidth        *bool
-	PromptOnNewLine       *bool
-	StaticPromptIndicator *bool
-	Mode                  *string
-	Theme                 *string
-	Shell                 *string
-	Modules               *string
-	ModulesRight          *string
-	Priority              *string
-	MaxWidthPercentage    *int
-	TruncateSegmentWidth  *int
-	PrevError             *int
-	NumericExitCodes      *bool
-	IgnoreRepos           *string
-	ShortenGKENames       *bool
-	ShortenEKSNames       *bool
-	ShellVar              *string
-	PathAliases           *string
-	Duration              *string
-	DurationMin           *string
-	Eval                  *bool
-	Condensed             *bool
+	CwdMode                *string
+	CwdMaxDepth            *int
+	CwdMaxDirSize          *int
+	ColorizeHostname       *bool
+	HostnameOnlyIfSSH      *bool
+	SshAlternateIcon       *bool
+	EastAsianWidth         *bool
+	PromptOnNewLine        *bool
+	StaticPromptIndicator  *bool
+	GitAssumeUnchangedSize *int64
+	Mode                   *string
+	Theme                  *string
+	Shell                  *string
+	Modules                *string
+	ModulesRight           *string
+	Priority               *string
+	MaxWidthPercentage     *int
+	TruncateSegmentWidth   *int
+	PrevError              *int
+	NumericExitCodes       *bool
+	IgnoreRepos            *string
+	ShortenGKENames        *bool
+	ShortenEKSNames        *bool
+	ShellVar               *string
+	PathAliases            *string
+	Duration               *string
+	DurationMin            *string
+	Eval                   *bool
+	Condensed              *bool
 }
 
 func warn(msg string) {
@@ -174,6 +175,10 @@ func main() {
 			"static-prompt-indicator",
 			false,
 			comments("Always show the prompt indicator with the default color, never with the error color")),
+		GitAssumeUnchangedSize: flag.Int64(
+			"git-assume-unchanged-size",
+			2048,
+			comments("Disable checking for changed/edited files in git repositories where the index is larger than this size (in KB), improves performance")),
 		Mode: flag.String(
 			"mode",
 			"patched",
