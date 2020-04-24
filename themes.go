@@ -4,12 +4,14 @@ package main
 type Symbols struct {
 	Lock                 string
 	Network              string
+	NetworkAlternate     string
 	Separator            string
 	SeparatorThin        string
 	SeparatorReverse     string
 	SeparatorReverseThin string
 
 	RepoDetached   string
+	RepoBranch     string
 	RepoAhead      string
 	RepoBehind     string
 	RepoStaged     string

@@ -161,6 +161,10 @@ func segmentGit(p *powerline) []pwl.Segment {
 		branch = getGitDetachedBranch(p)
 	}
 
+	if len(p.symbolTemplates.RepoBranch) > 0 {
+		branch = fmt.Sprintf("%s %s", p.symbolTemplates.RepoBranch, branch)
+	}
+
 	var foreground, background uint8
 	if stats.dirty() {
 		foreground = p.theme.RepoDirtyFg

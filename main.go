@@ -35,6 +35,7 @@ type args struct {
 	CwdMaxDirSize         *int
 	ColorizeHostname      *bool
 	HostnameOnlyIfSSH     *bool
+	SshAlternateIcon      *bool
 	EastAsianWidth        *bool
 	PromptOnNewLine       *bool
 	StaticPromptIndicator *bool
@@ -156,7 +157,11 @@ func main() {
 		HostnameOnlyIfSSH: flag.Bool(
 			"hostname-only-if-ssh",
 			false,
-			comments("Show hostname only for SSH connection")),
+			comments("Show hostname only for SSH connections")),
+		SshAlternateIcon: flag.Bool(
+			"alternate-ssh-icon",
+			false,
+			comments("Show the older, original icon for SSH connections")),
 		EastAsianWidth: flag.Bool(
 			"east-asian-width",
 			false,
