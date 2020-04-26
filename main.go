@@ -7,6 +7,8 @@ import (
 	"io/ioutil"
 	"os"
 	"strings"
+
+	pwl "github.com/justjanne/powerline-go/powerline"
 )
 
 type alignment int
@@ -28,32 +30,35 @@ const (
 )
 
 type args struct {
-	CwdMode               *string
-	CwdMaxDepth           *int
-	CwdMaxDirSize         *int
-	ColorizeHostname      *bool
-	EastAsianWidth        *bool
-	PromptOnNewLine       *bool
-	StaticPromptIndicator *bool
-	Mode                  *string
-	Theme                 *string
-	Shell                 *string
-	Modules               *string
-	ModulesRight          *string
-	Priority              *string
-	MaxWidthPercentage    *int
-	TruncateSegmentWidth  *int
-	PrevError             *int
-	NumericExitCodes      *bool
-	IgnoreRepos           *string
-	ShortenGKENames       *bool
-	ShortenEKSNames       *bool
-	ShellVar              *string
-	PathAliases           *string
-	Duration              *string
-	DurationMin           *string
-	Eval                  *bool
-	Condensed             *bool
+	CwdMode                *string
+	CwdMaxDepth            *int
+	CwdMaxDirSize          *int
+	ColorizeHostname       *bool
+	HostnameOnlyIfSSH      *bool
+	SshAlternateIcon       *bool
+	EastAsianWidth         *bool
+	PromptOnNewLine        *bool
+	StaticPromptIndicator  *bool
+	GitAssumeUnchangedSize *int64
+	Mode                   *string
+	Theme                  *string
+	Shell                  *string
+	Modules                *string
+	ModulesRight           *string
+	Priority               *string
+	MaxWidthPercentage     *int
+	TruncateSegmentWidth   *int
+	PrevError              *int
+	NumericExitCodes       *bool
+	IgnoreRepos            *string
+	ShortenGKENames        *bool
+	ShortenEKSNames        *bool
+	ShellVar               *string
+	PathAliases            *string
+	Duration               *string
+	DurationMin            *string
+	Eval                   *bool
+	Condensed              *bool
 }
 
 func warn(msg string) {
@@ -68,8 +73,8 @@ func pathExists(path string) bool {
 }
 
 func getValidCwd() string {
-	cwd, exists := os.LookupEnv("PWD")
-	if !exists {
+	cwd, err := os.Getwd()
+	if err != nil {
 		warn("Your current directory is invalid.")
 		print("> ")
 		os.Exit(1)
@@ -88,15 +93,17 @@ func getValidCwd() string {
 	return cwd
 }
 
-var modules = map[string]func(*powerline){
+var modules = map[string]func(*powerline) []pwl.Segment{
 	"aws":                 segmentAWS,
 	"bzr":                 segmentBzr,
 	"cwd":                 segmentCwd,
 	"docker":              segmentDocker,
+	"docker-context":      segmentDockerContext,
 	"dotenv":              segmentDotEnv,
 	"duration":            segmentDuration,
 	"exit":                segmentExitCode,
 	"fossil":              segmentFossil,
+	"gcp":                 segmentGCP,
 	"git":                 segmentGit,
 	"gitlite":             segmentGitLite,
 	"hg":                  segmentHg,
@@ -111,6 +118,7 @@ var modules = map[string]func(*powerline){
 	"perms":               segmentPerms,
 	"root":                segmentRoot,
 	"shell-var":           segmentShellVar,
+	"shenv":               segmentShEnv,
 	"ssh":                 segmentSSH,
 	"termtitle":           segmentTermTitle,
 	"terraform-workspace": segmentTerraformWorkspace,
@@ -148,7 +156,15 @@ func main() {
 		ColorizeHostname: flag.Bool(
 			"colorize-hostname",
 			false,
-			comments("Colorize the hostname based on a hash of itself")),
+			comments("Colorize the hostname based on a hash of itself, or use the PLGO_HOSTNAMEFG and/or PLGO_HOSTNAMEBG env vars.")),
+		HostnameOnlyIfSSH: flag.Bool(
+			"hostname-only-if-ssh",
+			false,
+			comments("Show hostname only for SSH connections")),
+		SshAlternateIcon: flag.Bool(
+			"alternate-ssh-icon",
+			false,
+			comments("Show the older, original icon for SSH connections")),
 		EastAsianWidth: flag.Bool(
 			"east-asian-width",
 			false,
@@ -161,6 +177,10 @@ func main() {
 			"static-prompt-indicator",
 			false,
 			comments("Always show the prompt indicator with the default color, never with the error color")),
+		GitAssumeUnchangedSize: flag.Int64(
+			"git-assume-unchanged-size",
+			2048,
+			comments("Disable checking for changed/edited files in git repositories where the index is larger than this size (in KB), improves performance")),
 		Mode: flag.String(
 			"mode",
 			"patched",
@@ -180,17 +200,17 @@ func main() {
 			"modules",
 			"venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root",
 			commentsWithDefaults("The list of modules to load, separated by ','",
-				"(valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
+				"(valid choices: aws, cwd, docker, docker-context, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
 		ModulesRight: flag.String(
 			"modules-right",
 			"",
 			comments("The list of modules to load anchored to the right, for shells that support it, separated by ','",
-				"(valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
+				"(valid choices: aws, cwd, docker, docker-context, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
 		Priority: flag.String(
 			"priority",
 			"root,cwd,user,host,ssh,perms,git-branch,git-status,hg,jobs,exit,cwd-path",
 			commentsWithDefaults("Segments sorted by priority, if not enough space exists, the least priorized segments are removed first. Separate with ','",
-				"(valid choices: aws, cwd, docker, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
+				"(valid choices: aws, cwd, docker, docker-context, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
 		MaxWidthPercentage: flag.Int(
 			"max-width",
 			0,

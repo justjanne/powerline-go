@@ -7,7 +7,7 @@ import (
 	pwl "github.com/justjanne/powerline-go/powerline"
 )
 
-func segmentDocker(p *powerline) {
+func segmentDocker(p *powerline) []pwl.Segment {
 	var docker string
 	dockerMachineName, _ := os.LookupEnv("DOCKER_MACHINE_NAME")
 	dockerHost, _ := os.LookupEnv("DOCKER_HOST")
@@ -22,10 +22,12 @@ func segmentDocker(p *powerline) {
 	}
 
 	if docker != "" {
-		p.appendSegment("docker", pwl.Segment{
+		return []pwl.Segment{{
+			Name:       "docker",
 			Content:    docker,
 			Foreground: p.theme.DockerMachineFg,
 			Background: p.theme.DockerMachineBg,
-		})
+		}}
 	}
+	return []pwl.Segment{}
 }

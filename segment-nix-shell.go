@@ -5,15 +5,16 @@ import (
 	"os"
 )
 
-func segmentNixShell(p *powerline) {
+func segmentNixShell(p *powerline) []pwl.Segment {
 	var nixShell string
 	nixShell, _ = os.LookupEnv("IN_NIX_SHELL")
 	if nixShell == "" {
-		return
+		return []pwl.Segment{}
 	}
-	p.appendSegment("nix-shell", pwl.Segment{
+	return []pwl.Segment{{
+		Name:       "nix-shell",
 		Content:    nixShell,
 		Foreground: p.theme.NixShellFg,
 		Background: p.theme.NixShellBg,
-	})
+	}}
 }

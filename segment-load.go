@@ -8,11 +8,11 @@ import (
 	"github.com/shirou/gopsutil/load"
 )
 
-func segmentLoad(p *powerline) {
+func segmentLoad(p *powerline) []pwl.Segment {
 	c := runtime.NumCPU()
 	a, err := load.Avg()
 	if err != nil {
-		return
+		return []pwl.Segment{}
 	}
 	bg := p.theme.LoadBg
 
@@ -28,9 +28,10 @@ func segmentLoad(p *powerline) {
 		bg = p.theme.LoadHighBg
 	}
 
-	p.appendSegment("load", pwl.Segment{
+	return []pwl.Segment{{
+		Name:       "load",
 		Content:    fmt.Sprintf("%.2f", a.Load5),
 		Foreground: p.theme.LoadFg,
 		Background: bg,
-	})
+	}}
 }

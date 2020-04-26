@@ -6,6 +6,7 @@ import (
 
 // Segment describes an information to display on the command line prompt
 type Segment struct {
+	Name string
 	// Content is the text to be displayed on the command line prompt
 	Content string
 	// Foreground is the text color (see https://misc.flogisoft.com/bash/tip_colors_and_formatting#background1)
@@ -21,6 +22,8 @@ type Segment struct {
 	// HideSeparators indicated not to display any separator with next segment.
 	HideSeparators bool
 	Width          int
+	// NewLine defines a newline segment to break the powerline in multi lines
+	NewLine bool
 }
 
 func (s Segment) ComputeWidth(condensed bool) int {

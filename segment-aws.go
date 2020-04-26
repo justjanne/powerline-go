@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-func segmentAWS(p *powerline) {
+func segmentAWS(p *powerline) []pwl.Segment {
 	profile := os.Getenv("AWS_PROFILE")
 	region := os.Getenv("AWS_DEFAULT_REGION")
 	if profile != "" {
@@ -13,10 +13,12 @@ func segmentAWS(p *powerline) {
 		if region != "" {
 			r = " (" + region + ")"
 		}
-		p.appendSegment("aws", pwl.Segment{
+		return []pwl.Segment{{
+			Name:       "aws",
 			Content:    profile + r,
 			Foreground: p.theme.AWSFg,
 			Background: p.theme.AWSBg,
-		})
+		}}
 	}
+	return []pwl.Segment{}
 }

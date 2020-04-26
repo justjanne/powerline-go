@@ -7,19 +7,16 @@ import (
 	pwl "github.com/justjanne/powerline-go/powerline"
 )
 
-func segmentPlugin(p *powerline, plugin string) bool {
+func segmentPlugin(p *powerline, plugin string) ([]pwl.Segment, bool) {
 	output, err := exec.Command("powerline-go-" + plugin).Output()
 	if err != nil {
-		return false
+		return nil, false
 	}
 	segments := []pwl.Segment{}
 	err = json.Unmarshal(output, &segments)
 	if err != nil {
 		// The plugin was found but no valid data was returned. Ignore it
-		return true
+		return []pwl.Segment{}, true
 	}
-	for _, s := range segments {
-		p.appendSegment(plugin, s)
-	}
-	return true
+	return segments, true
 }

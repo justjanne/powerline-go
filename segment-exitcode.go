@@ -65,7 +65,7 @@ func getMeaningFromExitCode(exitCode int) string {
 	}
 }
 
-func segmentExitCode(p *powerline) {
+func segmentExitCode(p *powerline) []pwl.Segment {
 	var meaning string
 	if *p.args.PrevError != 0 {
 		if *p.args.NumericExitCodes {
@@ -73,10 +73,12 @@ func segmentExitCode(p *powerline) {
 		} else {
 			meaning = getMeaningFromExitCode(*p.args.PrevError)
 		}
-		p.appendSegment("exit", pwl.Segment{
+		return []pwl.Segment{{
+			Name:       "exit",
 			Content:    meaning,
 			Foreground: p.theme.CmdFailedFg,
 			Background: p.theme.CmdFailedBg,
-		})
+		}}
 	}
+	return []pwl.Segment{}
 }

@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func segmentJobs(p *powerline) {
+func segmentJobs(p *powerline) []pwl.Segment {
 	nJobs := -1
 
 	ppid := os.Getppid()
@@ -29,10 +29,12 @@ func segmentJobs(p *powerline) {
 	}
 
 	if nJobs > 0 {
-		p.appendSegment("jobs", pwl.Segment{
+		return []pwl.Segment{{
+			Name:       "jobs",
 			Content:    fmt.Sprintf("%d", nJobs),
 			Foreground: p.theme.JobsFg,
 			Background: p.theme.JobsBg,
-		})
+		}}
 	}
+	return []pwl.Segment{}
 }

@@ -30,7 +30,7 @@ func getHgStatus() (bool, bool, bool) {
 	return hasModifiedFiles, hasUntrackedFiles, hasMissingFiles
 }
 
-func segmentHg(p *powerline) {
+func segmentHg(p *powerline) []pwl.Segment {
 	out, _ := exec.Command("hg", "branch").Output()
 	output := strings.SplitN(string(out), "\n", 2)
 	if len(output) > 0 && output[0] != "" {
@@ -61,10 +61,12 @@ func segmentHg(p *powerline) {
 			content = fmt.Sprintf(branch)
 		}
 
-		p.appendSegment("hg", pwl.Segment{
+		return []pwl.Segment{{
+			Name:       "hg",
 			Content:    content,
 			Foreground: foreground,
 			Background: background,
-		})
+		}}
 	}
+	return []pwl.Segment{}
 }
