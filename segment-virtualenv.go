@@ -18,6 +18,9 @@ func segmentVirtualEnv(p *powerline) []pwl.Segment {
 	if env == "" {
 		env, _ = os.LookupEnv("CONDA_DEFAULT_ENV")
 	}
+	if env == "" {
+		env, _ = os.LookupEnv("PYENV_VERSION")
+	}
 	segments := []pwl.Segment{}
 	if env != "" {
 		envName := path.Base(env)
