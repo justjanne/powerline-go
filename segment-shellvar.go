@@ -5,21 +5,23 @@ import (
 	"os"
 )
 
-func segmentShellVar(p *powerline) {
+func segmentShellVar(p *powerline) []pwl.Segment {
 	shellVarName := *p.args.ShellVar
 	varContent, varExists := os.LookupEnv(shellVarName)
 
 	if varExists {
 		if varContent != "" {
-			p.appendSegment("shell-var", pwl.Segment{
+			return []pwl.Segment{{
+				Name:       "shell-var",
 				Content:    varContent,
 				Foreground: p.theme.ShellVarFg,
 				Background: p.theme.ShellVarBg,
-			})
-		} else {
-			warn("Shell variable " + shellVarName + " is empty.")
+			}}
 		}
+		warn("Shell variable " + shellVarName + " is empty.")
+
 	} else {
 		warn("Shell variable " + shellVarName + " does not exist.")
 	}
+	return []pwl.Segment{}
 }

@@ -26,14 +26,14 @@ const (
 	hours        int64 = minutes * 60
 )
 
-func segmentDuration(p *powerline) {
+func segmentDuration(p *powerline) []pwl.Segment {
 	if p.args.Duration == nil || *p.args.Duration == "" {
-		p.appendSegment("duration", pwl.Segment{
+		return []pwl.Segment{{
+			Name:       "duration",
 			Content:    "No duration",
 			Foreground: p.theme.DurationFg,
 			Background: p.theme.DurationBg,
-		})
-		return
+		}}
 	}
 
 	durationValue := strings.Trim(*p.args.Duration, "'\"")
@@ -44,16 +44,16 @@ func segmentDuration(p *powerline) {
 	durationFloat, err := strconv.ParseFloat(durationValue, 64)
 	durationMinFloat, _ := strconv.ParseFloat(durationMinValue, 64)
 	if err != nil {
-		p.appendSegment("duration", pwl.Segment{
+		return []pwl.Segment{{
+			Name:       "duration",
 			Content:    fmt.Sprintf("Failed to convert '%s' to a number", *p.args.Duration),
 			Foreground: p.theme.DurationFg,
 			Background: p.theme.DurationBg,
-		})
-		return
+		}}
 	}
 
 	if durationFloat < durationMinFloat {
-		return
+		return []pwl.Segment{}
 	}
 
 	duration := time.Duration(durationFloat * float64(time.Second.Nanoseconds()))
@@ -88,10 +88,12 @@ func segmentDuration(p *powerline) {
 			content = fmt.Sprintf("%d\u00B5s", ns/microseconds)
 		}
 
-		p.appendSegment("duration", pwl.Segment{
+		return []pwl.Segment{{
+			Name:       "duration",
 			Content:    content,
 			Foreground: p.theme.DurationFg,
 			Background: p.theme.DurationBg,
-		})
+		}}
 	}
+	return []pwl.Segment{}
 }

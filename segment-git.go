@@ -5,6 +5,7 @@ import (
 	pwl "github.com/justjanne/powerline-go/powerline"
 	"os"
 	"os/exec"
+	"path"
 	"regexp"
 	"strconv"
 	"strings"
@@ -24,24 +25,27 @@ func (r repoStats) dirty() bool {
 	return r.untracked+r.notStaged+r.staged+r.conflicted > 0
 }
 
-func addRepoStatsSegment(p *powerline, nChanges int, symbol string, foreground uint8, background uint8) {
+func addRepoStatsSegment(nChanges int, symbol string, foreground uint8, background uint8) []pwl.Segment {
 	if nChanges > 0 {
-		p.appendSegment("git-status", pwl.Segment{
+		return []pwl.Segment{{
+			Name:       "git-status",
 			Content:    fmt.Sprintf("%d%s", nChanges, symbol),
 			Foreground: foreground,
 			Background: background,
-		})
+		}}
 	}
+	return []pwl.Segment{}
 }
 
-func (r repoStats) addToPowerline(p *powerline) {
-	addRepoStatsSegment(p, r.ahead, p.symbolTemplates.RepoAhead, p.theme.GitAheadFg, p.theme.GitAheadBg)
-	addRepoStatsSegment(p, r.behind, p.symbolTemplates.RepoBehind, p.theme.GitBehindFg, p.theme.GitBehindBg)
-	addRepoStatsSegment(p, r.staged, p.symbolTemplates.RepoStaged, p.theme.GitStagedFg, p.theme.GitStagedBg)
-	addRepoStatsSegment(p, r.notStaged, p.symbolTemplates.RepoNotStaged, p.theme.GitNotStagedFg, p.theme.GitNotStagedBg)
-	addRepoStatsSegment(p, r.untracked, p.symbolTemplates.RepoUntracked, p.theme.GitUntrackedFg, p.theme.GitUntrackedBg)
-	addRepoStatsSegment(p, r.conflicted, p.symbolTemplates.RepoConflicted, p.theme.GitConflictedFg, p.theme.GitConflictedBg)
-	addRepoStatsSegment(p, r.stashed, p.symbolTemplates.RepoStashed, p.theme.GitStashedFg, p.theme.GitStashedBg)
+func (r repoStats) GitSegments(p *powerline) (segments []pwl.Segment) {
+	segments = append(segments, addRepoStatsSegment(r.ahead, p.symbolTemplates.RepoAhead, p.theme.GitAheadFg, p.theme.GitAheadBg)...)
+	segments = append(segments, addRepoStatsSegment(r.behind, p.symbolTemplates.RepoBehind, p.theme.GitBehindFg, p.theme.GitBehindBg)...)
+	segments = append(segments, addRepoStatsSegment(r.staged, p.symbolTemplates.RepoStaged, p.theme.GitStagedFg, p.theme.GitStagedBg)...)
+	segments = append(segments, addRepoStatsSegment(r.notStaged, p.symbolTemplates.RepoNotStaged, p.theme.GitNotStagedFg, p.theme.GitNotStagedBg)...)
+	segments = append(segments, addRepoStatsSegment(r.untracked, p.symbolTemplates.RepoUntracked, p.theme.GitUntrackedFg, p.theme.GitUntrackedBg)...)
+	segments = append(segments, addRepoStatsSegment(r.conflicted, p.symbolTemplates.RepoConflicted, p.theme.GitConflictedFg, p.theme.GitConflictedBg)...)
+	segments = append(segments, addRepoStatsSegment(r.stashed, p.symbolTemplates.RepoStashed, p.theme.GitStashedFg, p.theme.GitStashedBg)...)
+	return
 }
 
 var branchRegex = regexp.MustCompile(`^## (?P<local>\S+?)(\.{3}(?P<remote>\S+?)( \[(ahead (?P<ahead>\d+)(, )?)?(behind (?P<behind>\d+))?])?)?$`)
@@ -124,21 +128,45 @@ func parseGitStats(status []string) repoStats {
 	return stats
 }
 
-func segmentGit(p *powerline) {
-	if len(p.ignoreRepos) > 0 {
-		out, err := runGitCommand("git", "rev-parse", "--show-toplevel")
-		if err != nil {
-			return
-		}
-		out = strings.TrimSpace(out)
-		if p.ignoreRepos[out] {
-			return
-		}
+func repoRoot(path string) (string, error) {
+	out, err := runGitCommand("git", "rev-parse", "--show-toplevel")
+	if err != nil {
+		return "", err
+	}
+	return strings.TrimSpace(out), nil
+}
+
+func indexSize(root string) (int64, error) {
+	fileInfo, err := os.Stat(path.Join(root, ".git", "index"))
+	if err != nil {
+		return 0, err
 	}
 
-	out, err := runGitCommand("git", "status", "--porcelain", "-b", "--ignore-submodules")
+	return fileInfo.Size(), nil
+}
+
+func segmentGit(p *powerline) []pwl.Segment {
+	repoRoot, err := repoRoot(p.cwd)
 	if err != nil {
-		return
+		return []pwl.Segment{}
+	}
+
+	if len(p.ignoreRepos) > 0 && p.ignoreRepos[repoRoot] {
+		return []pwl.Segment{}
+	}
+
+	indexSize, err := indexSize(p.cwd)
+	args := []string{
+		"status", "--porcelain", "-b", "--ignore-submodules",
+	}
+
+	if *p.args.GitAssumeUnchangedSize > 0 && indexSize > (*p.args.GitAssumeUnchangedSize*1024) {
+		args = append(args, "-uno")
+	}
+
+	out, err := runGitCommand("git", args...)
+	if err != nil {
+		return []pwl.Segment{}
 	}
 
 	status := strings.Split(out, "\n")
@@ -158,6 +186,10 @@ func segmentGit(p *powerline) {
 		branch = getGitDetachedBranch(p)
 	}
 
+	if len(p.symbolTemplates.RepoBranch) > 0 {
+		branch = fmt.Sprintf("%s %s", p.symbolTemplates.RepoBranch, branch)
+	}
+
 	var foreground, background uint8
 	if stats.dirty() {
 		foreground = p.theme.RepoDirtyFg
@@ -172,10 +204,12 @@ func segmentGit(p *powerline) {
 		stats.stashed = len(strings.Split(out, "\n")) - 1
 	}
 
-	p.appendSegment("git-branch", pwl.Segment{
+	segments := []pwl.Segment{{
+		Name:       "git-branch",
 		Content:    branch,
 		Foreground: foreground,
 		Background: background,
-	})
-	stats.addToPowerline(p)
+	}}
+	segments = append(segments, stats.GitSegments(p)...)
+	return segments
 }

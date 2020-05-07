@@ -23,6 +23,7 @@ Ported to golang by @justjanne.
   - [ZSH](#zsh)
   - [Fish](#fish)
   - [Nix](#nix)
+  - [PowerShell](#powershell)
 - [Customization](#customization)
 - [License](#license)
 
@@ -55,7 +56,7 @@ but you may have to set your $TERM to `xterm-256color` for it to work.
 If you want to use the "patched" mode (which is the default, and provides
 improved UI), you'll need to install a powerline font, either as fallback,
 or by patching the font you use for your terminal: see
-[powerline-fonts](https://github.com/Lokaltog/powerline-fonts).
+[powerline-fonts](https://github.com/Lokaltog/powerline-fonts).  
 Alternatively you can use "compatible" or "flat" mode.
 
 ### Precompiled Binaries
@@ -142,6 +143,34 @@ if [ "$IN_NIX_SHELL" == "pure" ]; then
 fi
 ```
 
+### Powershell
+
+Redefine `prompt` function on your profile:
+
+```powershell
+# Load powerline-go prompt
+function global:prompt {
+    $pwd = $ExecutionContext.SessionState.Path.CurrentLocation
+    $startInfo = New-Object System.Diagnostics.ProcessStartInfo
+    $startInfo.FileName = "powerline-go"
+    $startInfo.Arguments = "-shell bare"
+    $startInfo.Environment["TERM"] = "xterm-256color"
+    $startInfo.CreateNoWindow = $true
+    $startInfo.StandardOutputEncoding = [System.Text.Encoding]::UTF8
+    $startInfo.RedirectStandardOutput = $true
+    $startInfo.UseShellExecute = $false
+    $startInfo.WorkingDirectory = $pwd
+    $process = New-Object System.Diagnostics.Process
+    $process.StartInfo = $startInfo
+    $process.Start() | Out-Null
+    $standardOut = $process.StandardOutput.ReadToEnd()
+    $process.WaitForExit()
+    $standardOut
+}
+```
+
+Use `ProcessStartInfo` is needed to allow fill the enviromnet variables required by powerline-go.
+
 ## Customization
 
 There are a few optional arguments which can be seen by running
@@ -149,80 +178,87 @@ There are a few optional arguments which can be seen by running
 in your shell’s init file.
 
 ```
-Usage of ./powerline-go:
+Usage of powerline-go:
+  -alternate-ssh-icon
+    	 Show the older, original icon for SSH connections
   -colorize-hostname
-         Colorize the hostname based on a hash of itself
+    	 Colorize the hostname based on a hash of itself, or use the PLGO_HOSTNAMEFG and/or PLGO_HOSTNAMEBG env vars.
   -condensed
-         Remove spacing between segments
+    	 Remove spacing between segments
   -cwd-max-depth int
-         Maximum number of directories to show in path
-         (default 5)
+    	 Maximum number of directories to show in path
+    	 (default 5)
   -cwd-max-dir-size int
-         Maximum number of letters displayed for each directory in the path
-         (default -1)
+    	 Maximum number of letters displayed for each directory in the path
+    	 (default -1)
   -cwd-mode string
-         How to display the current directory
-         (valid choices: fancy, plain, dironly)
-         (default "fancy")
+    	 How to display the current directory
+    	 (valid choices: fancy, plain, dironly)
+    	 (default "fancy")
   -duration string
-         The elapsed clock-time of the previous command
+    	 The elapsed clock-time of the previous command
   -duration-min string
-         The minimal time a command has to take before the duration segment is shown (default "0")
+    	 The minimal time a command has to take before the duration segment is shown (default "0")
   -east-asian-width
-         Use East Asian Ambiguous Widths
+    	 Use East Asian Ambiguous Widths
   -error int
-         Exit code of previously executed command
+    	 Exit code of previously executed command
   -eval
-         Output prompt in 'eval' format.
+    	 Output prompt in 'eval' format.
+  -git-assume-unchanged-size int
+    	 Disable checking for changed/edited files in git repositories where the index is larger than this size (in KB), improves performance (default 2048)
+  -hostname-only-if-ssh
+    	 Show hostname only for SSH connections
   -ignore-repos string
-         A list of git repos to ignore. Separate with ','.
-         Repos are identified by their root directory.
+    	 A list of git repos to ignore. Separate with ','.
+    	 Repos are identified by their root directory.
   -max-width int
-         Maximum width of the shell that the prompt may use, in percent. Setting this to 0 disables the shrinking subsystem.
+    	 Maximum width of the shell that the prompt may use, in percent. Setting this to 0 disables the shrinking subsystem.
   -mode string
-         The characters used to make separators between segments.
-         (valid choices: patched, compatible, flat)
-         (default "patched")
+    	 The characters used to make separators between segments.
+    	 (valid choices: patched, compatible, flat)
+    	 (default "patched")
   -modules string
-         The list of modules to load, separated by ','
-         (valid choices: aws, bzr, cwd, docker, dotenv, duration, exit, fossil, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)
-         (default "venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root")
+    	 The list of modules to load, separated by ','
+    	 (valid choices: aws, bzr, cwd, docker, docker-context, dotenv, duration, exit, fossil, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)
+    	 (default "venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root")
   -modules-right string
-         The list of modules to load anchored to the right, for shells that support it, separated by ','
-         (valid choices: aws, bzr, cwd, docker, dotenv, duration, exit, fossil, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)
+    	 The list of modules to load anchored to the right, for shells that support it, separated by ','
+    	 (valid choices: aws, bzr, cwd, docker, docker-context, dotenv, duration, exit, fossil, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)
   -newline
-         Show the prompt on a new line
+    	 Show the prompt on a new line
   -numeric-exit-codes
-         Shows numeric exit codes for errors.
+    	 Shows numeric exit codes for errors.
   -path-aliases string
-         One or more aliases from a path to a short name. Separate with ','.
-         An alias maps a path like foo/bar/baz to a short name like FBB.
-         Specify these as key/value pairs like foo/bar/baz=FBB.
-         Use '~' for your home dir. You may need to escape this character to avoid shell substitution.
+    	 One or more aliases from a path to a short name. Separate with ','.
+    	 An alias maps a path like foo/bar/baz to a short name like FBB.
+    	 Specify these as key/value pairs like foo/bar/baz=FBB.
+    	 Use '~' for your home dir. You may need to escape this character to avoid shell substitution.
   -priority string
-         Segments sorted by priority, if not enough space exists, the least priorized segments are removed first. Separate with ','
-         (valid choices: aws, bzr, cwd, docker, dotenv, duration, exit, fossil, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)
-         (default "root,cwd,user,host,ssh,perms,git,hg,jobs,exit,cwd-path")
+    	 Segments sorted by priority, if not enough space exists, the least priorized segments are removed first. Separate with ','
+    	 (valid choices: aws, bzr, cwd, docker, docker-context, dotenv, duration, exit, fossil, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)
+    	 (default "root,cwd,user,host,ssh,perms,git,git-branch,git-status,hg,jobs,exit,cwd-path")
   -shell string
-         Set this to your shell type
-         (valid choices: bare, bash, zsh)
-         (default "bash")
+    	 Set this to your shell type
+    	 (valid choices: bare, bash, zsh)
+    	 (default "bash")
   -shell-var string
-         A shell variable to add to the segments.
+    	 A shell variable to add to the segments.
   -shorten-eks-names
-         Shortens names for EKS Kube clusters.
+    	 Shortens names for EKS Kube clusters.
   -shorten-gke-names
-         Shortens names for GKE Kube clusters.
+    	 Shortens names for GKE Kube clusters.
   -static-prompt-indicator
-         Always show the prompt indicator with the default color, never with the error color
+    	 Always show the prompt indicator with the default color, never with the error color
   -theme string
-         Set this to the theme you want to use
-         (valid choices: default, low-contrast)
-         (default "default")
+    	 Set this to the theme you want to use
+    	 (valid choices: default, low-contrast)
+    	 (default "default")
   -truncate-segment-width int
-         Minimum width of a segment, segments longer than this will be shortened if space is limited. Setting this to 0 disables it.
-         (default 16)
+    	 Minimum width of a segment, segments longer than this will be shortened if space is limited. Setting this to 0 disables it.
+    	 (default 16)
 ```
+
 ### Eval
 
 If using `eval` and `-modules-right` is desired, the shell setup must be modified slightly, as shown below:
@@ -285,7 +321,7 @@ Aliases are defined as comma-separated key value pairs, like this:
 ```bash
 powerline-go ... -path-aliases \$GOPATH/src/github.com=@GOPATH-GH,\~/work/projects/foo=@FOO,\~/work/projects/bar=@BAR
 ```
-
+    
 Note that you should use `~` instead of `/home/username` when specifying the
 path. Also make sure to escape the `~` character. Otherwise your shell will
 perform interpolation on it before `powerline-go` can see it!
@@ -362,6 +398,6 @@ end
 
 ## License
 
-> This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-> This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-> You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
+> This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.  
+> This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.  
+> You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.  

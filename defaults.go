@@ -4,6 +4,7 @@ var symbolTemplates = map[string]Symbols{
 	"compatible": {
 		Lock:                 "RO",
 		Network:              "SSH",
+		NetworkAlternate:     "SSH",
 		Separator:            "\u25B6",
 		SeparatorThin:        "\u276F",
 		SeparatorReverse:     "\u25C0",
@@ -21,11 +22,13 @@ var symbolTemplates = map[string]Symbols{
 	"patched": {
 		Lock:                 "\uE0A2",
 		Network:              "\u260E",
+		NetworkAlternate:     "\uE0A2",
 		Separator:            "\uE0B0",
 		SeparatorThin:        "\uE0B1",
 		SeparatorReverse:     "\uE0B2",
 		SeparatorReverseThin: "\uE0B3",
 
+		RepoBranch:     "\uE0A0",
 		RepoDetached:   "\u2693",
 		RepoAhead:      "\u2B06",
 		RepoBehind:     "\u2B07",
@@ -69,7 +72,7 @@ var shellInfos = map[string]ShellInfo{
 		evalPromptRightSuffix: `"`,
 	},
 	"bare": {
-		colorTemplate: "%s",
+		colorTemplate:    "%s",
 		rootIndicator:    "$",
 		escapedBackslash: `\`,
 		escapedBacktick:  "`",
@@ -137,6 +140,9 @@ var themes = map[string]Theme{
 		SvnChangesFg: 22, // dark green
 		SvnChangesBg: 148,
 
+		GCPFg: 117,
+		GCPBg: 26,
+
 		GitAheadFg:      250,
 		GitAheadBg:      240,
 		GitBehindFg:     250,
@@ -172,6 +178,9 @@ var themes = map[string]Theme{
 
 		ShellVarFg: 52,
 		ShellVarBg: 11,
+
+		ShEnvFg: 15,
+		ShEnvBg: 130,
 
 		NodeFg: 15,
 		NodeBg: 40,
@@ -533,6 +542,9 @@ var themes = map[string]Theme{
 		TimeFg: 236,
 		TimeBg: 15,
 
+		ShEnvFg: 130,
+		ShEnvBg: 15,
+
 		LoadFg:           15,
 		LoadBg:           22,
 		LoadHighBg:       161,
@@ -861,6 +873,8 @@ var themes = map[string]Theme{
 		TimeBg:             0,
 		ShellVarFg:         1,
 		ShellVarBg:         11,
+		ShEnvFg:            15,
+		ShEnvBg:            9,
 		NodeFg:             15,
 		NodeBg:             40,
 		LoadFg:             15,
@@ -1189,6 +1203,8 @@ var themes = map[string]Theme{
 		TimeBg:             0,
 		ShellVarFg:         1,
 		ShellVarBg:         11,
+		ShEnvFg:            15,
+		ShEnvBg:            9,
 		NodeFg:             15,
 		NodeBg:             40,
 		LoadFg:             15,
@@ -1457,4 +1473,116 @@ var themes = map[string]Theme{
 			255: 243,
 		},
 	},
+	"gruvbox": {
+		/* based on https://github.com/b-ryan/powerline-shell/blob/master/powerline_shell/themes/gruvbox.py */
+		Reset:              0,
+		DefaultFg:          gruvbox_light0,
+		DefaultBg:          gruvbox_dark0,
+		UsernameFg:         gruvbox_bright_purple,
+		UsernameBg:         gruvbox_dark2,
+		UsernameRootBg:     gruvbox_faded_red,
+		HostnameFg:         gruvbox_bright_purple,
+		HostnameBg:         gruvbox_dark1,
+		HomeSpecialDisplay: true,
+		HomeFg:             gruvbox_light2,
+		HomeBg:             gruvbox_neutral_blue,
+		PathFg:             gruvbox_light3,
+		PathBg:             gruvbox_dark3,
+		CwdFg:              gruvbox_light2,
+		SeparatorFg:        gruvbox_dark_gray,
+		ReadonlyFg:         gruvbox_light0,
+		ReadonlyBg:         gruvbox_bright_red,
+		SSHFg:              gruvbox_light0,
+		SSHBg:              gruvbox_faded_purple,
+		DockerMachineFg:    gruvbox_light0, // match ssh-fg
+		DockerMachineBg:    gruvbox_faded_purple, // match ssh-bg
+		DotEnvFg:           gruvbox_light0, // match ssh-fg
+		DotEnvBg:           gruvbox_faded_purple, // match ssh-bg
+		RepoCleanFg:        gruvbox_dark1,
+		RepoCleanBg:        gruvbox_faded_green,
+		RepoDirtyFg:        gruvbox_light0,
+		RepoDirtyBg:        gruvbox_faded_orange,
+		JobsFg:             gruvbox_neutral_aqua,
+		JobsBg:             gruvbox_dark1,
+		CmdPassedFg:        gruvbox_light4,
+		CmdPassedBg:        gruvbox_dark1,
+		CmdFailedFg:        gruvbox_light0,
+		CmdFailedBg:        gruvbox_neutral_red,
+		SvnChangesFg:       gruvbox_light0,
+		SvnChangesBg:       gruvbox_faded_orange,
+		GitAheadFg:         gruvbox_light3,
+		GitAheadBg:         gruvbox_dark2,
+		GitBehindFg:        gruvbox_light3,
+		GitBehindBg:        gruvbox_dark2,
+		GitStagedFg:        gruvbox_light0,
+		GitStagedBg:        gruvbox_neutral_green,
+		GitNotStagedFg:     gruvbox_light0,
+		GitNotStagedBg:     gruvbox_neutral_orange,
+		GitUntrackedFg:     gruvbox_light0,
+		GitUntrackedBg:     gruvbox_faded_red,
+		GitConflictedFg:    gruvbox_light0,
+		GitConflictedBg:    gruvbox_neutral_red,
+		GitStashedFg:       gruvbox_dark0,
+		GitStashedBg:       gruvbox_neutral_yellow,
+		VirtualEnvFg:       gruvbox_light0,
+		VirtualEnvBg:       gruvbox_faded_green,
+		PerlbrewFg:         gruvbox_light0,  // match virtualenv
+		PerlbrewBg:         gruvbox_faded_green, // match virtualenv
+		PlEnvFg:            gruvbox_light0,  // match virtualenv
+		PlEnvBg:            gruvbox_faded_green, // match virtualenv
+		TimeFg:             gruvbox_light2,
+		TimeBg:             gruvbox_dark4,
+		ShellVarFg:         gruvbox_light0,  // match ssh-fg
+		ShellVarBg:         gruvbox_faded_purple,  // match ssh-bg
+		NodeFg:             gruvbox_light0,      // match virtualenv
+		NodeBg:             gruvbox_faded_green, // match virtualenv
+		LoadFg:             gruvbox_light0,
+		LoadBg:             gruvbox_faded_purple,
+		LoadHighBg:         gruvbox_neutral_red,
+		LoadAvgValue:       gruvbox_light0,
+		LoadThresholdBad:   1.0,
+		NixShellFg:         gruvbox_light0,
+		NixShellBg:         gruvbox_faded_purple,
+	},
 }
+
+const (
+	gruvbox_dark0 = 235
+	gruvbox_dark1 = 237
+	gruvbox_dark2 = 239
+	gruvbox_dark3 = 241
+	gruvbox_dark4 = 243
+
+	gruvbox_light0 = 229
+	gruvbox_light1 = 223
+	gruvbox_light2 = 250
+	gruvbox_light3 = 248
+	gruvbox_light4 = 246
+
+	gruvbox_dark_gray  = 245
+	gruvbox_light_gray = 244
+
+	gruvbox_neutral_red    = 124
+	gruvbox_neutral_green  = 106
+	gruvbox_neutral_yellow = 172
+	gruvbox_neutral_blue   = 66
+	gruvbox_neutral_purple = 132
+	gruvbox_neutral_aqua   = 72
+	gruvbox_neutral_orange = 166
+
+	gruvbox_bright_red    = 167
+	gruvbox_bright_green  = 142
+	gruvbox_bright_yellow = 214
+	gruvbox_bright_blue   = 109
+	gruvbox_bright_purple = 175
+	gruvbox_bright_aqua   = 108
+	gruvbox_bright_orange = 208
+
+	gruvbox_faded_red    = 88
+	gruvbox_faded_green  = 100
+	gruvbox_faded_yellow = 136
+	gruvbox_faded_blue   = 24
+	gruvbox_faded_purple = 96
+	gruvbox_faded_aqua   = 66
+	gruvbox_faded_orange = 130
+)

@@ -10,24 +10,27 @@ import (
 
 var otherModified int
 
-func addSvnRepoStatsSegment(p *powerline, nChanges int, symbol string, foreground uint8, background uint8) {
+func addSvnRepoStatsSegment(p *powerline, nChanges int, symbol string, foreground uint8, background uint8) (segments []pwl.Segment) {
 	if nChanges > 0 {
-		p.appendSegment("svn-status", pwl.Segment{
+		segments = append(segments, pwl.Segment{
+			Name:       "svn-status",
 			Content:    fmt.Sprintf("%d%s", nChanges, symbol),
 			Foreground: foreground,
 			Background: background,
 		})
 	}
+	return segments
 }
 
-func (r repoStats) addSvnToPowerline(p *powerline) {
-	addSvnRepoStatsSegment(p, r.ahead, p.symbolTemplates.RepoAhead, p.theme.GitAheadFg, p.theme.GitAheadBg)
-	addSvnRepoStatsSegment(p, r.behind, p.symbolTemplates.RepoBehind, p.theme.GitBehindFg, p.theme.GitBehindBg)
-	addSvnRepoStatsSegment(p, r.staged, p.symbolTemplates.RepoStaged, p.theme.GitStagedFg, p.theme.GitStagedBg)
-	addSvnRepoStatsSegment(p, r.notStaged, p.symbolTemplates.RepoNotStaged, p.theme.GitNotStagedFg, p.theme.GitNotStagedBg)
-	addSvnRepoStatsSegment(p, r.untracked, p.symbolTemplates.RepoUntracked, p.theme.GitUntrackedFg, p.theme.GitUntrackedBg)
-	addSvnRepoStatsSegment(p, r.conflicted, p.symbolTemplates.RepoConflicted, p.theme.GitConflictedFg, p.theme.GitConflictedBg)
-	addSvnRepoStatsSegment(p, r.stashed, p.symbolTemplates.RepoStashed, p.theme.GitStashedFg, p.theme.GitStashedBg)
+func (r repoStats) SvnSegments(p *powerline) (segments []pwl.Segment) {
+	segments = append(segments, addSvnRepoStatsSegment(p, r.ahead, p.symbolTemplates.RepoAhead, p.theme.GitAheadFg, p.theme.GitAheadBg)...)
+	segments = append(segments, addSvnRepoStatsSegment(p, r.behind, p.symbolTemplates.RepoBehind, p.theme.GitBehindFg, p.theme.GitBehindBg)...)
+	segments = append(segments, addSvnRepoStatsSegment(p, r.staged, p.symbolTemplates.RepoStaged, p.theme.GitStagedFg, p.theme.GitStagedBg)...)
+	segments = append(segments, addSvnRepoStatsSegment(p, r.notStaged, p.symbolTemplates.RepoNotStaged, p.theme.GitNotStagedFg, p.theme.GitNotStagedBg)...)
+	segments = append(segments, addSvnRepoStatsSegment(p, r.untracked, p.symbolTemplates.RepoUntracked, p.theme.GitUntrackedFg, p.theme.GitUntrackedBg)...)
+	segments = append(segments, addSvnRepoStatsSegment(p, r.conflicted, p.symbolTemplates.RepoConflicted, p.theme.GitConflictedFg, p.theme.GitConflictedBg)...)
+	segments = append(segments, addSvnRepoStatsSegment(p, r.stashed, p.symbolTemplates.RepoStashed, p.theme.GitStashedFg, p.theme.GitStashedBg)...)
+	return segments
 }
 
 func runSvnCommand(cmd string, args ...string) (string, error) {
@@ -112,16 +115,16 @@ func parseSvnStatus() repoStats {
 	return stats
 }
 
-func segmentSubversion(p *powerline) {
+func segmentSubversion(p *powerline) []pwl.Segment {
 
 	svnInfo, err := parseSvnURL()
 	if err != nil {
-		return
+		return []pwl.Segment{}
 	}
 
 	if len(p.ignoreRepos) > 0 {
 		if p.ignoreRepos[svnInfo["URL"]] || p.ignoreRepos[svnInfo["Relative URL"]] {
-			return
+			return []pwl.Segment{}
 		}
 	}
 
@@ -136,11 +139,13 @@ func segmentSubversion(p *powerline) {
 		background = p.theme.RepoCleanBg
 	}
 
-	p.appendSegment("svn-branch", pwl.Segment{
+	segments := []pwl.Segment{{
+		Name:       "svn-branch",
 		Content:    svnInfo["Relative URL"],
 		Foreground: foreground,
 		Background: background,
-	})
+	}}
 
-	svnStats.addSvnToPowerline(p)
+	segments = append(segments, svnStats.SvnSegments(p)...)
+	return segments
 }

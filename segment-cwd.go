@@ -31,6 +31,8 @@ func (s byRevLength) Less(i, j int) bool {
 }
 
 func maybeAliasPathSegments(p *powerline, pathSegments []pathSegment) []pathSegment {
+	pathSeparator := string(os.PathSeparator)
+
 	if p.pathAliases == nil {
 		return pathSegments
 	}
@@ -44,7 +46,7 @@ func maybeAliasPathSegments(p *powerline, pathSegments []pathSegment) []pathSegm
 Aliases:
 	for _, k := range keys {
 		// This turns a string like "foo/bar/baz" into an array of strings.
-		path := strings.Split(strings.Trim(k, "/"), "/")
+		path := strings.Split(strings.Trim(k, pathSeparator), pathSeparator)
 
 		// If the path has 3 elements, we know we should look at pathSegments
 		// in 3-element chunks.
@@ -100,24 +102,24 @@ Aliases:
 }
 
 func cwdToPathSegments(p *powerline, cwd string) []pathSegment {
+	pathSeparator := string(os.PathSeparator)
 	pathSegments := make([]pathSegment, 0)
 
-	home, _ := os.LookupEnv("HOME")
-	if strings.HasPrefix(cwd, home) {
+	if strings.HasPrefix(cwd, p.userInfo.HomeDir) {
 		pathSegments = append(pathSegments, pathSegment{
 			path: "~",
 			home: true,
 		})
-		cwd = cwd[len(home):]
-	} else if cwd == "/" {
+		cwd = cwd[len(p.userInfo.HomeDir):]
+	} else if cwd == pathSeparator {
 		pathSegments = append(pathSegments, pathSegment{
-			path: "/",
+			path: pathSeparator,
 			root: true,
 		})
 	}
 
-	cwd = strings.Trim(cwd, "/")
-	names := strings.Split(cwd, "/")
+	cwd = strings.Trim(cwd, pathSeparator)
+	names := strings.Split(cwd, pathSeparator)
 	if names[0] == "" {
 		names = names[1:]
 	}
@@ -156,19 +158,16 @@ func getColor(p *powerline, pathSegment pathSegment, isLastDir bool) (uint8, uin
 	return p.theme.PathFg, p.theme.PathBg, false
 }
 
-func segmentCwd(p *powerline) {
+func segmentCwd(p *powerline) (segments []pwl.Segment) {
 	cwd := p.cwd
-	if cwd == "" {
-		cwd, _ = os.LookupEnv("PWD")
-	}
 
 	if *p.args.CwdMode == "plain" {
-		home, _ := os.LookupEnv("HOME")
-		if strings.HasPrefix(cwd, home) {
-			cwd = "~" + cwd[len(home):]
+		if strings.HasPrefix(cwd, p.userInfo.HomeDir) {
+			cwd = "~" + cwd[len(p.userInfo.HomeDir):]
 		}
 
-		p.appendSegment("cwd", pwl.Segment{
+		segments = append(segments, pwl.Segment{
+			Name:       "cwd",
 			Content:    cwd,
 			Foreground: p.theme.CwdFg,
 			Background: p.theme.PathBg,
@@ -222,12 +221,13 @@ func segmentCwd(p *powerline) {
 				}
 			}
 
-			origin := "cwd-path"
+			segment.Name = "cwd-path"
 			if isLastDir {
-				origin = "cwd"
+				segment.Name = "cwd"
 			}
 
-			p.appendSegment(origin, segment)
+			segments = append(segments, segment)
 		}
 	}
+	return segments
 }

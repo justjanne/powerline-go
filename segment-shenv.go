@@ -6,19 +6,20 @@ import (
 	"path"
 )
 
-func segmentPlEnv(p *powerline) []pwl.Segment {
+func segmentShEnv(p *powerline) []pwl.Segment {
 	var env string
 	if env == "" {
-		env, _ = os.LookupEnv("PLENV_VERSION")
+		env, _ = os.LookupEnv("SHENV_VERSION")
 	}
 	if env != "" {
 		envName := path.Base(env)
 		return []pwl.Segment{{
-			Name:       "plenv",
+			Name: "shenv",
 			Content:    envName,
-			Foreground: p.theme.PlEnvFg,
-			Background: p.theme.PlEnvBg,
+			Foreground: p.theme.ShEnvFg,
+			Background: p.theme.ShEnvBg,
 		}}
 	}
+
 	return []pwl.Segment{}
 }

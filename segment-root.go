@@ -2,7 +2,7 @@ package main
 
 import pwl "github.com/justjanne/powerline-go/powerline"
 
-func segmentRoot(p *powerline) {
+func segmentRoot(p *powerline) []pwl.Segment {
 	var foreground, background uint8
 	if *p.args.PrevError == 0 {
 		foreground = p.theme.CmdPassedFg
@@ -12,9 +12,10 @@ func segmentRoot(p *powerline) {
 		background = p.theme.CmdFailedBg
 	}
 
-	p.appendSegment("root", pwl.Segment{
+	return []pwl.Segment{{
+		Name:       "root",
 		Content:    p.shellInfo.rootIndicator,
 		Foreground: foreground,
 		Background: background,
-	})
+	}}
 }
