@@ -207,6 +207,9 @@ Usage of powerline-go:
     	 Output prompt in 'eval' format.
   -git-assume-unchanged-size int
     	 Disable checking for changed/edited files in git repositories where the index is larger than this size (in KB), improves performance (default 2048)
+  -git-disable-stats string
+    	 Comma-separated list to disable individual git statuses
+    	 (valid choices: ahead, behind, staged, notStaged, untracked, conflicted, stashed)
   -hostname-only-if-ssh
     	 Show hostname only for SSH connections
   -ignore-repos string

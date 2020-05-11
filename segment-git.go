@@ -38,6 +38,26 @@ func addRepoStatsSegment(nChanges int, symbol string, foreground uint8, backgrou
 }
 
 func (r repoStats) GitSegments(p *powerline) (segments []pwl.Segment) {
+	ignoreStats := strings.Split(*p.args.GitDisableStats, ",")
+	for _, stat := range ignoreStats {
+		// "ahead, behind, staged, notStaged, untracked, conflicted, stashed"
+		switch stat {
+		case "ahead":
+			r.ahead = 0
+		case "behind":
+			r.behind = 0
+		case "staged":
+			r.staged = 0
+		case "notStaged":
+			r.notStaged = 0
+		case "untracked":
+			r.untracked = 0
+		case "conflicted":
+			r.conflicted = 0
+		case "stashed":
+			r.stashed = 0
+		}
+	}
 	segments = append(segments, addRepoStatsSegment(r.ahead, p.symbolTemplates.RepoAhead, p.theme.GitAheadFg, p.theme.GitAheadBg)...)
 	segments = append(segments, addRepoStatsSegment(r.behind, p.symbolTemplates.RepoBehind, p.theme.GitBehindFg, p.theme.GitBehindBg)...)
 	segments = append(segments, addRepoStatsSegment(r.staged, p.symbolTemplates.RepoStaged, p.theme.GitStagedFg, p.theme.GitStagedBg)...)
