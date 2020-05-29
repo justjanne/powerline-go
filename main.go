@@ -39,6 +39,7 @@ type args struct {
 	EastAsianWidth         *bool
 	PromptOnNewLine        *bool
 	StaticPromptIndicator  *bool
+	VenvNameSizeLimit      *int
 	GitAssumeUnchangedSize *int64
 	Mode                   *string
 	Theme                  *string
@@ -175,6 +176,10 @@ func main() {
 			"static-prompt-indicator",
 			false,
 			comments("Always show the prompt indicator with the default color, never with the error color")),
+		VenvNameSizeLimit: flag.Int(
+			"venv-name-size-limit",
+			0,
+			comments("Show indicator instead of virtualenv name if name is longer than this limit (defaults to 0, which is unlimited)")),
 		GitAssumeUnchangedSize: flag.Int64(
 			"git-assume-unchanged-size",
 			2048,
