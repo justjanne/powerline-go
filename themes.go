@@ -63,6 +63,9 @@ type Theme struct {
 	KubeNamespaceFg uint8
 	KubeNamespaceBg uint8
 
+	WSLMachineFg uint8
+	WSLMachineBg uint8
+
 	DotEnvFg uint8
 	DotEnvBg uint8
 
