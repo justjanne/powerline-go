@@ -12,6 +12,8 @@ before_deploy:
   - "GOOS=linux  GOARCH=amd64 go build -o release/powerline-go-linux-amd64"
   - "GOOS=darwin GOARCH=amd64 go build -o release/powerline-go-darwin-amd64"
   - "GOOS=windows GOARCH=amd64 go build -o release/powerline-go-windows-amd64"
+  - "GOOS=openbsd GOARCH=amd64 go build -o release/powerline-go-openbsd-amd64"
+  - "GOOS=freebsd GOARCH=amd64 go build -o release/powerline-go-freebsd-amd64"
 
 deploy:
   provider: releases
@@ -21,6 +23,8 @@ deploy:
     - "release/powerline-go-linux-amd64"
     - "release/powerline-go-darwin-amd64"
     - "release/powerline-go-windows-amd64"
+    - "release/powerline-go-openbsd-amd64"
+    - "release/powerline-go-freebsd-amd64"
   skip_cleanup: true
   on:
     tags: true
