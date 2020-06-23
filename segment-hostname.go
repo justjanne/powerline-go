@@ -30,15 +30,15 @@ func segmentHost(p *powerline) []pwl.Segment {
 	}
 
 	if *p.args.ColorizeHostname {
+		hostName := getHostName(p.hostname)
+		hostPrompt = hostName
+
 		foregroundEnv, foregroundEnvErr := strconv.ParseInt(os.Getenv("PLGO_HOSTNAMEFG"), 0, 8)
 		backgroundEnv, backgroundEnvErr := strconv.ParseInt(os.Getenv("PLGO_HOSTNAMEBG"), 0, 8)
 		if foregroundEnvErr == nil && backgroundEnvErr == nil {
 			foreground = uint8(foregroundEnv)
 			background = uint8(backgroundEnv)
 		} else {
-			hostName := getHostName(p.hostname)
-			hostPrompt = hostName
-
 			hash := getMd5(hostName)
 			background = hash[0]
 			foreground = p.theme.HostnameColorizedFgMap[background]
