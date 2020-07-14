@@ -390,7 +390,7 @@ If the 'datetime' module is unavailable or unwanted, you may replace `$EPOCHREAL
 The fish prompt, in `~/.config/fish/config.fish`, will require a minimum of changes, as Fish automatically provides `$CMD_DURATION`, although with only milliseconds accuracy.
 
 ```bash
-function fish_prompt
+function fish_right_prompt
     set duration (math -s6 "$CMD_DURATION / 1000")
     $GOPATH/bin/powerline-go -modules duration -duration $duration -error $status -shell bare
 end
