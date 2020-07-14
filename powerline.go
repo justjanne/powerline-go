@@ -29,21 +29,21 @@ type ShellInfo struct {
 }
 
 type powerline struct {
-	args            args
-	cwd             string
-	userInfo        user.User
-	hostname        string
-	username        string
-	pathAliases     map[string]string
-	theme           Theme
-	shellInfo       ShellInfo
-	reset           string
-	symbolTemplates Symbols
-	priorities      map[string]int
-	ignoreRepos     map[string]bool
-	Segments        [][]pwl.Segment
-	curSegment      int
-	align           alignment
+	args                   args
+	cwd                    string
+	userInfo               user.User
+	hostname               string
+	username               string
+	pathAliases            map[string]string
+	theme                  Theme
+	shellInfo              ShellInfo
+	reset                  string
+	symbolTemplates        Symbols
+	priorities             map[string]int
+	ignoreRepos            map[string]bool
+	Segments               [][]pwl.Segment
+	curSegment             int
+	align                  alignment
 	rightPowerline         *powerline
 	appendEastAsianPadding int
 }
@@ -190,8 +190,10 @@ func (p *powerline) appendSegment(origin string, segment pwl.Segment) {
 }
 
 func (p *powerline) newRow() {
-	p.Segments = append(p.Segments, make([]pwl.Segment, 0))
-	p.curSegment = p.curSegment + 1
+	if len(p.Segments[p.curSegment]) > 0 {
+		p.Segments = append(p.Segments, make([]pwl.Segment, 0))
+		p.curSegment = p.curSegment + 1
+	}
 }
 
 func termWidth() int {
