@@ -40,7 +40,7 @@ func segmentHost(p *powerline) []pwl.Segment {
 			background = uint8(backgroundEnv)
 		} else {
 			hash := getMd5(hostName)
-			background = hash[0]
+			background = hash[0] % 128
 			foreground = p.theme.HostnameColorizedFgMap[background]
 		}
 	} else {
