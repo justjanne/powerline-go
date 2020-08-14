@@ -255,7 +255,7 @@ Usage of powerline-go:
     	 (valid choices: default, low-contrast)
     	 (default "default")
   -truncate-segment-width int
-    	 Minimum width of a segment, segments longer than this will be shortened if space is limited. Setting this to 0 disables it.
+    	 Maximum width of a segment, segments longer than this will be shortened if space is limited. Setting this to 0 disables it.
     	 (default 16)
 ```
 
