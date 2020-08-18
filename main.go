@@ -216,7 +216,7 @@ func main() {
 		TruncateSegmentWidth: flag.Int(
 			"truncate-segment-width",
 			16,
-			commentsWithDefaults("Minimum width of a segment, segments longer than this will be shortened if space is limited. Setting this to 0 disables it.")),
+			commentsWithDefaults("Maximum width of a segment, segments longer than this will be shortened if space is limited. Setting this to 0 disables it.")),
 		PrevError: flag.Int(
 			"error",
 			0,
