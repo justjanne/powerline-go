@@ -307,5 +307,5 @@ func main() {
 		panic("Flag '-modules-right' requires '-eval' mode.")
 	}
 
-	fmt.Print(p.draw())
+	fmt.Print(strings.TrimRight(p.draw(), " ") + " ")
 }
