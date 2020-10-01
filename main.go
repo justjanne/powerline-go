@@ -54,6 +54,7 @@ type args struct {
 	ShortenGKENames        *bool
 	ShortenEKSNames        *bool
 	ShellVar               *string
+	TrimADDomain           *bool
 	PathAliases            *string
 	Duration               *string
 	DurationMin            *string
@@ -243,6 +244,10 @@ func main() {
 			"shell-var",
 			"",
 			comments("A shell variable to add to the segments.")),
+		TrimADDomain: flag.Bool(
+			"trim-ad-domain",
+			false,
+			comments("Trim the Domainname from the AD username.")),
 		PathAliases: flag.String(
 			"path-aliases",
 			"",
