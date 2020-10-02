@@ -69,6 +69,13 @@ func newPowerline(args args, cwd string, priorities map[string]int, align alignm
 	} else {
 		p.username = p.userInfo.Username
 	}
+	if args.TrimADDomain != nil && *args.TrimADDomain {
+		usernameWithAd := strings.SplitN(p.username, `\`, 2)
+		if len(usernameWithAd) > 1 {
+			// remove the Domain name from username
+			p.username = usernameWithAd[1]
+		}
+	}
 
 	p.theme = themes[*args.Theme]
 	p.shellInfo = shellInfos[*args.Shell]
