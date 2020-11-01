@@ -194,7 +194,7 @@ Usage of powerline-go:
     	 (default -1)
   -cwd-mode string
     	 How to display the current directory
-    	 (valid choices: fancy, plain, dironly)
+    	 (valid choices: fancy, semifancy, plain, dironly)
     	 (default "fancy")
   -duration string
     	 The elapsed clock-time of the previous command
@@ -211,6 +211,10 @@ Usage of powerline-go:
   -git-disable-stats string
     	 Comma-separated list to disable individual git statuses
     	 (valid choices: ahead, behind, staged, notStaged, untracked, conflicted, stashed)
+  -git-mode string
+    	 How to display git status
+    	 (valid choices: fancy, simple)
+    	 (default "fancy")
   -hostname-only-if-ssh
     	 Show hostname only for SSH connections
   -ignore-repos string
