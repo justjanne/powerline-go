@@ -22,14 +22,14 @@ func segmentHost(p *powerline) []pwl.Segment {
 	var hostPrompt string
 	var foreground, background uint8
 
-	if *p.args.HostnameOnlyIfSSH {
+	if p.cfg.HostnameOnlyIfSSH {
 		if os.Getenv("SSH_CLIENT") == "" {
 			// It's not an ssh connection do nothing
 			return []pwl.Segment{}
 		}
 	}
 
-	if *p.args.ColorizeHostname {
+	if p.cfg.ColorizeHostname {
 		hostName := getHostName(p.hostname)
 		hostPrompt = hostName
 
@@ -44,9 +44,9 @@ func segmentHost(p *powerline) []pwl.Segment {
 			foreground = p.theme.HostnameColorizedFgMap[background]
 		}
 	} else {
-		if p.shell == "bash" {
+		if p.cfg.Shell == "bash" {
 			hostPrompt = "\\h"
-		} else if p.shell == "zsh" {
+		} else if p.cfg.Shell == "zsh" {
 			hostPrompt = "%m"
 		} else {
 			hostPrompt = getHostName(p.hostname)

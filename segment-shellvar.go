@@ -6,7 +6,7 @@ import (
 )
 
 func segmentShellVar(p *powerline) []pwl.Segment {
-	shellVarName := *p.args.ShellVar
+	shellVarName := p.cfg.ShellVar
 	varContent, varExists := os.LookupEnv(shellVarName)
 
 	if varExists {
@@ -18,7 +18,7 @@ func segmentShellVar(p *powerline) []pwl.Segment {
 				Background: p.theme.ShellVarBg,
 			}}
 		}
-		if !*p.args.ShellVarNoWarnEmpty {
+		if !p.cfg.ShellVarNoWarnEmpty {
 			warn("Shell variable " + shellVarName + " is empty.")
 		}
 	} else {

@@ -31,11 +31,11 @@ func getMeaningFromExitCode(exitCode int) string {
 
 func segmentExitCode(p *powerline) []pwl.Segment {
 	var meaning string
-	if *p.args.PrevError != 0 {
-		if *p.args.NumericExitCodes {
-			meaning = strconv.Itoa(*p.args.PrevError)
+	if p.cfg.PrevError != 0 {
+		if p.cfg.NumericExitCodes {
+			meaning = strconv.Itoa(p.cfg.PrevError)
 		} else {
-			meaning = getMeaningFromExitCode(*p.args.PrevError)
+			meaning = getMeaningFromExitCode(p.cfg.PrevError)
 		}
 		return []pwl.Segment{{
 			Name:       "exit",

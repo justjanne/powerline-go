@@ -27,7 +27,7 @@ const (
 )
 
 func segmentDuration(p *powerline) []pwl.Segment {
-	if p.args.Duration == nil || *p.args.Duration == "" {
+	if p.cfg.Duration == "" {
 		return []pwl.Segment{{
 			Name:       "duration",
 			Content:    "No duration",
@@ -36,8 +36,8 @@ func segmentDuration(p *powerline) []pwl.Segment {
 		}}
 	}
 
-	durationValue := strings.Trim(*p.args.Duration, "'\"")
-	durationMinValue := strings.Trim(*p.args.DurationMin, "'\"")
+	durationValue := strings.Trim(p.cfg.Duration, "'\"")
+	durationMinValue := strings.Trim(p.cfg.DurationMin, "'\"")
 
 	hasPrecision := strings.Index(durationValue, ".") != -1
 
@@ -46,7 +46,7 @@ func segmentDuration(p *powerline) []pwl.Segment {
 	if err != nil {
 		return []pwl.Segment{{
 			Name:       "duration",
-			Content:    fmt.Sprintf("Failed to convert '%s' to a number", *p.args.Duration),
+			Content:    fmt.Sprintf("Failed to convert '%s' to a number", p.cfg.Duration),
 			Foreground: p.theme.DurationFg,
 			Background: p.theme.DurationBg,
 		}}

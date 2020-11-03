@@ -18,30 +18,28 @@ import (
 
 // ShellInfo holds the shell information
 type ShellInfo struct {
-	rootIndicator         string
-	colorTemplate         string
-	escapedDollar         string
-	escapedBacktick       string
-	escapedBackslash      string
-	evalPromptPrefix      string
-	evalPromptSuffix      string
-	evalPromptRightPrefix string
-	evalPromptRightSuffix string
+	RootIndicator         string
+	ColorTemplate         string
+	EscapedDollar         string
+	EscapedBacktick       string
+	EscapedBackslash      string
+	EvalPromptPrefix      string
+	EvalPromptSuffix      string
+	EvalPromptRightPrefix string
+	EvalPromptRightSuffix string
 }
 
 type powerline struct {
-	args                   args
+	cfg                    Config
 	cwd                    string
 	userInfo               user.User
 	userIsAdmin            bool
 	hostname               string
 	username               string
-	pathAliases            map[string]string
 	theme                  Theme
-	shell                  string
-	shellInfo              ShellInfo
+	shell                  ShellInfo
 	reset                  string
-	symbolTemplates        Symbols
+	symbols                SymbolTemplate
 	priorities             map[string]int
 	ignoreRepos            map[string]bool
 	Segments               [][]pwl.Segment
@@ -56,9 +54,9 @@ type prioritizedSegments struct {
 	segs []pwl.Segment
 }
 
-func newPowerline(args args, cwd string, priorities map[string]int, align alignment) *powerline {
+func newPowerline(cfg Config, cwd string, align alignment) *powerline {
 	p := new(powerline)
-	p.args = args
+	p.cfg = cfg
 	p.cwd = cwd
 	userInfo, err := user.Current()
 	if userInfo != nil && err == nil {
@@ -72,7 +70,7 @@ func newPowerline(args args, cwd string, priorities map[string]int, align alignm
 	} else {
 		p.username = p.userInfo.Username
 	}
-	if args.TrimADDomain != nil && *args.TrimADDomain {
+	if cfg.TrimADDomain {
 		usernameWithAd := strings.SplitN(p.username, `\`, 2)
 		if len(usernameWithAd) > 1 {
 			// remove the Domain name from username
@@ -81,47 +79,40 @@ func newPowerline(args args, cwd string, priorities map[string]int, align alignm
 	}
 	p.userIsAdmin = userIsAdmin()
 
-	p.theme = themes[*args.Theme]
-	if *args.Shell == "autodetect" {
-		p.shell = detectShell(os.Getenv("SHELL"))
-	} else {
-		p.shell = *args.Shell
+	p.theme = cfg.Themes[cfg.Theme]
+	if cfg.Shell == "autodetect" {
+		cfg.Shell = detectShell(os.Getenv("SHELL"))
 	}
-	p.shellInfo = shellInfos[p.shell]
-	p.reset = fmt.Sprintf(p.shellInfo.colorTemplate, "[0m")
-	p.symbolTemplates = symbolTemplates[*args.Mode]
-	p.priorities = priorities
+	p.shell = cfg.Shells[cfg.Shell]
+	p.reset = fmt.Sprintf(p.shell.ColorTemplate, "[0m")
+	p.symbols = cfg.Modes[cfg.Mode]
+	p.priorities = make(map[string]int)
+	for idx, priority := range cfg.Priority {
+		p.priorities[priority] = len(cfg.Priority) - idx
+	}
 	p.align = align
 	p.ignoreRepos = make(map[string]bool)
-	for _, r := range strings.Split(*args.IgnoreRepos, ",") {
+	for _, r := range cfg.IgnoreRepos {
 		if r == "" {
 			continue
 		}
 		p.ignoreRepos[r] = true
 	}
-	p.pathAliases = make(map[string]string)
-	for _, pa := range strings.Split(*args.PathAliases, ",") {
-		if pa == "" {
-			continue
-		}
-		kv := strings.SplitN(pa, "=", 2)
-		p.pathAliases[kv[0]] = kv[1]
-	}
 	p.Segments = make([][]pwl.Segment, 1)
-	var mods string
+	var mods []string
 	if p.align == alignLeft {
-		mods = *args.Modules
-		if len(*args.ModulesRight) > 0 {
+		mods = cfg.Modules
+		if len(cfg.ModulesRight) > 0 {
 			if p.supportsRightModules() {
-				p.rightPowerline = newPowerline(args, cwd, priorities, alignRight)
+				p.rightPowerline = newPowerline(cfg, cwd, alignRight)
 			} else {
-				mods += `,` + *args.ModulesRight
+				mods = append(mods, cfg.ModulesRight...)
 			}
 		}
 	} else {
-		mods = *args.ModulesRight
+		mods = cfg.ModulesRight
 	}
-	initSegments(p, strings.Split(mods, ","))
+	initSegments(p, mods)
 
 	return p
 }
@@ -182,7 +173,7 @@ func (p *powerline) color(prefix string, code uint8) string {
 	if code == p.theme.Reset {
 		return p.reset
 	}
-	return fmt.Sprintf(p.shellInfo.colorTemplate, fmt.Sprintf("[%s;5;%dm", prefix, code))
+	return fmt.Sprintf(p.shell.ColorTemplate, fmt.Sprintf("[%s;5;%dm", prefix, code))
 }
 
 func (p *powerline) fgColor(code uint8) string {
@@ -200,9 +191,9 @@ func (p *powerline) appendSegment(origin string, segment pwl.Segment) {
 	}
 	if segment.Separator == "" {
 		if p.isRightPrompt() {
-			segment.Separator = p.symbolTemplates.SeparatorReverse
+			segment.Separator = p.symbols.SeparatorReverse
 		} else {
-			segment.Separator = p.symbolTemplates.Separator
+			segment.Separator = p.symbols.Separator
 		}
 	}
 	if segment.SeparatorForeground == 0 {
@@ -210,7 +201,7 @@ func (p *powerline) appendSegment(origin string, segment pwl.Segment) {
 	}
 	priority, _ := p.priorities[origin]
 	segment.Priority += priority
-	segment.Width = segment.ComputeWidth(*p.args.Condensed)
+	segment.Width = segment.ComputeWidth(p.cfg.Condensed)
 	if segment.NewLine {
 		p.newRow()
 	} else {
@@ -246,7 +237,7 @@ func termWidth() int {
 
 func (p *powerline) truncateRow(rowNum int) {
 
-	shellMaxLength := termWidth() * *p.args.MaxWidthPercentage / 100
+	shellMaxLength := termWidth() * p.cfg.MaxWidthPercentage / 100
 	row := p.Segments[rowNum]
 	rowLength := 0
 
@@ -255,11 +246,11 @@ func (p *powerline) truncateRow(rowNum int) {
 			rowLength += segment.Width
 		}
 
-		if rowLength > shellMaxLength && *p.args.TruncateSegmentWidth > 0 {
+		if rowLength > shellMaxLength && p.cfg.TruncateSegmentWidth > 0 {
 			minPriorityNotTruncated := MaxInteger
 			minPriorityNotTruncatedSegmentID := -1
 			for idx, segment := range row {
-				if segment.Width > *p.args.TruncateSegmentWidth && segment.Priority < minPriorityNotTruncated {
+				if segment.Width > p.cfg.TruncateSegmentWidth && segment.Priority < minPriorityNotTruncated {
 					minPriorityNotTruncated = segment.Priority
 					minPriorityNotTruncatedSegmentID = idx
 				}
@@ -269,8 +260,8 @@ func (p *powerline) truncateRow(rowNum int) {
 
 				rowLength -= segment.Width
 
-				segment.Content = runewidth.Truncate(segment.Content, *p.args.TruncateSegmentWidth-runewidth.StringWidth(segment.Separator)-3, "…")
-				segment.Width = segment.ComputeWidth(*p.args.Condensed)
+				segment.Content = runewidth.Truncate(segment.Content, p.cfg.TruncateSegmentWidth-runewidth.StringWidth(segment.Separator)-3, "…")
+				segment.Width = segment.ComputeWidth(p.cfg.Condensed)
 
 				row = append(append(row[:minPriorityNotTruncatedSegmentID], segment), row[minPriorityNotTruncatedSegmentID+1:]...)
 				rowLength += segment.Width
@@ -278,7 +269,7 @@ func (p *powerline) truncateRow(rowNum int) {
 				minPriorityNotTruncated = MaxInteger
 				minPriorityNotTruncatedSegmentID = -1
 				for idx, segment := range row {
-					if segment.Width > *p.args.TruncateSegmentWidth && segment.Priority < minPriorityNotTruncated {
+					if segment.Width > p.cfg.TruncateSegmentWidth && segment.Priority < minPriorityNotTruncated {
 						minPriorityNotTruncated = segment.Priority
 						minPriorityNotTruncatedSegmentID = idx
 					}
@@ -306,7 +297,7 @@ func (p *powerline) truncateRow(rowNum int) {
 }
 
 func (p *powerline) numEastAsianRunes(segmentContent *string) int {
-	if !*p.args.EastAsianWidth {
+	if !p.cfg.EastAsianWidth {
 		return 0
 	}
 	numEastAsianRunes := 0
@@ -363,12 +354,12 @@ func (p *powerline) drawRow(rowNum int, buffer *bytes.Buffer) {
 		}
 		buffer.WriteString(p.fgColor(segment.Foreground))
 		buffer.WriteString(p.bgColor(segment.Background))
-		if !*p.args.Condensed {
+		if !p.cfg.Condensed {
 			buffer.WriteRune(' ')
 		}
 		buffer.WriteString(segment.Content)
 		numEastAsianRunes += p.numEastAsianRunes(&segment.Content)
-		if !*p.args.Condensed {
+		if !p.cfg.Condensed {
 			buffer.WriteRune(' ')
 		}
 		if !p.isRightPrompt() {
@@ -396,11 +387,11 @@ func (p *powerline) draw() string {
 
 	var buffer bytes.Buffer
 
-	if *p.args.Eval {
+	if p.cfg.Eval {
 		if p.align == alignLeft {
-			buffer.WriteString(p.shellInfo.evalPromptPrefix)
+			buffer.WriteString(p.shell.EvalPromptPrefix)
 		} else if p.supportsRightModules() {
-			buffer.WriteString(p.shellInfo.evalPromptRightPrefix)
+			buffer.WriteString(p.shell.EvalPromptRightPrefix)
 		}
 	}
 
@@ -412,11 +403,11 @@ func (p *powerline) draw() string {
 		}
 	}
 
-	if *p.args.PromptOnNewLine {
+	if p.cfg.PromptOnNewLine {
 		buffer.WriteRune('\n')
 
 		var foreground, background uint8
-		if *p.args.PrevError == 0 || *p.args.StaticPromptIndicator {
+		if p.cfg.PrevError == 0 || p.cfg.StaticPromptIndicator {
 			foreground = p.theme.CmdPassedFg
 			background = p.theme.CmdPassedBg
 		} else {
@@ -426,28 +417,28 @@ func (p *powerline) draw() string {
 
 		buffer.WriteString(p.fgColor(foreground))
 		buffer.WriteString(p.bgColor(background))
-		buffer.WriteString(p.shellInfo.rootIndicator)
+		buffer.WriteString(p.shell.RootIndicator)
 		buffer.WriteString(p.reset)
 		buffer.WriteString(p.fgColor(background))
-		buffer.WriteString(p.symbolTemplates.Separator)
+		buffer.WriteString(p.symbols.Separator)
 		buffer.WriteString(p.reset)
 		buffer.WriteRune(' ')
 	}
 
-	if *p.args.Eval {
+	if p.cfg.Eval {
 		switch p.align {
 		case alignLeft:
-			buffer.WriteString(p.shellInfo.evalPromptSuffix)
+			buffer.WriteString(p.shell.EvalPromptSuffix)
 			if p.supportsRightModules() {
 				buffer.WriteRune('\n')
 				if !p.hasRightModules() {
-					buffer.WriteString(p.shellInfo.evalPromptRightPrefix + p.shellInfo.evalPromptRightSuffix)
+					buffer.WriteString(p.shell.EvalPromptRightPrefix + p.shell.EvalPromptRightSuffix)
 				}
 			}
 		case alignRight:
 			if p.supportsRightModules() {
 				buffer.Truncate(buffer.Len() - 1)
-				buffer.WriteString(p.shellInfo.evalPromptRightSuffix)
+				buffer.WriteString(p.shell.EvalPromptRightSuffix)
 			}
 		}
 		if p.hasRightModules() {
@@ -463,9 +454,10 @@ func (p *powerline) hasRightModules() bool {
 }
 
 func (p *powerline) supportsRightModules() bool {
-	return p.shellInfo.evalPromptRightPrefix != "" || p.shellInfo.evalPromptRightSuffix != ""
+	return p.shell.EvalPromptRightPrefix != "" || p.shell.EvalPromptRightSuffix != ""
 }
 
 func (p *powerline) isRightPrompt() bool {
 	return p.align == alignRight && p.supportsRightModules()
 }
+
