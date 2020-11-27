@@ -249,6 +249,8 @@ Usage of powerline-go:
     	 Shortens names for EKS Kube clusters.
   -shorten-gke-names
     	 Shortens names for GKE Kube clusters.
+  -show-warnings
+         Warning messages will be printed to stdout
   -static-prompt-indicator
     	 Always show the prompt indicator with the default color, never with the error color
   -theme string
