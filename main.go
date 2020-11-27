@@ -60,86 +60,11 @@ type args struct {
 	DurationMin            *string
 	Eval                   *bool
 	Condensed              *bool
+	ShowWarnings           *bool
 }
 
-func warn(msg string) {
-	print("[powerline-go]", msg)
-}
-
-func pathExists(path string) bool {
-	if _, err := os.Stat(path); os.IsNotExist(err) {
-		return false
-	}
-	return true
-}
-
-func getValidCwd() string {
-	cwd, err := os.Getwd()
-	if err != nil {
-		warn("Your current directory is invalid.")
-		print("> ")
-		os.Exit(1)
-	}
-
-	parts := strings.Split(cwd, string(os.PathSeparator))
-	up := cwd
-
-	for len(parts) > 0 && !pathExists(up) {
-		parts = parts[:len(parts)-1]
-		up = strings.Join(parts, string(os.PathSeparator))
-	}
-	if cwd != up {
-		warn("Your current directory is invalid. Lowest valid directory: " + up)
-	}
-	return cwd
-}
-
-var modules = map[string]func(*powerline) []pwl.Segment{
-	"aws":                 segmentAWS,
-	"cwd":                 segmentCwd,
-	"docker":              segmentDocker,
-	"docker-context":      segmentDockerContext,
-	"dotenv":              segmentDotEnv,
-	"duration":            segmentDuration,
-	"exit":                segmentExitCode,
-	"gcp":                 segmentGCP,
-	"git":                 segmentGit,
-	"gitlite":             segmentGitLite,
-	"hg":                  segmentHg,
-	"svn":                 segmentSubversion,
-	"host":                segmentHost,
-	"jobs":                segmentJobs,
-	"kube":                segmentKube,
-	"load":                segmentLoad,
-	"newline":             segmentNewline,
-	"perlbrew":            segmentPerlbrew,
-	"plenv":               segmentPlEnv,
-	"perms":               segmentPerms,
-	"rbenv":               segmentRbenv,
-	"root":                segmentRoot,
-	"shell-var":           segmentShellVar,
-	"shenv":               segmentShEnv,
-	"ssh":                 segmentSSH,
-	"termtitle":           segmentTermTitle,
-	"terraform-workspace": segmentTerraformWorkspace,
-	"time":                segmentTime,
-	"node":                segmentNode,
-	"user":                segmentUser,
-	"venv":                segmentVirtualEnv,
-	"vgo":                 segmentVirtualGo,
-	"nix-shell":           segmentNixShell,
-}
-
-func comments(lines ...string) string {
-	return " " + strings.Join(lines, "\n"+" ")
-}
-
-func commentsWithDefaults(lines ...string) string {
-	return comments(lines...) + "\n"
-}
-
-func main() {
-	args := args{
+var (
+	arguments = args{
 		CwdMode: flag.String(
 			"cwd-mode",
 			"fancy",
@@ -271,30 +196,118 @@ func main() {
 			"condensed",
 			false,
 			comments("Remove spacing between segments")),
+		ShowWarnings: flag.Bool(
+			"show-warnings",
+			false,
+			comments("Warning messages will be printed to stdout")),
 	}
+)
+
+func warn(msg string) {
+	if *arguments.ShowWarnings {
+		print("[powerline-go]", msg)
+	}
+}
+
+func pathExists(path string) bool {
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		return false
+	}
+	return true
+}
+
+func getValidCwd() string {
+	cwd, err := os.Getwd()
+	if err != nil {
+		warn("Your current directory is invalid.")
+		print("> ")
+		os.Exit(1)
+	}
+
+	parts := strings.Split(cwd, string(os.PathSeparator))
+	up := cwd
+
+	for len(parts) > 0 && !pathExists(up) {
+		parts = parts[:len(parts)-1]
+		up = strings.Join(parts, string(os.PathSeparator))
+	}
+	if cwd != up {
+		warn("Your current directory is invalid. Lowest valid directory: " + up)
+	}
+	return cwd
+}
+
+var modules = map[string]func(*powerline) []pwl.Segment{
+	"aws":                 segmentAWS,
+	"cwd":                 segmentCwd,
+	"docker":              segmentDocker,
+	"docker-context":      segmentDockerContext,
+	"dotenv":              segmentDotEnv,
+	"duration":            segmentDuration,
+	"exit":                segmentExitCode,
+	"gcp":                 segmentGCP,
+	"git":                 segmentGit,
+	"gitlite":             segmentGitLite,
+	"hg":                  segmentHg,
+	"svn":                 segmentSubversion,
+	"host":                segmentHost,
+	"jobs":                segmentJobs,
+	"kube":                segmentKube,
+	"load":                segmentLoad,
+	"newline":             segmentNewline,
+	"perlbrew":            segmentPerlbrew,
+	"plenv":               segmentPlEnv,
+	"perms":               segmentPerms,
+	"rbenv":               segmentRbenv,
+	"root":                segmentRoot,
+	"shell-var":           segmentShellVar,
+	"shenv":               segmentShEnv,
+	"ssh":                 segmentSSH,
+	"termtitle":           segmentTermTitle,
+	"terraform-workspace": segmentTerraformWorkspace,
+	"time":                segmentTime,
+	"node":                segmentNode,
+	"user":                segmentUser,
+	"venv":                segmentVirtualEnv,
+	"vgo":                 segmentVirtualGo,
+	"nix-shell":           segmentNixShell,
+}
+
+func comments(lines ...string) string {
+	return " " + strings.Join(lines, "\n"+" ")
+}
+
+func commentsWithDefaults(lines ...string) string {
+	return comments(lines...) + "\n"
+}
+
+func init() {
 	flag.Parse()
-	if strings.HasSuffix(*args.Theme, ".json") {
+}
+
+func main() {
+	if strings.HasSuffix(*arguments.Theme, ".json") {
 		jsonTheme := themes["default"]
 
-		file, err := ioutil.ReadFile(*args.Theme)
+		file, err := ioutil.ReadFile(*arguments.Theme)
 		if err == nil {
 			err = json.Unmarshal(file, &jsonTheme)
 			if err == nil {
-				themes[*args.Theme] = jsonTheme
+				themes[*arguments.Theme] = jsonTheme
 			} else {
 				println("Error reading theme")
 				println(err.Error())
 			}
 		}
 	}
-	if strings.HasSuffix(*args.Mode, ".json") {
+	if strings.HasSuffix(*arguments.Mode, ".json") {
 		modeTheme := symbolTemplates["compatible"]
 
-		file, err := ioutil.ReadFile(*args.Mode)
+		file, err := ioutil.ReadFile(*arguments.Mode)
 		if err == nil {
 			err = json.Unmarshal(file, &modeTheme)
 			if err == nil {
-				symbolTemplates[*args.Mode] = modeTheme
+				symbolTemplates[*arguments.Mode] = modeTheme
 			} else {
 				println("Error reading mode")
 				println(err.Error())
@@ -302,13 +315,13 @@ func main() {
 		}
 	}
 	priorities := map[string]int{}
-	priorityList := strings.Split(*args.Priority, ",")
+	priorityList := strings.Split(*arguments.Priority, ",")
 	for idx, priority := range priorityList {
 		priorities[priority] = len(priorityList) - idx
 	}
 
-	p := newPowerline(args, getValidCwd(), priorities, alignLeft)
-	if p.supportsRightModules() && p.hasRightModules() && !*args.Eval {
+	p := newPowerline(arguments, getValidCwd(), priorities, alignLeft)
+	if p.supportsRightModules() && p.hasRightModules() && !*arguments.Eval {
 		panic("Flag '-modules-right' requires '-eval' mode.")
 	}
 
