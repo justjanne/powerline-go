@@ -54,6 +54,7 @@ type args struct {
 	ShortenGKENames        *bool
 	ShortenEKSNames        *bool
 	ShellVar               *string
+	ShellVarNoWarnEmpty    *bool
 	TrimADDomain           *bool
 	PathAliases            *string
 	Duration               *string
@@ -244,6 +245,10 @@ func main() {
 			"shell-var",
 			"",
 			comments("A shell variable to add to the segments.")),
+		ShellVarNoWarnEmpty: flag.Bool(
+			"shell-var-no-warn-empty",
+			false,
+			comments("Disables warning for empty shell variable.")),
 		TrimADDomain: flag.Bool(
 			"trim-ad-domain",
 			false,
