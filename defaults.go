@@ -164,6 +164,9 @@ var themes = map[string]Theme{
 		VirtualGoFg: 00,
 		VirtualGoBg: 35,
 
+		GoEnvFg: 00,
+		GoEnvBg: 06, // Golang turquoise
+
 		PerlbrewFg: 00,
 		PerlbrewBg: 20, // a mid-tone blue
 
@@ -532,6 +535,9 @@ var themes = map[string]Theme{
 
 		VirtualGoFg: 35,
 		VirtualGoBg: 254,
+
+		GoEnvFg: 06, // Golang turquoise
+		GoEnvBg: 254,
 
 		PerlbrewFg: 20, // a mid-tone blue
 		PerlbrewBg: 15,

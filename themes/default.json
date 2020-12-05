@@ -50,6 +50,8 @@
   "GitStashedBg": 20,
   "VirtualEnvFg": 0,
   "VirtualEnvBg": 35,
+  "GoEnvFg": 0,
+  "GoEnvBg": 6,
   "PerlbrewFg": 0,
   "PerlbrewBg": 20,
   "PlEnvFg": 0,
