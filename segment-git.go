@@ -203,7 +203,7 @@ func segmentGit(p *powerline) []pwl.Segment {
 
 	out, err = runGitCommand("git", "rev-list", "-g", "refs/stash")
 	if err == nil && len(out) > 0 {
-		stats.stashed = len(strings.Split(out, "\n")) - 1
+		stats.stashed = strings.Count(out, "\n")
 	}
 
 	segments := []pwl.Segment{{
