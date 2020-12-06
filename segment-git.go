@@ -71,7 +71,7 @@ var gitProcessEnv = func() []string {
 		"HOME": home,
 		"PATH": path,
 	}
-	result := make([]string, 0)
+	result := make([]string, len(env))
 	for key, value := range env {
 		result = append(result, fmt.Sprintf("%s=%s", key, value))
 	}
