@@ -63,7 +63,7 @@ func groupDict(pattern *regexp.Regexp, haystack string) map[string]string {
 	return result
 }
 
-func gitProcessEnv() []string {
+var gitProcessEnv = func() []string {
 	home, _ := os.LookupEnv("HOME")
 	path, _ := os.LookupEnv("PATH")
 	env := map[string]string{
@@ -76,11 +76,11 @@ func gitProcessEnv() []string {
 		result = append(result, fmt.Sprintf("%s=%s", key, value))
 	}
 	return result
-}
+}()
 
 func runGitCommand(cmd string, args ...string) (string, error) {
 	command := exec.Command(cmd, args...)
-	command.Env = gitProcessEnv()
+	command.Env = gitProcessEnv
 	out, err := command.Output()
 	return string(out), err
 }
