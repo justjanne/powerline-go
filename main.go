@@ -201,9 +201,9 @@ func main() {
 				"(valid choices: default, low-contrast)")),
 		Shell: flag.String(
 			"shell",
-			"bash",
+			"autodetect",
 			commentsWithDefaults("Set this to your shell type",
-				"(valid choices: bare, bash, zsh)")),
+				"(valid choices: autodetect, bare, bash, zsh)")),
 		Modules: flag.String(
 			"modules",
 			"venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root",

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/user"
+	"path"
 	"strconv"
 	"strings"
 	"sync"
@@ -37,6 +38,7 @@ type powerline struct {
 	username               string
 	pathAliases            map[string]string
 	theme                  Theme
+	shell                  string
 	shellInfo              ShellInfo
 	reset                  string
 	symbolTemplates        Symbols
@@ -80,7 +82,12 @@ func newPowerline(args args, cwd string, priorities map[string]int, align alignm
 	p.userIsAdmin = userIsAdmin()
 
 	p.theme = themes[*args.Theme]
-	p.shellInfo = shellInfos[*args.Shell]
+	if *args.Shell == "autodetect" {
+		p.shell = detectShell(os.Getenv("SHELL"))
+	} else {
+		p.shell = *args.Shell
+	}
+	p.shellInfo = shellInfos[p.shell]
 	p.reset = fmt.Sprintf(p.shellInfo.colorTemplate, "[0m")
 	p.symbolTemplates = symbolTemplates[*args.Mode]
 	p.priorities = priorities
@@ -117,6 +124,19 @@ func newPowerline(args args, cwd string, priorities map[string]int, align alignm
 	initSegments(p, strings.Split(mods, ","))
 
 	return p
+}
+
+func detectShell(envShell string) string {
+	var shell string
+	envShell = path.Base(envShell)
+	if strings.Contains(envShell, "bash") {
+		shell = "bash"
+	} else if strings.Contains(envShell, "zsh") {
+		shell = "zsh"
+	} else {
+		shell = "bare"
+	}
+	return shell
 }
 
 func initSegments(p *powerline, mods []string) {
