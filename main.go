@@ -40,6 +40,7 @@ type args struct {
 	PromptOnNewLine        *bool
 	StaticPromptIndicator  *bool
 	GitAssumeUnchangedSize *int64
+	GitDisableStats        *string
 	Mode                   *string
 	Theme                  *string
 	Shell                  *string
@@ -182,6 +183,11 @@ func main() {
 			"git-assume-unchanged-size",
 			2048,
 			comments("Disable checking for changed/edited files in git repositories where the index is larger than this size (in KB), improves performance")),
+		GitDisableStats: flag.String(
+			"git-disable-stats",
+			"",
+			commentsWithDefaults("Comma-separated list to disable individual git statuses",
+				"(valid choices: ahead, behind, staged, notStaged, untracked, conflicted, stashed)")),
 		Mode: flag.String(
 			"mode",
 			"patched",
