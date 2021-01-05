@@ -248,6 +248,8 @@ Usage of powerline-go:
     	 (default "bash")
   -shell-var string
     	 A shell variable to add to the segments.
+  -shell-var-no-warn-empty
+    	 Disables warning for empty shell variable.
   -shorten-eks-names
     	 Shortens names for EKS Kube clusters.
   -shorten-gke-names
