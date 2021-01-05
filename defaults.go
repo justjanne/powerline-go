@@ -158,6 +158,9 @@ var themes = map[string]Theme{
 		GitStashedFg:    15,
 		GitStashedBg:    20,
 
+		GoenvBg: 38,  // approx. Gopher Blue
+		GoenvFg: 220, // approx. Secondary Yellow
+
 		VirtualEnvFg: 00,
 		VirtualEnvBg: 35, // a mid-tone green
 
@@ -527,6 +530,9 @@ var themes = map[string]Theme{
 		GitStashedFg:    15,
 		GitStashedBg:    20,
 
+		GoenvBg: 38,  // approx. Gopher Blue
+		GoenvFg: 220, // approx. Secondary Yellow
+
 		VirtualEnvFg: 35, // a mid-tone green
 		VirtualEnvBg: 254,
 
@@ -863,6 +869,8 @@ var themes = map[string]Theme{
 		GitConflictedBg:    1,
 		GitStashedFg:       15,
 		GitStashedBg:       4,
+		GoenvBg:            38,  // approx. Gopher Blue
+		GoenvFg:            220, // approx. Secondary Yellow
 		VirtualEnvFg:       8,
 		VirtualEnvBg:       6,
 		PerlbrewFg:         8,
@@ -1193,6 +1201,8 @@ var themes = map[string]Theme{
 		GitConflictedBg:    1,
 		GitStashedFg:       15,
 		GitStashedBg:       4,
+		GoenvBg:            38,  // approx. Gopher Blue
+		GoenvFg:            220, // approx. Secondary Yellow
 		VirtualEnvFg:       8,
 		VirtualEnvBg:       6,
 		PerlbrewFg:         8,
@@ -1524,6 +1534,8 @@ var themes = map[string]Theme{
 		GitConflictedBg:    gruvbox_neutral_red,
 		GitStashedFg:       gruvbox_dark0,
 		GitStashedBg:       gruvbox_neutral_yellow,
+		GoenvBg:            gruvbox_faded_blue,
+		GoenvFg:            gruvbox_light1,
 		VirtualEnvFg:       gruvbox_light0,
 		VirtualEnvBg:       gruvbox_faded_green,
 		PerlbrewFg:         gruvbox_light0,  // match virtualenv

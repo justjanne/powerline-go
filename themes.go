@@ -103,6 +103,9 @@ type Theme struct {
 	GitStashedFg    uint8
 	GitStashedBg    uint8
 
+	GoenvFg uint8
+	GoenvBg uint8
+
 	VirtualEnvFg uint8
 	VirtualEnvBg uint8
 
