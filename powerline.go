@@ -286,7 +286,7 @@ func (p *powerline) truncateRow(rowNum int) {
 }
 
 func (p *powerline) numEastAsianRunes(segmentContent *string) int {
-	if *p.args.EastAsianWidth {
+	if !*p.args.EastAsianWidth {
 		return 0
 	}
 	numEastAsianRunes := 0
