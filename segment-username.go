@@ -2,7 +2,6 @@ package main
 
 import (
 	pwl "github.com/justjanne/powerline-go/powerline"
-	"os"
 )
 
 func segmentUser(p *powerline) []pwl.Segment {
@@ -16,7 +15,7 @@ func segmentUser(p *powerline) []pwl.Segment {
 	}
 
 	var background uint8
-	if os.Getuid() == 0 {
+	if p.userIsAdmin {
 		background = p.theme.UsernameRootBg
 	} else {
 		background = p.theme.UsernameBg
