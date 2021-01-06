@@ -43,6 +43,7 @@ type args struct {
 	GitAssumeUnchangedSize *int64
 	GitDisableStats        *string
 	GitMode                *string
+	Jobs                   *int
 	Mode                   *string
 	Theme                  *string
 	Shell                  *string
@@ -187,6 +188,10 @@ func main() {
 			"venv-name-size-limit",
 			0,
 			comments("Show indicator instead of virtualenv name if name is longer than this limit (defaults to 0, which is unlimited)")),
+		Jobs: flag.Int(
+			"jobs",
+			0,
+			comments("Number of jobs currently running")),
 		GitAssumeUnchangedSize: flag.Int64(
 			"git-assume-unchanged-size",
 			2048,
