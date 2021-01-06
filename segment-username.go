@@ -6,9 +6,9 @@ import (
 
 func segmentUser(p *powerline) []pwl.Segment {
 	var userPrompt string
-	if *p.args.Shell == "bash" {
+	if p.shell == "bash" {
 		userPrompt = "\\u"
-	} else if *p.args.Shell == "zsh" {
+	} else if p.shell == "zsh" {
 		userPrompt = "%n"
 	} else {
 		userPrompt = p.username

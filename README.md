@@ -244,8 +244,8 @@ Usage of powerline-go:
     	 (default "root,cwd,user,host,ssh,perms,git-branch,git-status,hg,jobs,exit,cwd-path")
   -shell string
     	 Set this to your shell type
-    	 (valid choices: bare, bash, zsh)
-    	 (default "bash")
+    	 (valid choices: autodetect, bare, bash, zsh)
+    	 (default "autodetect")
   -shell-var string
     	 A shell variable to add to the segments.
   -shell-var-no-warn-empty

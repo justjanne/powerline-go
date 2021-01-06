@@ -44,9 +44,9 @@ func segmentHost(p *powerline) []pwl.Segment {
 			foreground = p.theme.HostnameColorizedFgMap[background]
 		}
 	} else {
-		if *p.args.Shell == "bash" {
+		if p.shell == "bash" {
 			hostPrompt = "\\h"
-		} else if *p.args.Shell == "zsh" {
+		} else if p.shell == "zsh" {
 			hostPrompt = "%m"
 		} else {
 			hostPrompt = getHostName(p.hostname)
