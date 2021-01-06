@@ -303,9 +303,9 @@ func (p *powerline) numEastAsianRunes(segmentContent *string) int {
 	numEastAsianRunes := 0
 	for _, r := range *segmentContent {
 		switch width.LookupRune(r).Kind() {
-		case width.Neutral:
 		case width.EastAsianAmbiguous:
 			numEastAsianRunes++
+		case width.Neutral:
 		case width.EastAsianWide:
 		case width.EastAsianNarrow:
 		case width.EastAsianFullwidth:
