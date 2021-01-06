@@ -24,7 +24,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        arch: [ 'amd64', 'arm64' ]
+        arch: [ 'amd64' ]
+        # arm64 for darwin is disabled as it's not currently supported by the go
+        # compiler for our use case
     steps:
       - name: Checkout the repository
         uses: actions/checkout@master
@@ -34,6 +36,7 @@ jobs:
           go-version: '1.14'
       - run: go build -o release/powerline-go-$GOOS-$GOARCH
         env:
+          CGO_ENABLED: 0
           GOOS: darwin
           GOARCH: ${{ matrix.arch }}
   release-windows:
