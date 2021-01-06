@@ -86,7 +86,7 @@ func groupDict(pattern *regexp.Regexp, haystack string) map[string]string {
 	return result
 }
 
-func gitProcessEnv() []string {
+var gitProcessEnv = func() []string {
 	home, _ := os.LookupEnv("HOME")
 	path, _ := os.LookupEnv("PATH")
 	env := map[string]string{
@@ -94,16 +94,16 @@ func gitProcessEnv() []string {
 		"HOME": home,
 		"PATH": path,
 	}
-	result := make([]string, 0)
+	result := make([]string, len(env))
 	for key, value := range env {
 		result = append(result, fmt.Sprintf("%s=%s", key, value))
 	}
 	return result
-}
+}()
 
 func runGitCommand(cmd string, args ...string) (string, error) {
 	command := exec.Command(cmd, args...)
-	command.Env = gitProcessEnv()
+	command.Env = gitProcessEnv
 	out, err := command.Output()
 	return string(out), err
 }
@@ -178,13 +178,15 @@ func segmentGit(p *powerline) []pwl.Segment {
 		return []pwl.Segment{}
 	}
 
-	indexSize, err := indexSize(p.cwd)
 	args := []string{
 		"status", "--porcelain", "-b", "--ignore-submodules",
 	}
 
-	if p.cfg.GitAssumeUnchangedSize > 0 && indexSize > (p.cfg.GitAssumeUnchangedSize*1024) {
-		args = append(args, "-uno")
+	if p.cfg.GitAssumeUnchangedSize > 0 {
+		indexSize, _ := indexSize(p.cwd)
+		if indexSize > (p.cfg.GitAssumeUnchangedSize * 1024) {
+			args = append(args, "-uno")
+		}
 	}
 
 	out, err := runGitCommand("git", args...)
@@ -224,7 +226,7 @@ func segmentGit(p *powerline) []pwl.Segment {
 
 	out, err = runGitCommand("git", "rev-list", "-g", "refs/stash")
 	if err == nil && len(out) > 0 {
-		stats.stashed = len(strings.Split(out, "\n")) - 1
+		stats.stashed = strings.Count(out, "\n")
 	}
 
 	segments := []pwl.Segment{{
