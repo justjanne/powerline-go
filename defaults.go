@@ -18,6 +18,8 @@ var symbolTemplates = map[string]Symbols{
 		RepoUntracked:  "+",
 		RepoConflicted: "\u273C",
 		RepoStashed:    "\u2691",
+
+		VenvIndicator: "\uE235",
 	},
 	"patched": {
 		Lock:                 "\uE0A2",
@@ -37,6 +39,8 @@ var symbolTemplates = map[string]Symbols{
 		RepoUntracked:  "+",
 		RepoConflicted: "\u273C",
 		RepoStashed:    "\u2691",
+
+		VenvIndicator: "\uE235",
 	},
 	"flat": {
 		RepoDetached:   "\u2693",
@@ -47,6 +51,8 @@ var symbolTemplates = map[string]Symbols{
 		RepoUntracked:  "+",
 		RepoConflicted: "\u273C",
 		RepoStashed:    "\u2691",
+
+		VenvIndicator: "\uE235",
 	},
 }
 

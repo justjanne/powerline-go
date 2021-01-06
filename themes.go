@@ -19,6 +19,8 @@ type Symbols struct {
 	RepoUntracked  string
 	RepoConflicted string
 	RepoStashed    string
+
+	VenvIndicator string
 }
 
 // Theme definitions
