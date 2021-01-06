@@ -78,22 +78,16 @@ func checkForGoenvOutput() (string, error) {
 }
 
 func segmentGoenv(p *powerline) []pwl.Segment {
-	var (
-		segment string
-		err     error
-	)
+	global, err := checkForGoenvGlobalVersion()
 
-	segment, err = checkEnvForGoenvVersion()
-	if err != nil {
+	segment, err := checkEnvForGoenvVersion()
+	if err != nil || segment == global {
 		segment, err = checkForGoVersionFileInTree()
 	}
-	if err != nil {
-		segment, err = checkForGoenvGlobalVersion()
-	}
-	if err != nil {
+	if err != nil || segment == global {
 		segment, err = checkForGoenvOutput()
 	}
-	if err != nil {
+	if err != nil || segment == global {
 		return []pwl.Segment{}
 	} else {
 		return []pwl.Segment{{
