@@ -1,0 +1,75 @@
+name: Build
+on: push
+jobs:
+  release-linux:
+    name: Build release binaries for linux
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch: [ 'amd64', 'arm64', 'arm' ]
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@master
+      - name: Setup Golang
+        uses: actions/setup-go@v1
+        with:
+          go-version: '1.14'
+      - run: go build -o release/powerline-go-$GOOS-$GOARCH
+        env:
+          CGO_ENABLED: 0
+          GOOS: linux
+          GOARCH: ${{ matrix.arch }}
+  release-macos:
+    name: Build release binaries for macOS
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch: [ 'amd64', 'arm64']
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@master
+      - name: Setup Golang
+        uses: actions/setup-go@v1
+        with:
+          go-version: '1.14'
+      - run: go build -o release/powerline-go-$GOOS-$GOARCH
+        env:
+          CGO_ENABLED: 0
+          GOOS: darwin
+          GOARCH: ${{ matrix.arch }}
+  release-windows:
+    name: Build release binaries for windows
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch: [ 'amd64', 'arm64']
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@master
+      - name: Setup Golang
+        uses: actions/setup-go@v1
+        with:
+          go-version: '1.14'
+      - run: go build -o release/powerline-go-$GOOS-$GOARCH
+        env:
+          CGO_ENABLED: 0
+          GOOS: windows
+          GOARCH: ${{ matrix.arch }}
+  release-bsd:
+    name: Build release binaries for BSD
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ 'freebsd', 'netbsd', 'openbsd' ]
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@master
+      - name: Setup Golang
+        uses: actions/setup-go@v1
+        with:
+          go-version: '1.14'
+      - run: go build -o release/powerline-go-$GOOS-$GOARCH
+        env:
+          CGO_ENABLED: 0
+          GOOS: ${{ matrix.os }}
+          GOARCH: amd64
