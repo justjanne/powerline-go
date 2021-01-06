@@ -23,6 +23,7 @@ type Config struct {
 	PromptOnNewLine        bool      `json:"newline"`
 	StaticPromptIndicator  bool      `json:"static-prompt-indicator"`
 	VenvNameSizeLimit      int       `json:"venv-name-size-limit"`
+	Jobs                   int       `json:"-"`
 	GitAssumeUnchangedSize int64     `json:"git-assume-unchanged-size"`
 	GitDisableStats        []string  `json:"git-disable-stats"`
 	GitMode                string    `json:"git-mode"`

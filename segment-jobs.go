@@ -6,10 +6,10 @@ import (
 )
 
 func segmentJobs(p *powerline) []pwl.Segment {
-	if *p.args.Jobs > 0 {
+	if p.cfg.Jobs > 0 {
 		return []pwl.Segment{{
 			Name:       "jobs",
-			Content:    strconv.Itoa(*p.args.Jobs),
+			Content:    strconv.Itoa(p.cfg.Jobs),
 			Foreground: p.theme.JobsFg,
 			Background: p.theme.JobsBg,
 		}}

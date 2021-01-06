@@ -11,6 +11,7 @@ var defaults = Config{
 	PromptOnNewLine: false,
 	StaticPromptIndicator: false,
 	VenvNameSizeLimit: 0,
+    Jobs: 0,
 	GitAssumeUnchangedSize: 2048,
 	GitDisableStats: []string{},
 	GitMode: "fancy",

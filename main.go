@@ -190,7 +190,7 @@ func main() {
 			comments("Show indicator instead of virtualenv name if name is longer than this limit (defaults to 0, which is unlimited)")),
 		Jobs: flag.Int(
 			"jobs",
-			0,
+			defaults.Jobs,
 			comments("Number of jobs currently running")),
 		GitAssumeUnchangedSize: flag.Int64(
 			"git-assume-unchanged-size",
@@ -332,6 +332,8 @@ func main() {
 			cfg.StaticPromptIndicator = *args.StaticPromptIndicator
 		case "venv-name-size-limit":
 			cfg.VenvNameSizeLimit = *args.VenvNameSizeLimit
+		case "jobs":
+			cfg.Jobs = *args.Jobs
 		case "git-assume-unchanged-size":
 			cfg.GitAssumeUnchangedSize = *args.GitAssumeUnchangedSize
 		case "git-disable-stats":
