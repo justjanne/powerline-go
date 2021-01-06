@@ -132,6 +132,7 @@ var modules = map[string]func(*powerline) []pwl.Segment{
 	"user":                segmentUser,
 	"venv":                segmentVirtualEnv,
 	"vgo":                 segmentVirtualGo,
+	"wsl":                 segmentWSL,
 	"nix-shell":           segmentNixShell,
 }
 
