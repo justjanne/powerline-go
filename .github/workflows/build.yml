@@ -34,7 +34,6 @@ jobs:
           go-version: '1.14'
       - run: go build -o release/powerline-go-$GOOS-$GOARCH
         env:
-          CGO_ENABLED: 0
           GOOS: darwin
           GOARCH: ${{ matrix.arch }}
   release-windows:
