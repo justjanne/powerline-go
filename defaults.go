@@ -1,23 +1,23 @@
 package main
 
 var defaults = Config{
-	CwdMode: "fancy",
-	CwdMaxDepth: 5,
-	CwdMaxDirSize: -1,
-	ColorizeHostname: false,
-	HostnameOnlyIfSSH: false,
-	SshAlternateIcon: false,
-	EastAsianWidth: false,
-	PromptOnNewLine: false,
-	StaticPromptIndicator: false,
-	VenvNameSizeLimit: 0,
-  Jobs: 0,
+	CwdMode:                "fancy",
+	CwdMaxDepth:            5,
+	CwdMaxDirSize:          -1,
+	ColorizeHostname:       false,
+	HostnameOnlyIfSSH:      false,
+	SshAlternateIcon:       false,
+	EastAsianWidth:         false,
+	PromptOnNewLine:        false,
+	StaticPromptIndicator:  false,
+	VenvNameSizeLimit:      0,
+	Jobs:                   0,
 	GitAssumeUnchangedSize: 2048,
-	GitDisableStats: []string{},
-	GitMode: "fancy",
-	Mode: "patched",
-	Theme: "default",
-	Shell: "autodetect",
+	GitDisableStats:        []string{},
+	GitMode:                "fancy",
+	Mode:                   "patched",
+	Theme:                  "default",
+	Shell:                  "autodetect",
 	Modules: []string{
 		"venv",
 		"user",
@@ -46,21 +46,22 @@ var defaults = Config{
 		"exit",
 		"cwd-path",
 	},
-	MaxWidthPercentage: 0,
+	MaxWidthPercentage:   0,
 	TruncateSegmentWidth: 16,
-	PrevError: 0,
-	NumericExitCodes: false,
-	IgnoreRepos: []string{},
-	ShortenGKENames: false,
-	ShortenEKSNames: false,
-	ShellVar: "",
-	ShellVarNoWarnEmpty: false,
-	TrimADDomain: false,
-	PathAliases: AliasMap{},
-	Duration: "",
-	DurationMin: "0",
-	Eval: false,
-	Condensed: false,
+	PrevError:            0,
+	NumericExitCodes:     false,
+	IgnoreRepos:          []string{},
+	ShortenGKENames:      false,
+	ShortenEKSNames:      false,
+	ShellVar:             "",
+	ShellVarNoWarnEmpty:  false,
+	TrimADDomain:         false,
+	PathAliases:          AliasMap{},
+	Duration:             "",
+	DurationMin:          "0",
+	Eval:                 false,
+	Condensed:            false,
+	IgnoreWarnings:       false,
 	Modes: SymbolMap{
 		"compatible": {
 			Lock:                 "RO",
@@ -79,7 +80,7 @@ var defaults = Config{
 			RepoUntracked:  "+",
 			RepoConflicted: "\u273C",
 			RepoStashed:    "\u2691",
-			
+
 			VenvIndicator: "\uE235",
 		},
 		"patched": {
@@ -100,7 +101,7 @@ var defaults = Config{
 			RepoUntracked:  "+",
 			RepoConflicted: "\u273C",
 			RepoStashed:    "\u2691",
-			
+
 			VenvIndicator: "\uE235",
 		},
 		"flat": {
@@ -112,7 +113,7 @@ var defaults = Config{
 			RepoUntracked:  "+",
 			RepoConflicted: "\u273C",
 			RepoStashed:    "\u2691",
-			
+
 			VenvIndicator: "\uE235",
 		},
 	},
@@ -138,7 +139,7 @@ var defaults = Config{
 			EvalPromptRightSuffix: `"`,
 		},
 		"bare": {
-			ColorTemplate:    "%s",
+			ColorTemplate: "%s",
 			RootIndicator:    "$",
 			EscapedBackslash: `\`,
 			EscapedBacktick:  "`",
@@ -182,7 +183,7 @@ var defaults = Config{
 			KubeClusterBg:   26,
 			KubeNamespaceFg: 170,
 			KubeNamespaceBg: 17,
-			
+
 			WSLMachineFg: 250, // light grey
 			WSLMachineBg: 238, // dark grey
 
@@ -1572,9 +1573,9 @@ var defaults = Config{
 			ReadonlyBg:         gruvbox_bright_red,
 			SSHFg:              gruvbox_light0,
 			SSHBg:              gruvbox_faded_purple,
-			DockerMachineFg:    gruvbox_light0, // match ssh-fg
+			DockerMachineFg:    gruvbox_light0,       // match ssh-fg
 			DockerMachineBg:    gruvbox_faded_purple, // match ssh-bg
-			DotEnvFg:           gruvbox_light0, // match ssh-fg
+			DotEnvFg:           gruvbox_light0,       // match ssh-fg
 			DotEnvBg:           gruvbox_faded_purple, // match ssh-bg
 			RepoCleanFg:        gruvbox_dark1,
 			RepoCleanBg:        gruvbox_faded_green,
@@ -1606,16 +1607,16 @@ var defaults = Config{
 			GoenvFg:            gruvbox_light1,
 			VirtualEnvFg:       gruvbox_light0,
 			VirtualEnvBg:       gruvbox_faded_green,
-			PerlbrewFg:         gruvbox_light0,  // match virtualenv
+			PerlbrewFg:         gruvbox_light0,      // match virtualenv
 			PerlbrewBg:         gruvbox_faded_green, // match virtualenv
-			PlEnvFg:            gruvbox_light0,  // match virtualenv
+			PlEnvFg:            gruvbox_light0,      // match virtualenv
 			PlEnvBg:            gruvbox_faded_green, // match virtualenv
 			TimeFg:             gruvbox_light2,
 			TimeBg:             gruvbox_dark4,
-			ShellVarFg:         gruvbox_light0,  // match ssh-fg
-			ShellVarBg:         gruvbox_faded_purple,  // match ssh-bg
-			NodeFg:             gruvbox_light0,      // match virtualenv
-			NodeBg:             gruvbox_faded_green, // match virtualenv
+			ShellVarFg:         gruvbox_light0,       // match ssh-fg
+			ShellVarBg:         gruvbox_faded_purple, // match ssh-bg
+			NodeFg:             gruvbox_light0,       // match virtualenv
+			NodeBg:             gruvbox_faded_green,  // match virtualenv
 			LoadFg:             gruvbox_light0,
 			LoadBg:             gruvbox_faded_purple,
 			LoadHighBg:         gruvbox_neutral_red,

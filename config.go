@@ -1,10 +1,10 @@
 package main
 
 import (
+	"encoding/json"
+	"io/ioutil"
 	"os"
 	"path/filepath"
-	"io/ioutil"
-	"encoding/json"
 )
 
 type SymbolMap map[string]SymbolTemplate
@@ -48,6 +48,7 @@ type Config struct {
 	DurationMin            string    `json:"duration-min"`
 	Eval                   bool      `json:"eval"`
 	Condensed              bool      `json:"condensed"`
+	IgnoreWarnings         bool      `json:"ignore-warnings"`
 	Modes                  SymbolMap `json:"modes"`
 	Shells                 ShellMap  `json:"shells"`
 	Themes                 ThemeMap  `json:"themes"`
