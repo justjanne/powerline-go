@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        arch: [ 'amd64', 'arm64']
+        arch: [ 'amd64', 'arm64' ]
     steps:
       - name: Checkout the repository
         uses: actions/checkout@master
@@ -40,9 +40,6 @@ jobs:
   release-windows:
     name: Build release binaries for windows
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        arch: [ 'amd64', 'arm64']
     steps:
       - name: Checkout the repository
         uses: actions/checkout@master
@@ -54,7 +51,7 @@ jobs:
         env:
           CGO_ENABLED: 0
           GOOS: windows
-          GOARCH: ${{ matrix.arch }}
+          GOARCH: amd64
   release-bsd:
     name: Build release binaries for BSD
     runs-on: ubuntu-latest
