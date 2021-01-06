@@ -51,6 +51,8 @@ Each of these will have a number next to it if more than one file matches.
 
 ## Installation
 
+Requires Go 1.12+
+
 `powerline-go` uses ANSI color codes, these should nowadays work everywhere,
 but you may have to set your $TERM to `xterm-256color` for it to work.
 
