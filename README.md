@@ -101,7 +101,7 @@ Add the following to your `.zshrc`:
 
 ```bash
 function powerline_precmd() {
-    PS1="$($GOPATH/bin/powerline-go -error $? -jobs ${(%):%j})"
+    PS1="$($GOPATH/bin/powerline-go -error $? -jobs ${${(%):%j}:-0})"
 }
 
 function install_powerline_precmd() {
