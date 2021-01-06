@@ -15,7 +15,7 @@ func segmentPerms(p *powerline) []pwl.Segment {
 	if fileInfo.Mode()&W_USR != W_USR {
 		return []pwl.Segment{{
 			Name:       "perms",
-			Content:    p.symbolTemplates.Lock,
+			Content:    p.symbols.Lock,
 			Foreground: p.theme.ReadonlyFg,
 			Background: p.theme.ReadonlyBg,
 		}}

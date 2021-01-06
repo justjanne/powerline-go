@@ -20,6 +20,8 @@
   "SshBg": 166,
   "DockerMachineFg": 177,
   "DockerMachineBg": 55,
+  "WSLMachineFg": 250,
+  "WSLMachineBg": 238,
   "DotEnvFg": 15,
   "DotEnvBg": 55,
   "RepoCleanFg": 0,

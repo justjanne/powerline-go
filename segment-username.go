@@ -2,21 +2,20 @@ package main
 
 import (
 	pwl "github.com/justjanne/powerline-go/powerline"
-	"os"
 )
 
 func segmentUser(p *powerline) []pwl.Segment {
 	var userPrompt string
-	if *p.args.Shell == "bash" {
+	if p.cfg.Shell == "bash" {
 		userPrompt = "\\u"
-	} else if *p.args.Shell == "zsh" {
+	} else if p.cfg.Shell == "zsh" {
 		userPrompt = "%n"
 	} else {
 		userPrompt = p.username
 	}
 
 	var background uint8
-	if os.Getuid() == 0 {
+	if p.userIsAdmin {
 		background = p.theme.UsernameRootBg
 	} else {
 		background = p.theme.UsernameBg

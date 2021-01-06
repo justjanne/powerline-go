@@ -33,12 +33,12 @@ func (s byRevLength) Less(i, j int) bool {
 func maybeAliasPathSegments(p *powerline, pathSegments []pathSegment) []pathSegment {
 	pathSeparator := string(os.PathSeparator)
 
-	if p.pathAliases == nil {
+	if p.cfg.PathAliases == nil || len(p.cfg.PathAliases) == 0 {
 		return pathSegments
 	}
 
-	keys := make([]string, len(p.pathAliases))
-	for k := range p.pathAliases {
+	keys := make([]string, len(p.cfg.PathAliases))
+	for k := range p.cfg.PathAliases {
 		keys = append(keys, k)
 	}
 	sort.Sort(byRevLength(keys))
@@ -57,7 +57,7 @@ Aliases:
 			continue Aliases
 		}
 
-		alias := p.pathAliases[k]
+		alias := p.cfg.PathAliases[k]
 
 	Segments:
 		// We want to see if that array of strings exists in pathSegments.
@@ -134,16 +134,16 @@ func cwdToPathSegments(p *powerline, cwd string) []pathSegment {
 }
 
 func maybeShortenName(p *powerline, pathSegment string) string {
-	if *p.args.CwdMaxDirSize > 0 && len(pathSegment) > *p.args.CwdMaxDirSize {
-		return pathSegment[:*p.args.CwdMaxDirSize]
+	if p.cfg.CwdMaxDirSize > 0 && len(pathSegment) > p.cfg.CwdMaxDirSize {
+		return pathSegment[:p.cfg.CwdMaxDirSize]
 	}
 	return pathSegment
 }
 
 func escapeVariables(p *powerline, pathSegment string) string {
-	pathSegment = strings.Replace(pathSegment, `\`, p.shellInfo.escapedBackslash, -1)
-	pathSegment = strings.Replace(pathSegment, "`", p.shellInfo.escapedBacktick, -1)
-	pathSegment = strings.Replace(pathSegment, `$`, p.shellInfo.escapedDollar, -1)
+	pathSegment = strings.Replace(pathSegment, `\`, p.shell.EscapedBackslash, -1)
+	pathSegment = strings.Replace(pathSegment, "`", p.shell.EscapedBacktick, -1)
+	pathSegment = strings.Replace(pathSegment, `$`, p.shell.EscapedDollar, -1)
 	return pathSegment
 }
 
@@ -161,7 +161,7 @@ func getColor(p *powerline, pathSegment pathSegment, isLastDir bool) (uint8, uin
 func segmentCwd(p *powerline) (segments []pwl.Segment) {
 	cwd := p.cwd
 
-	if *p.args.CwdMode == "plain" {
+	if p.cfg.CwdMode == "plain" {
 		if strings.HasPrefix(cwd, p.userInfo.HomeDir) {
 			cwd = "~" + cwd[len(p.userInfo.HomeDir):]
 		}
@@ -175,10 +175,10 @@ func segmentCwd(p *powerline) (segments []pwl.Segment) {
 	} else {
 		pathSegments := cwdToPathSegments(p, cwd)
 
-		if *p.args.CwdMode == "dironly" {
+		if p.cfg.CwdMode == "dironly" {
 			pathSegments = pathSegments[len(pathSegments)-1:]
 		} else {
-			maxDepth := *p.args.CwdMaxDepth
+			maxDepth := p.cfg.CwdMaxDepth
 			if maxDepth <= 0 {
 				warn("Ignoring -cwd-max-depth argument since it's smaller than or equal to 0")
 			} else if len(pathSegments) > maxDepth {
@@ -199,6 +199,27 @@ func segmentCwd(p *powerline) (segments []pwl.Segment) {
 				})
 				pathSegments = append(pathSegments, secondPart...)
 			}
+
+			if p.cfg.CwdMode == "semifancy" && len(pathSegments) > 1 {
+				var path string
+				for idx, pathSegment := range pathSegments {
+					if pathSegment.home || pathSegment.alias {
+						continue
+					}
+					path += pathSegment.path
+					if idx != len(pathSegments)-1 {
+						path += string(os.PathSeparator)
+					}
+				}
+				first := pathSegments[0]
+				pathSegments = make([]pathSegment, 0)
+				if (first.home || first.alias) {
+					pathSegments = append(pathSegments, first)
+				}
+				pathSegments = append(pathSegments, pathSegment{
+					path:	  path,
+				})
+			}
 		}
 
 		for idx, pathSegment := range pathSegments {
@@ -213,10 +234,10 @@ func segmentCwd(p *powerline) (segments []pwl.Segment) {
 
 			if !special {
 				if p.align == alignRight && p.supportsRightModules() && idx != 0 {
-					segment.Separator = p.symbolTemplates.SeparatorReverseThin
+					segment.Separator = p.symbols.SeparatorReverseThin
 					segment.SeparatorForeground = p.theme.SeparatorFg
 				} else if (p.align == alignLeft || !p.supportsRightModules()) && !isLastDir {
-					segment.Separator = p.symbolTemplates.SeparatorThin
+					segment.Separator = p.symbols.SeparatorThin
 					segment.SeparatorForeground = p.theme.SeparatorFg
 				}
 			}

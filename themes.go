@@ -1,7 +1,7 @@
 package main
 
 // Symbols of the theme
-type Symbols struct {
+type SymbolTemplate struct {
 	Lock                 string
 	Network              string
 	NetworkAlternate     string
@@ -19,6 +19,8 @@ type Symbols struct {
 	RepoUntracked  string
 	RepoConflicted string
 	RepoStashed    string
+
+	VenvIndicator string
 }
 
 // Theme definitions
@@ -63,6 +65,9 @@ type Theme struct {
 	KubeNamespaceFg uint8
 	KubeNamespaceBg uint8
 
+	WSLMachineFg uint8
+	WSLMachineBg uint8
+
 	DotEnvFg uint8
 	DotEnvBg uint8
 
@@ -102,6 +107,9 @@ type Theme struct {
 	GitConflictedBg uint8
 	GitStashedFg    uint8
 	GitStashedBg    uint8
+
+	GoenvFg uint8
+	GoenvBg uint8
 
 	VirtualEnvFg uint8
 	VirtualEnvBg uint8

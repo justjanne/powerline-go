@@ -8,10 +8,10 @@ import (
 func segmentSSH(p *powerline) []pwl.Segment {
 	sshClient, _ := os.LookupEnv("SSH_CLIENT")
 	var networkIcon string
-	if *p.args.SshAlternateIcon {
-		networkIcon = p.symbolTemplates.NetworkAlternate
+	if p.cfg.SshAlternateIcon {
+		networkIcon = p.symbols.NetworkAlternate
 	} else {
-		networkIcon = p.symbolTemplates.Network
+		networkIcon = p.symbols.Network
 	}
 
 	if sshClient != "" {
