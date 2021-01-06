@@ -23,7 +23,7 @@ var symbolTemplates = map[string]Symbols{
 	},
 	"patched": {
 		Lock:                 "\uE0A2",
-		Network:              "\u260E",
+		Network:              "\u260E ",
 		NetworkAlternate:     "\uE0A2",
 		Separator:            "\uE0B0",
 		SeparatorThin:        "\uE0B1",
