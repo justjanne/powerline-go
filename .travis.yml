@@ -4,7 +4,10 @@ os: linux
 dist: xenial
 
 go:
+  - "1.12"
+  - "1.13"
   - "1.14"
+  - "1.15"
 
 # before we deploy, we go build for all operating systems we would like to support
 before_deploy:
