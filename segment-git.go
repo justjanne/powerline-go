@@ -42,33 +42,13 @@ func addRepoStatsSegment(nChanges int, symbol string, foreground uint8, backgrou
 }
 
 func (r repoStats) GitSegments(p *powerline) (segments []pwl.Segment) {
-	ignoreStats := strings.Split(*p.args.GitDisableStats, ",")
-	for _, stat := range ignoreStats {
-		// "ahead, behind, staged, notStaged, untracked, conflicted, stashed"
-		switch stat {
-		case "ahead":
-			r.ahead = 0
-		case "behind":
-			r.behind = 0
-		case "staged":
-			r.staged = 0
-		case "notStaged":
-			r.notStaged = 0
-		case "untracked":
-			r.untracked = 0
-		case "conflicted":
-			r.conflicted = 0
-		case "stashed":
-			r.stashed = 0
-		}
-	}
-	segments = append(segments, addRepoStatsSegment(r.ahead, p.symbolTemplates.RepoAhead, p.theme.GitAheadFg, p.theme.GitAheadBg)...)
-	segments = append(segments, addRepoStatsSegment(r.behind, p.symbolTemplates.RepoBehind, p.theme.GitBehindFg, p.theme.GitBehindBg)...)
-	segments = append(segments, addRepoStatsSegment(r.staged, p.symbolTemplates.RepoStaged, p.theme.GitStagedFg, p.theme.GitStagedBg)...)
-	segments = append(segments, addRepoStatsSegment(r.notStaged, p.symbolTemplates.RepoNotStaged, p.theme.GitNotStagedFg, p.theme.GitNotStagedBg)...)
-	segments = append(segments, addRepoStatsSegment(r.untracked, p.symbolTemplates.RepoUntracked, p.theme.GitUntrackedFg, p.theme.GitUntrackedBg)...)
-	segments = append(segments, addRepoStatsSegment(r.conflicted, p.symbolTemplates.RepoConflicted, p.theme.GitConflictedFg, p.theme.GitConflictedBg)...)
-	segments = append(segments, addRepoStatsSegment(r.stashed, p.symbolTemplates.RepoStashed, p.theme.GitStashedFg, p.theme.GitStashedBg)...)
+	segments = append(segments, addRepoStatsSegment(r.ahead, p.symbols.RepoAhead, p.theme.GitAheadFg, p.theme.GitAheadBg)...)
+	segments = append(segments, addRepoStatsSegment(r.behind, p.symbols.RepoBehind, p.theme.GitBehindFg, p.theme.GitBehindBg)...)
+	segments = append(segments, addRepoStatsSegment(r.staged, p.symbols.RepoStaged, p.theme.GitStagedFg, p.theme.GitStagedBg)...)
+	segments = append(segments, addRepoStatsSegment(r.notStaged, p.symbols.RepoNotStaged, p.theme.GitNotStagedFg, p.theme.GitNotStagedBg)...)
+	segments = append(segments, addRepoStatsSegment(r.untracked, p.symbols.RepoUntracked, p.theme.GitUntrackedFg, p.theme.GitUntrackedBg)...)
+	segments = append(segments, addRepoStatsSegment(r.conflicted, p.symbols.RepoConflicted, p.theme.GitConflictedFg, p.theme.GitConflictedBg)...)
+	segments = append(segments, addRepoStatsSegment(r.stashed, p.symbols.RepoStashed, p.theme.GitStashedFg, p.theme.GitStashedBg)...)
 	return
 }
 
@@ -81,13 +61,13 @@ func addRepoStatsSymbol(nChanges int, symbol string) string {
 
 func (r repoStats) GitSymbols(p *powerline) string {
 	var info string
-	info += addRepoStatsSymbol(r.ahead, p.symbolTemplates.RepoAhead)
-	info += addRepoStatsSymbol(r.behind, p.symbolTemplates.RepoBehind)
-	info += addRepoStatsSymbol(r.staged, p.symbolTemplates.RepoStaged)
-	info += addRepoStatsSymbol(r.notStaged, p.symbolTemplates.RepoNotStaged)
-	info += addRepoStatsSymbol(r.untracked, p.symbolTemplates.RepoUntracked)
-	info += addRepoStatsSymbol(r.conflicted, p.symbolTemplates.RepoConflicted)
-	info += addRepoStatsSymbol(r.stashed, p.symbolTemplates.RepoStashed)
+	info += addRepoStatsSymbol(r.ahead, p.symbols.RepoAhead)
+	info += addRepoStatsSymbol(r.behind, p.symbols.RepoBehind)
+	info += addRepoStatsSymbol(r.staged, p.symbols.RepoStaged)
+	info += addRepoStatsSymbol(r.notStaged, p.symbols.RepoNotStaged)
+	info += addRepoStatsSymbol(r.untracked, p.symbols.RepoUntracked)
+	info += addRepoStatsSymbol(r.conflicted, p.symbols.RepoConflicted)
+	info += addRepoStatsSymbol(r.stashed, p.symbols.RepoStashed)
 	return info
 }
 
@@ -142,7 +122,7 @@ func getGitDetachedBranch(p *powerline) string {
 		return strings.SplitN(out, "\n", 2)[0]
 	}
 	detachedRef := strings.SplitN(out, "\n", 2)
-	return fmt.Sprintf("%s %s", p.symbolTemplates.RepoDetached, detachedRef[0])
+	return fmt.Sprintf("%s %s", p.symbols.RepoDetached, detachedRef[0])
 }
 
 func parseGitStats(status []string) repoStats {
@@ -203,7 +183,7 @@ func segmentGit(p *powerline) []pwl.Segment {
 		"status", "--porcelain", "-b", "--ignore-submodules",
 	}
 
-	if *p.args.GitAssumeUnchangedSize > 0 && indexSize > (*p.args.GitAssumeUnchangedSize*1024) {
+	if p.cfg.GitAssumeUnchangedSize > 0 && indexSize > (p.cfg.GitAssumeUnchangedSize*1024) {
 		args = append(args, "-uno")
 	}
 
@@ -229,8 +209,8 @@ func segmentGit(p *powerline) []pwl.Segment {
 		branch = getGitDetachedBranch(p)
 	}
 
-	if len(p.symbolTemplates.RepoBranch) > 0 {
-		branch = fmt.Sprintf("%s %s", p.symbolTemplates.RepoBranch, branch)
+	if len(p.symbols.RepoBranch) > 0 {
+		branch = fmt.Sprintf("%s %s", p.symbols.RepoBranch, branch)
 	}
 
 	var foreground, background uint8
@@ -254,7 +234,27 @@ func segmentGit(p *powerline) []pwl.Segment {
 		Background: background,
 	}}
 
-	if *p.args.GitMode == "simple" {
+	for _, stat := range p.cfg.GitDisableStats {
+		// "ahead, behind, staged, notStaged, untracked, conflicted, stashed"
+		switch stat {
+		case "ahead":
+			stats.ahead = 0
+		case "behind":
+			stats.behind = 0
+		case "staged":
+			stats.staged = 0
+		case "notStaged":
+			stats.notStaged = 0
+		case "untracked":
+			stats.untracked = 0
+		case "conflicted":
+			stats.conflicted = 0
+		case "stashed":
+			stats.stashed = 0
+		}
+	}
+
+	if p.cfg.GitMode == "simple" {
 		if stats.any() {
 			segments[0].Content += " " + stats.GitSymbols(p)
 		}

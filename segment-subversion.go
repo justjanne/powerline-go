@@ -23,13 +23,13 @@ func addSvnRepoStatsSegment(p *powerline, nChanges int, symbol string, foregroun
 }
 
 func (r repoStats) SvnSegments(p *powerline) (segments []pwl.Segment) {
-	segments = append(segments, addSvnRepoStatsSegment(p, r.ahead, p.symbolTemplates.RepoAhead, p.theme.GitAheadFg, p.theme.GitAheadBg)...)
-	segments = append(segments, addSvnRepoStatsSegment(p, r.behind, p.symbolTemplates.RepoBehind, p.theme.GitBehindFg, p.theme.GitBehindBg)...)
-	segments = append(segments, addSvnRepoStatsSegment(p, r.staged, p.symbolTemplates.RepoStaged, p.theme.GitStagedFg, p.theme.GitStagedBg)...)
-	segments = append(segments, addSvnRepoStatsSegment(p, r.notStaged, p.symbolTemplates.RepoNotStaged, p.theme.GitNotStagedFg, p.theme.GitNotStagedBg)...)
-	segments = append(segments, addSvnRepoStatsSegment(p, r.untracked, p.symbolTemplates.RepoUntracked, p.theme.GitUntrackedFg, p.theme.GitUntrackedBg)...)
-	segments = append(segments, addSvnRepoStatsSegment(p, r.conflicted, p.symbolTemplates.RepoConflicted, p.theme.GitConflictedFg, p.theme.GitConflictedBg)...)
-	segments = append(segments, addSvnRepoStatsSegment(p, r.stashed, p.symbolTemplates.RepoStashed, p.theme.GitStashedFg, p.theme.GitStashedBg)...)
+	segments = append(segments, addSvnRepoStatsSegment(p, r.ahead, p.symbols.RepoAhead, p.theme.GitAheadFg, p.theme.GitAheadBg)...)
+	segments = append(segments, addSvnRepoStatsSegment(p, r.behind, p.symbols.RepoBehind, p.theme.GitBehindFg, p.theme.GitBehindBg)...)
+	segments = append(segments, addSvnRepoStatsSegment(p, r.staged, p.symbols.RepoStaged, p.theme.GitStagedFg, p.theme.GitStagedBg)...)
+	segments = append(segments, addSvnRepoStatsSegment(p, r.notStaged, p.symbols.RepoNotStaged, p.theme.GitNotStagedFg, p.theme.GitNotStagedBg)...)
+	segments = append(segments, addSvnRepoStatsSegment(p, r.untracked, p.symbols.RepoUntracked, p.theme.GitUntrackedFg, p.theme.GitUntrackedBg)...)
+	segments = append(segments, addSvnRepoStatsSegment(p, r.conflicted, p.symbols.RepoConflicted, p.theme.GitConflictedFg, p.theme.GitConflictedBg)...)
+	segments = append(segments, addSvnRepoStatsSegment(p, r.stashed, p.symbols.RepoStashed, p.theme.GitStashedFg, p.theme.GitStashedBg)...)
 	return segments
 }
 

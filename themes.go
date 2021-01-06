@@ -1,7 +1,7 @@
 package main
 
 // Symbols of the theme
-type Symbols struct {
+type SymbolTemplate struct {
 	Lock                 string
 	Network              string
 	NetworkAlternate     string

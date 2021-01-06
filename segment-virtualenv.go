@@ -24,8 +24,8 @@ func segmentVirtualEnv(p *powerline) []pwl.Segment {
 	segments := []pwl.Segment{}
 	if env != "" {
 		envName := path.Base(env)
-		if *p.args.VenvNameSizeLimit > 0 && len(envName) > *p.args.VenvNameSizeLimit {
-			envName = p.symbolTemplates.VenvIndicator
+		if p.cfg.VenvNameSizeLimit > 0 && len(envName) > p.cfg.VenvNameSizeLimit {
+			envName = p.symbols.VenvIndicator
 		}
 		segments = append(segments, pwl.Segment{
 			Name:       "venv",

@@ -81,7 +81,7 @@ func segmentKube(p *powerline) []pwl.Segment {
 	// When you use gke your clusters may look something like gke_projectname_availability-zone_cluster-01
 	// instead I want it to read as `cluster-01`
 	// So we remove the first 3 segments of this string, if the flag is set, and there are enough segments
-	if strings.HasPrefix(cluster, "gke") && *p.args.ShortenGKENames {
+	if strings.HasPrefix(cluster, "gke") && p.cfg.ShortenGKENames {
 		segments := strings.Split(cluster, "_")
 		if len(segments) > 3 {
 			cluster = strings.Join(segments[3:], "_")
@@ -93,7 +93,7 @@ func segmentKube(p *powerline) []pwl.Segment {
 	const arnRegexString string = "^arn:aws:eks:[[:alnum:]-]+:[[:digit:]]+:cluster/(.*)$"
 	arnRe := regexp.MustCompile(arnRegexString)
 
-	if arnMatches := arnRe.FindStringSubmatch(cluster); arnMatches != nil && *p.args.ShortenEKSNames {
+	if arnMatches := arnRe.FindStringSubmatch(cluster); arnMatches != nil && p.cfg.ShortenEKSNames {
 		cluster = arnMatches[1]
 	}
 	segments := []pwl.Segment{}
