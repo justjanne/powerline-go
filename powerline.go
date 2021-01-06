@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/user"
+	"path"
 	"strconv"
 	"strings"
 	"sync"
@@ -29,21 +30,23 @@ type ShellInfo struct {
 }
 
 type powerline struct {
-	args            args
-	cwd             string
-	userInfo        user.User
-	hostname        string
-	username        string
-	pathAliases     map[string]string
-	theme           Theme
-	shellInfo       ShellInfo
-	reset           string
-	symbolTemplates Symbols
-	priorities      map[string]int
-	ignoreRepos     map[string]bool
-	Segments        [][]pwl.Segment
-	curSegment      int
-	align           alignment
+	args                   args
+	cwd                    string
+	userInfo               user.User
+	userIsAdmin            bool
+	hostname               string
+	username               string
+	pathAliases            map[string]string
+	theme                  Theme
+	shell                  string
+	shellInfo              ShellInfo
+	reset                  string
+	symbolTemplates        Symbols
+	priorities             map[string]int
+	ignoreRepos            map[string]bool
+	Segments               [][]pwl.Segment
+	curSegment             int
+	align                  alignment
 	rightPowerline         *powerline
 	appendEastAsianPadding int
 }
@@ -69,9 +72,22 @@ func newPowerline(args args, cwd string, priorities map[string]int, align alignm
 	} else {
 		p.username = p.userInfo.Username
 	}
+	if args.TrimADDomain != nil && *args.TrimADDomain {
+		usernameWithAd := strings.SplitN(p.username, `\`, 2)
+		if len(usernameWithAd) > 1 {
+			// remove the Domain name from username
+			p.username = usernameWithAd[1]
+		}
+	}
+	p.userIsAdmin = userIsAdmin()
 
 	p.theme = themes[*args.Theme]
-	p.shellInfo = shellInfos[*args.Shell]
+	if *args.Shell == "autodetect" {
+		p.shell = detectShell(os.Getenv("SHELL"))
+	} else {
+		p.shell = *args.Shell
+	}
+	p.shellInfo = shellInfos[p.shell]
 	p.reset = fmt.Sprintf(p.shellInfo.colorTemplate, "[0m")
 	p.symbolTemplates = symbolTemplates[*args.Mode]
 	p.priorities = priorities
@@ -108,6 +124,19 @@ func newPowerline(args args, cwd string, priorities map[string]int, align alignm
 	initSegments(p, strings.Split(mods, ","))
 
 	return p
+}
+
+func detectShell(envShell string) string {
+	var shell string
+	envShell = path.Base(envShell)
+	if strings.Contains(envShell, "bash") {
+		shell = "bash"
+	} else if strings.Contains(envShell, "zsh") {
+		shell = "zsh"
+	} else {
+		shell = "bare"
+	}
+	return shell
 }
 
 func initSegments(p *powerline, mods []string) {
@@ -190,8 +219,10 @@ func (p *powerline) appendSegment(origin string, segment pwl.Segment) {
 }
 
 func (p *powerline) newRow() {
-	p.Segments = append(p.Segments, make([]pwl.Segment, 0))
-	p.curSegment = p.curSegment + 1
+	if len(p.Segments[p.curSegment]) > 0 {
+		p.Segments = append(p.Segments, make([]pwl.Segment, 0))
+		p.curSegment = p.curSegment + 1
+	}
 }
 
 func termWidth() int {
@@ -275,7 +306,7 @@ func (p *powerline) truncateRow(rowNum int) {
 }
 
 func (p *powerline) numEastAsianRunes(segmentContent *string) int {
-	if *p.args.EastAsianWidth {
+	if !*p.args.EastAsianWidth {
 		return 0
 	}
 	numEastAsianRunes := 0
@@ -415,7 +446,8 @@ func (p *powerline) draw() string {
 			}
 		case alignRight:
 			if p.supportsRightModules() {
-				buffer.WriteString(p.shellInfo.evalPromptSuffix)
+				buffer.Truncate(buffer.Len() - 1)
+				buffer.WriteString(p.shellInfo.evalPromptRightSuffix)
 			}
 		}
 		if p.hasRightModules() {

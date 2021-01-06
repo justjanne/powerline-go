@@ -19,6 +19,8 @@ type Symbols struct {
 	RepoUntracked  string
 	RepoConflicted string
 	RepoStashed    string
+
+	VenvIndicator string
 }
 
 // Theme definitions
@@ -105,6 +107,9 @@ type Theme struct {
 	GitConflictedBg uint8
 	GitStashedFg    uint8
 	GitStashedBg    uint8
+
+	GoenvFg uint8
+	GoenvBg uint8
 
 	VirtualEnvFg uint8
 	VirtualEnvBg uint8

@@ -199,6 +199,27 @@ func segmentCwd(p *powerline) (segments []pwl.Segment) {
 				})
 				pathSegments = append(pathSegments, secondPart...)
 			}
+
+			if *p.args.CwdMode == "semifancy" && len(pathSegments) > 1 {
+				var path string
+				for idx, pathSegment := range pathSegments {
+					if pathSegment.home || pathSegment.alias {
+						continue
+					}
+					path += pathSegment.path
+					if idx != len(pathSegments)-1 {
+						path += string(os.PathSeparator)
+					}
+				}
+				first := pathSegments[0]
+				pathSegments = make([]pathSegment, 0)
+				if (first.home || first.alias) {
+					pathSegments = append(pathSegments, first)
+				}
+				pathSegments = append(pathSegments, pathSegment{
+					path:	  path,
+				})
+			}
 		}
 
 		for idx, pathSegment := range pathSegments {

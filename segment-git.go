@@ -25,6 +25,10 @@ func (r repoStats) dirty() bool {
 	return r.untracked+r.notStaged+r.staged+r.conflicted > 0
 }
 
+func (r repoStats) any() bool {
+	return r.ahead+r.behind+r.untracked+r.notStaged+r.staged+r.conflicted+r.stashed > 0
+}
+
 func addRepoStatsSegment(nChanges int, symbol string, foreground uint8, background uint8) []pwl.Segment {
 	if nChanges > 0 {
 		return []pwl.Segment{{
@@ -38,6 +42,26 @@ func addRepoStatsSegment(nChanges int, symbol string, foreground uint8, backgrou
 }
 
 func (r repoStats) GitSegments(p *powerline) (segments []pwl.Segment) {
+	ignoreStats := strings.Split(*p.args.GitDisableStats, ",")
+	for _, stat := range ignoreStats {
+		// "ahead, behind, staged, notStaged, untracked, conflicted, stashed"
+		switch stat {
+		case "ahead":
+			r.ahead = 0
+		case "behind":
+			r.behind = 0
+		case "staged":
+			r.staged = 0
+		case "notStaged":
+			r.notStaged = 0
+		case "untracked":
+			r.untracked = 0
+		case "conflicted":
+			r.conflicted = 0
+		case "stashed":
+			r.stashed = 0
+		}
+	}
 	segments = append(segments, addRepoStatsSegment(r.ahead, p.symbolTemplates.RepoAhead, p.theme.GitAheadFg, p.theme.GitAheadBg)...)
 	segments = append(segments, addRepoStatsSegment(r.behind, p.symbolTemplates.RepoBehind, p.theme.GitBehindFg, p.theme.GitBehindBg)...)
 	segments = append(segments, addRepoStatsSegment(r.staged, p.symbolTemplates.RepoStaged, p.theme.GitStagedFg, p.theme.GitStagedBg)...)
@@ -46,6 +70,25 @@ func (r repoStats) GitSegments(p *powerline) (segments []pwl.Segment) {
 	segments = append(segments, addRepoStatsSegment(r.conflicted, p.symbolTemplates.RepoConflicted, p.theme.GitConflictedFg, p.theme.GitConflictedBg)...)
 	segments = append(segments, addRepoStatsSegment(r.stashed, p.symbolTemplates.RepoStashed, p.theme.GitStashedFg, p.theme.GitStashedBg)...)
 	return
+}
+
+func addRepoStatsSymbol(nChanges int, symbol string) string {
+	if nChanges > 0 {
+		return symbol
+	}
+	return ""
+}
+
+func (r repoStats) GitSymbols(p *powerline) string {
+	var info string
+	info += addRepoStatsSymbol(r.ahead, p.symbolTemplates.RepoAhead)
+	info += addRepoStatsSymbol(r.behind, p.symbolTemplates.RepoBehind)
+	info += addRepoStatsSymbol(r.staged, p.symbolTemplates.RepoStaged)
+	info += addRepoStatsSymbol(r.notStaged, p.symbolTemplates.RepoNotStaged)
+	info += addRepoStatsSymbol(r.untracked, p.symbolTemplates.RepoUntracked)
+	info += addRepoStatsSymbol(r.conflicted, p.symbolTemplates.RepoConflicted)
+	info += addRepoStatsSymbol(r.stashed, p.symbolTemplates.RepoStashed)
+	return info
 }
 
 var branchRegex = regexp.MustCompile(`^## (?P<local>\S+?)(\.{3}(?P<remote>\S+?)( \[(ahead (?P<ahead>\d+)(, )?)?(behind (?P<behind>\d+))?])?)?$`)
@@ -210,6 +253,14 @@ func segmentGit(p *powerline) []pwl.Segment {
 		Foreground: foreground,
 		Background: background,
 	}}
-	segments = append(segments, stats.GitSegments(p)...)
+
+	if *p.args.GitMode == "simple" {
+		if stats.any() {
+			segments[0].Content += " " + stats.GitSymbols(p)
+		}
+	} else { // fancy
+		segments = append(segments, stats.GitSegments(p)...)
+	}
+
 	return segments
 }

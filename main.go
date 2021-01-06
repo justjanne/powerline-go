@@ -39,7 +39,10 @@ type args struct {
 	EastAsianWidth         *bool
 	PromptOnNewLine        *bool
 	StaticPromptIndicator  *bool
+	VenvNameSizeLimit      *int
 	GitAssumeUnchangedSize *int64
+	GitDisableStats        *string
+	GitMode                *string
 	Mode                   *string
 	Theme                  *string
 	Shell                  *string
@@ -54,6 +57,8 @@ type args struct {
 	ShortenGKENames        *bool
 	ShortenEKSNames        *bool
 	ShellVar               *string
+	ShellVarNoWarnEmpty    *bool
+	TrimADDomain           *bool
 	PathAliases            *string
 	Duration               *string
 	DurationMin            *string
@@ -104,6 +109,7 @@ var modules = map[string]func(*powerline) []pwl.Segment{
 	"gcp":                 segmentGCP,
 	"git":                 segmentGit,
 	"gitlite":             segmentGitLite,
+	"goenv":               segmentGoenv,
 	"hg":                  segmentHg,
 	"svn":                 segmentSubversion,
 	"host":                segmentHost,
@@ -114,6 +120,7 @@ var modules = map[string]func(*powerline) []pwl.Segment{
 	"perlbrew":            segmentPerlbrew,
 	"plenv":               segmentPlEnv,
 	"perms":               segmentPerms,
+	"rbenv":               segmentRbenv,
 	"root":                segmentRoot,
 	"shell-var":           segmentShellVar,
 	"shenv":               segmentShEnv,
@@ -143,7 +150,7 @@ func main() {
 			"cwd-mode",
 			"fancy",
 			commentsWithDefaults("How to display the current directory",
-				"(valid choices: fancy, plain, dironly)")),
+				"(valid choices: fancy, semifancy, plain, dironly)")),
 		CwdMaxDepth: flag.Int(
 			"cwd-max-depth",
 			5,
@@ -176,10 +183,24 @@ func main() {
 			"static-prompt-indicator",
 			false,
 			comments("Always show the prompt indicator with the default color, never with the error color")),
+		VenvNameSizeLimit: flag.Int(
+			"venv-name-size-limit",
+			0,
+			comments("Show indicator instead of virtualenv name if name is longer than this limit (defaults to 0, which is unlimited)")),
 		GitAssumeUnchangedSize: flag.Int64(
 			"git-assume-unchanged-size",
 			2048,
 			comments("Disable checking for changed/edited files in git repositories where the index is larger than this size (in KB), improves performance")),
+		GitDisableStats: flag.String(
+			"git-disable-stats",
+			"",
+			commentsWithDefaults("Comma-separated list to disable individual git statuses",
+				"(valid choices: ahead, behind, staged, notStaged, untracked, conflicted, stashed)")),
+		GitMode: flag.String(
+			"git-mode",
+			"fancy",
+			commentsWithDefaults("How to display git status",
+				"(valid choices: fancy, simple)")),
 		Mode: flag.String(
 			"mode",
 			"patched",
@@ -192,19 +213,19 @@ func main() {
 				"(valid choices: default, low-contrast)")),
 		Shell: flag.String(
 			"shell",
-			"bash",
+			"autodetect",
 			commentsWithDefaults("Set this to your shell type",
-				"(valid choices: bare, bash, zsh)")),
+				"(valid choices: autodetect, bare, bash, zsh)")),
 		Modules: flag.String(
 			"modules",
 			"venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root",
 			commentsWithDefaults("The list of modules to load, separated by ','",
-				"(valid choices: aws, cwd, docker, docker-context, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
+				"(valid choices: aws, cwd, docker, docker-context, dotenv, duration, exit, git, gitlite, goenv, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
 		ModulesRight: flag.String(
 			"modules-right",
 			"",
 			comments("The list of modules to load anchored to the right, for shells that support it, separated by ','",
-				"(valid choices: aws, cwd, docker, docker-context, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
+				"(valid choices: aws, cwd, docker, docker-context, dotenv, duration, exit, git, gitlite, goenv, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
 		Priority: flag.String(
 			"priority",
 			"root,cwd,user,host,ssh,perms,git-branch,git-status,hg,jobs,exit,cwd-path",
@@ -217,7 +238,7 @@ func main() {
 		TruncateSegmentWidth: flag.Int(
 			"truncate-segment-width",
 			16,
-			commentsWithDefaults("Minimum width of a segment, segments longer than this will be shortened if space is limited. Setting this to 0 disables it.")),
+			commentsWithDefaults("Maximum width of a segment, segments longer than this will be shortened if space is limited. Setting this to 0 disables it.")),
 		PrevError: flag.Int(
 			"error",
 			0,
@@ -243,6 +264,14 @@ func main() {
 			"shell-var",
 			"",
 			comments("A shell variable to add to the segments.")),
+		ShellVarNoWarnEmpty: flag.Bool(
+			"shell-var-no-warn-empty",
+			false,
+			comments("Disables warning for empty shell variable.")),
+		TrimADDomain: flag.Bool(
+			"trim-ad-domain",
+			false,
+			comments("Trim the Domainname from the AD username.")),
 		PathAliases: flag.String(
 			"path-aliases",
 			"",

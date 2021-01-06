@@ -10,6 +10,7 @@ Ported to golang by @justjanne.
 - Changes color if the last command exited with a failure code
 - If you're too deep into a directory tree, shortens the displayed path with an ellipsis
 - Shows the current Python [virtualenv](http://www.virtualenv.org/) environment
+- Shows the current Ruby version using [rbenv](https://github.com/rbenv/rbenv)
 - Shows if you are in a [nix](https://nixos.org/) shell
 - It's easy to customize and extend. See below for details.
 
@@ -193,7 +194,7 @@ Usage of powerline-go:
     	 (default -1)
   -cwd-mode string
     	 How to display the current directory
-    	 (valid choices: fancy, plain, dironly)
+    	 (valid choices: fancy, semifancy, plain, dironly)
     	 (default "fancy")
   -duration string
     	 The elapsed clock-time of the previous command
@@ -207,6 +208,13 @@ Usage of powerline-go:
     	 Output prompt in 'eval' format.
   -git-assume-unchanged-size int
     	 Disable checking for changed/edited files in git repositories where the index is larger than this size (in KB), improves performance (default 2048)
+  -git-disable-stats string
+    	 Comma-separated list to disable individual git statuses
+    	 (valid choices: ahead, behind, staged, notStaged, untracked, conflicted, stashed)
+  -git-mode string
+    	 How to display git status
+    	 (valid choices: fancy, simple)
+    	 (default "fancy")
   -hostname-only-if-ssh
     	 Show hostname only for SSH connections
   -ignore-repos string
@@ -220,11 +228,11 @@ Usage of powerline-go:
     	 (default "patched")
   -modules string
     	 The list of modules to load, separated by ','
-    	 (valid choices: aws, cwd, docker, docker-context, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo, wsl)
+    	 (valid choices: aws, cwd, docker, docker-context, dotenv, duration, exit, git, gitlite, goenv, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, rbenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo, wsl)
     	 (default "venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root")
   -modules-right string
     	 The list of modules to load anchored to the right, for shells that support it, separated by ','
-    	 (valid choices: aws, cwd, docker, docker-context, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo, wsl)
+    	 (valid choices: aws, cwd, docker, docker-context, dotenv, duration, exit, git, gitlite, goenv, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, rbenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo, wsl)
   -newline
     	 Show the prompt on a new line
   -numeric-exit-codes
@@ -236,14 +244,16 @@ Usage of powerline-go:
     	 Use '~' for your home dir. You may need to escape this character to avoid shell substitution.
   -priority string
     	 Segments sorted by priority, if not enough space exists, the least priorized segments are removed first. Separate with ','
-    	 (valid choices: aws, cwd, docker, docker-context, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)
+    	 (valid choices: aws, cwd, docker, docker-context, dotenv, duration, exit, git, gitlite, goenv, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, rbenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)
     	 (default "root,cwd,user,host,ssh,perms,git-branch,git-status,hg,jobs,exit,cwd-path")
   -shell string
     	 Set this to your shell type
-    	 (valid choices: bare, bash, zsh)
-    	 (default "bash")
+    	 (valid choices: autodetect, bare, bash, zsh)
+    	 (default "autodetect")
   -shell-var string
     	 A shell variable to add to the segments.
+  -shell-var-no-warn-empty
+    	 Disables warning for empty shell variable.
   -shorten-eks-names
     	 Shortens names for EKS Kube clusters.
   -shorten-gke-names
@@ -255,7 +265,7 @@ Usage of powerline-go:
     	 (valid choices: default, low-contrast)
     	 (default "default")
   -truncate-segment-width int
-    	 Minimum width of a segment, segments longer than this will be shortened if space is limited. Setting this to 0 disables it.
+    	 Maximum width of a segment, segments longer than this will be shortened if space is limited. Setting this to 0 disables it.
     	 (default 16)
 ```
 
