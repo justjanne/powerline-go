@@ -41,6 +41,7 @@ type args struct {
 	StaticPromptIndicator  *bool
 	GitAssumeUnchangedSize *int64
 	GitDisableStats        *string
+	GitMode                *string
 	Mode                   *string
 	Theme                  *string
 	Shell                  *string
@@ -147,7 +148,7 @@ func main() {
 			"cwd-mode",
 			"fancy",
 			commentsWithDefaults("How to display the current directory",
-				"(valid choices: fancy, plain, dironly)")),
+				"(valid choices: fancy, semifancy, plain, dironly)")),
 		CwdMaxDepth: flag.Int(
 			"cwd-max-depth",
 			5,
@@ -189,6 +190,11 @@ func main() {
 			"",
 			commentsWithDefaults("Comma-separated list to disable individual git statuses",
 				"(valid choices: ahead, behind, staged, notStaged, untracked, conflicted, stashed)")),
+		GitMode: flag.String(
+			"git-mode",
+			"fancy",
+			commentsWithDefaults("How to display git status",
+				"(valid choices: fancy, simple)")),
 		Mode: flag.String(
 			"mode",
 			"patched",
