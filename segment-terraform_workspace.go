@@ -11,7 +11,7 @@ const wsFile = "./.terraform/environment"
 
 func segmentTerraformWorkspace(p *powerline) []pwl.Segment {
 	stat, err := os.Stat(wsFile)
-	if err == nil {
+	if err != nil {
 		return []pwl.Segment{}
 	}
 	if stat.IsDir() {
