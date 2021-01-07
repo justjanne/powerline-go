@@ -233,8 +233,8 @@ var defaults = Config{
 			VirtualEnvFg: 00,
 			VirtualEnvBg: 35, // a mid-tone green
 
-			VirtualGoFg: 00,
-			VirtualGoBg: 35,
+			VirtualGoFg: 220, // approx. Secondary Yellow
+			VirtualGoBg: 38,  // approx. Gopher Blue
 
 			PerlbrewFg: 00,
 			PerlbrewBg: 20, // a mid-tone blue
@@ -605,8 +605,8 @@ var defaults = Config{
 			VirtualEnvFg: 35, // a mid-tone green
 			VirtualEnvBg: 254,
 
-			VirtualGoFg: 35,
-			VirtualGoBg: 254,
+			VirtualGoFg: 220, // approx. Secondary Yellow
+			VirtualGoBg: 38,  // approx. Gopher Blue
 
 			PerlbrewFg: 20, // a mid-tone blue
 			PerlbrewBg: 15,
