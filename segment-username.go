@@ -6,11 +6,12 @@ import (
 
 func segmentUser(p *powerline) []pwl.Segment {
 	var userPrompt string
-	if p.cfg.Shell == "bash" {
+	switch p.cfg.Shell {
+	case "bash":
 		userPrompt = "\\u"
-	} else if p.cfg.Shell == "zsh" {
+	case "zsh":
 		userPrompt = "%n"
-	} else {
+	default:
 		userPrompt = p.username
 	}
 

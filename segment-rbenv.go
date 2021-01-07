@@ -1,13 +1,14 @@
 package main
 
 import (
-	pwl "github.com/justjanne/powerline-go/powerline"
 	"errors"
 	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
+
+	pwl "github.com/justjanne/powerline-go/powerline"
 )
 
 const rubyVersionFileSuffix = "/.ruby-version"
@@ -22,18 +23,17 @@ func runRbenvCommand(cmd string, args ...string) (string, error) {
 // check RBENV_VERSION variable
 func checkEnvForRbenvVersion() (string, error) {
 	rbenvVersion := os.Getenv("RBENV_VERSION")
-	if (len(rbenvVersion) > 0) {
-		return rbenvVersion, nil
-	} else {
+	if len(rbenvVersion) <= 0 {
 		return "", errors.New("Not found in RBENV_VERSION")
 	}
+	return rbenvVersion, nil
 }
 
 // check existence of .ruby_version in tree until root path
 func checkForRubyVersionFileInTree() (string, error) {
 	var (
 		workingDirectory string
-		err error
+		err              error
 	)
 
 	workingDirectory, err = os.Getwd()
@@ -55,31 +55,31 @@ func checkForRubyVersionFileInTree() (string, error) {
 func checkForGlobalVersion() (string, error) {
 	homeDir, _ := os.UserHomeDir()
 	globalRubyVersion, err := ioutil.ReadFile(homeDir + globalVersionFileSuffix)
-	if err == nil {
-		return strings.TrimSpace(string(globalRubyVersion)), nil
-	} else {
+	if err != nil {
 		return "", errors.New("No global version file found in tree")
 	}
+	return strings.TrimSpace(string(globalRubyVersion)), nil
 }
 
 // retrieve rbenv version output
 func checkForRbenvOutput() (string, error) {
 	// spawn rbenv and print out version
 	out, err := runRbenvCommand("rbenv", "version")
-	if err == nil {
-		items := strings.Split(out, " ")
-		if len(items) > 1 {
-			return items[0], nil
-		}
+	if err != nil {
+		return "", errors.New("Not found in rbenv output")
+	}
+	items := strings.Split(out, " ")
+	if len(items) <= 0 {
+		return "", errors.New("Not found in rbenv output")
 	}
 
-	return "", errors.New("Not found in rbenv output")
+	return items[0], nil
 }
 
 func segmentRbenv(p *powerline) []pwl.Segment {
 	var (
 		segment string
-		err error
+		err     error
 	)
 
 	segment, err = checkEnvForRbenvVersion()
@@ -94,12 +94,11 @@ func segmentRbenv(p *powerline) []pwl.Segment {
 	}
 	if err != nil {
 		return []pwl.Segment{}
-	} else {
-		return []pwl.Segment{{
-			Name:       "rbenv",
-			Content:    segment,
-			Foreground: p.theme.TimeFg,
-			Background: p.theme.TimeBg,
-		}}
 	}
+	return []pwl.Segment{{
+		Name:       "rbenv",
+		Content:    segment,
+		Foreground: p.theme.TimeFg,
+		Background: p.theme.TimeBg,
+	}}
 }

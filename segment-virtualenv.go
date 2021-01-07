@@ -21,18 +21,18 @@ func segmentVirtualEnv(p *powerline) []pwl.Segment {
 	if env == "" {
 		env, _ = os.LookupEnv("PYENV_VERSION")
 	}
-	segments := []pwl.Segment{}
-	if env != "" {
-		envName := path.Base(env)
-		if p.cfg.VenvNameSizeLimit > 0 && len(envName) > p.cfg.VenvNameSizeLimit {
-			envName = p.symbols.VenvIndicator
-		}
-		segments = append(segments, pwl.Segment{
-			Name:       "venv",
-			Content:    envName,
-			Foreground: p.theme.VirtualEnvFg,
-			Background: p.theme.VirtualEnvBg,
-		})
+	if env == "" {
+		return []pwl.Segment{}
 	}
-	return segments
+	envName := path.Base(env)
+	if p.cfg.VenvNameSizeLimit > 0 && len(envName) > p.cfg.VenvNameSizeLimit {
+		envName = p.symbols.VenvIndicator
+	}
+
+	return []pwl.Segment{{
+		Name:       "venv",
+		Content:    envName,
+		Foreground: p.theme.VirtualEnvFg,
+		Background: p.theme.VirtualEnvBg,
+	}}
 }

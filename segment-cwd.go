@@ -161,7 +161,8 @@ func getColor(p *powerline, pathSegment pathSegment, isLastDir bool) (uint8, uin
 func segmentCwd(p *powerline) (segments []pwl.Segment) {
 	cwd := p.cwd
 
-	if p.cfg.CwdMode == "plain" {
+	switch p.cfg.CwdMode {
+	case "plain":
 		if strings.HasPrefix(cwd, p.userInfo.HomeDir) {
 			cwd = "~" + cwd[len(p.userInfo.HomeDir):]
 		}
@@ -172,7 +173,7 @@ func segmentCwd(p *powerline) (segments []pwl.Segment) {
 			Foreground: p.theme.CwdFg,
 			Background: p.theme.PathBg,
 		})
-	} else {
+	default:
 		pathSegments := cwdToPathSegments(p, cwd)
 
 		if p.cfg.CwdMode == "dironly" {
@@ -213,11 +214,11 @@ func segmentCwd(p *powerline) (segments []pwl.Segment) {
 				}
 				first := pathSegments[0]
 				pathSegments = make([]pathSegment, 0)
-				if (first.home || first.alias) {
+				if first.home || first.alias {
 					pathSegments = append(pathSegments, first)
 				}
 				pathSegments = append(pathSegments, pathSegment{
-					path:	  path,
+					path: path,
 				})
 			}
 		}

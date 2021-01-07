@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
+	"strconv"
+
 	"github.com/justjanne/powerline-go/exitcode"
 	pwl "github.com/justjanne/powerline-go/powerline"
-	"strconv"
 )
 
 var exitCodes = map[int]string{
@@ -31,18 +32,19 @@ func getMeaningFromExitCode(exitCode int) string {
 
 func segmentExitCode(p *powerline) []pwl.Segment {
 	var meaning string
-	if p.cfg.PrevError != 0 {
-		if p.cfg.NumericExitCodes {
-			meaning = strconv.Itoa(p.cfg.PrevError)
-		} else {
-			meaning = getMeaningFromExitCode(p.cfg.PrevError)
-		}
-		return []pwl.Segment{{
-			Name:       "exit",
-			Content:    meaning,
-			Foreground: p.theme.CmdFailedFg,
-			Background: p.theme.CmdFailedBg,
-		}}
+	if p.cfg.PrevError == 0 {
+		return []pwl.Segment{}
 	}
-	return []pwl.Segment{}
+	if p.cfg.NumericExitCodes {
+		meaning = strconv.Itoa(p.cfg.PrevError)
+	} else {
+		meaning = getMeaningFromExitCode(p.cfg.PrevError)
+	}
+
+	return []pwl.Segment{{
+		Name:       "exit",
+		Content:    meaning,
+		Foreground: p.theme.CmdFailedFg,
+		Background: p.theme.CmdFailedBg,
+	}}
 }

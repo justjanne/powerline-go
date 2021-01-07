@@ -2,13 +2,14 @@ package main
 
 import (
 	"fmt"
-	pwl "github.com/justjanne/powerline-go/powerline"
 	"os"
 	"os/exec"
 	"path"
 	"regexp"
 	"strconv"
 	"strings"
+
+	pwl "github.com/justjanne/powerline-go/powerline"
 )
 
 type repoStats struct {
