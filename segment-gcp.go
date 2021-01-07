@@ -1,10 +1,11 @@
 package main
 
 import (
-	pwl "github.com/justjanne/powerline-go/powerline"
 	"log"
 	"os/exec"
 	"strings"
+
+	pwl "github.com/justjanne/powerline-go/powerline"
 )
 
 func segmentGCP(p *powerline) []pwl.Segment {
@@ -14,14 +15,13 @@ func segmentGCP(p *powerline) []pwl.Segment {
 	}
 
 	project := strings.TrimSuffix(string(out), "\n")
-	if project != "" {
-		return []pwl.Segment{{
-			Name:       "gcp",
-			Content:    project,
-			Foreground: p.theme.GCPFg,
-			Background: p.theme.GCPBg,
-		}}
+	if project == "" {
+		return []pwl.Segment{}
 	}
-
-	return []pwl.Segment{}
+	return []pwl.Segment{{
+		Name:       "gcp",
+		Content:    project,
+		Foreground: p.theme.GCPFg,
+		Background: p.theme.GCPBg,
+	}}
 }

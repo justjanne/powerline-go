@@ -9,13 +9,13 @@ import (
 
 func segmentPerms(p *powerline) []pwl.Segment {
 	cwd := p.cwd
-	if unix.Access(cwd, unix.W_OK) != nil {
-		return []pwl.Segment{{
-			Name:       "perms",
-			Content:    p.symbols.Lock,
-			Foreground: p.theme.ReadonlyFg,
-			Background: p.theme.ReadonlyBg,
-		}}
+	if unix.Access(cwd, unix.W_OK) == nil {
+		return []pwl.Segment{}
 	}
-	return []pwl.Segment{}
+	return []pwl.Segment{{
+		Name:       "perms",
+		Content:    p.symbols.Lock,
+		Foreground: p.theme.ReadonlyFg,
+		Background: p.theme.ReadonlyBg,
+	}}
 }

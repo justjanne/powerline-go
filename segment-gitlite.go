@@ -1,8 +1,9 @@
 package main
 
 import (
-	pwl "github.com/justjanne/powerline-go/powerline"
 	"strings"
+
+	pwl "github.com/justjanne/powerline-go/powerline"
 )
 
 func segmentGitLite(p *powerline) []pwl.Segment {
@@ -25,10 +26,10 @@ func segmentGitLite(p *powerline) []pwl.Segment {
 	status := strings.TrimSpace(out)
 	var branch string
 
-	if status != "HEAD" {
-		branch = status
-	} else {
+	if status == "HEAD" {
 		branch = getGitDetachedBranch(p)
+	} else {
+		branch = status
 	}
 
 	return []pwl.Segment{{
