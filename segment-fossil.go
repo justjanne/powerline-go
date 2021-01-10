@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	pwl "github.com/justjanne/powerline-go/powerline"
 	"os/exec"
 	"strings"
 )
@@ -29,7 +30,7 @@ func getFossilStatus() (bool, bool, bool) {
 	return hasModifiedFiles, hasUntrackedFiles, hasMissingFiles
 }
 
-func segmentFossil(p *powerline) {
+func segmentFossil(p *powerline) []pwl.Segment {
 	out, _ := exec.Command("fossil", "branch", "current").Output()
 	output := strings.SplitN(string(out), "\n", 2)
 	if len(output) > 0 && output[0] != "" {
@@ -64,10 +65,12 @@ func segmentFossil(p *powerline) {
 			content = fmt.Sprintf(branch)
 		}
 
-		p.appendSegment("fossil", segment{
-			content:    content,
-			foreground: foreground,
-			background: background,
-		})
+		return []pwl.Segment{{
+            Name:       "fossil",
+			Content:    content,
+			Foreground: foreground,
+			Background: background,
+		}}
 	}
+	return []pwl.Segment{}
 }
