@@ -27,7 +27,7 @@ const (
 )
 
 func segmentDuration(p *powerline) []pwl.Segment {
-	if p.args.Duration == nil || *p.args.Duration == "" {
+	if p.cfg.Duration == "" {
 		return []pwl.Segment{{
 			Name:       "duration",
 			Content:    "No duration",
@@ -36,17 +36,17 @@ func segmentDuration(p *powerline) []pwl.Segment {
 		}}
 	}
 
-	durationValue := strings.Trim(*p.args.Duration, "'\"")
-	durationMinValue := strings.Trim(*p.args.DurationMin, "'\"")
+	durationValue := strings.Trim(p.cfg.Duration, "'\"")
+	durationMinValue := strings.Trim(p.cfg.DurationMin, "'\"")
 
-	hasPrecision := strings.Index(durationValue, ".") != -1
+	hasPrecision := strings.Contains(durationValue, ".")
 
 	durationFloat, err := strconv.ParseFloat(durationValue, 64)
 	durationMinFloat, _ := strconv.ParseFloat(durationMinValue, 64)
 	if err != nil {
 		return []pwl.Segment{{
 			Name:       "duration",
-			Content:    fmt.Sprintf("Failed to convert '%s' to a number", *p.args.Duration),
+			Content:    fmt.Sprintf("Failed to convert '%s' to a number", p.cfg.Duration),
 			Foreground: p.theme.DurationFg,
 			Background: p.theme.DurationBg,
 		}}
@@ -58,42 +58,43 @@ func segmentDuration(p *powerline) []pwl.Segment {
 
 	duration := time.Duration(durationFloat * float64(time.Second.Nanoseconds()))
 
-	if duration > 0 {
-		var content string
-		ns := duration.Nanoseconds()
-		if ns > hours {
-			hrs := ns / hours
-			ns -= hrs * hours
-			mins := ns / minutes
-			content = fmt.Sprintf("%dh %dm", hrs, mins)
-		} else if ns > minutes {
-			mins := ns / minutes
-			ns -= mins * minutes
-			secs := ns / seconds
-			content = fmt.Sprintf("%dm %ds", mins, secs)
-		} else if !hasPrecision {
-			secs := ns / seconds
-			content = fmt.Sprintf("%ds", secs)
-		} else if ns > seconds {
-			secs := ns / seconds
-			ns -= secs * seconds
-			millis := ns / milliseconds
-			content = fmt.Sprintf("%ds %dms", secs, millis)
-		} else if ns > milliseconds {
-			millis := ns / milliseconds
-			ns -= millis * milliseconds
-			micros := ns / microseconds
-			content = fmt.Sprintf("%dms %d\u00B5s", millis, micros)
-		} else {
-			content = fmt.Sprintf("%d\u00B5s", ns/microseconds)
-		}
-
-		return []pwl.Segment{{
-			Name:       "duration",
-			Content:    content,
-			Foreground: p.theme.DurationFg,
-			Background: p.theme.DurationBg,
-		}}
+	if duration <= 0 {
+		return []pwl.Segment{}
 	}
-	return []pwl.Segment{}
+
+	var content string
+	ns := duration.Nanoseconds()
+	if ns > hours {
+		hrs := ns / hours
+		ns -= hrs * hours
+		mins := ns / minutes
+		content = fmt.Sprintf("%dh %dm", hrs, mins)
+	} else if ns > minutes {
+		mins := ns / minutes
+		ns -= mins * minutes
+		secs := ns / seconds
+		content = fmt.Sprintf("%dm %ds", mins, secs)
+	} else if !hasPrecision {
+		secs := ns / seconds
+		content = fmt.Sprintf("%ds", secs)
+	} else if ns > seconds {
+		secs := ns / seconds
+		ns -= secs * seconds
+		millis := ns / milliseconds
+		content = fmt.Sprintf("%ds %dms", secs, millis)
+	} else if ns > milliseconds {
+		millis := ns / milliseconds
+		ns -= millis * milliseconds
+		micros := ns / microseconds
+		content = fmt.Sprintf("%dms %d\u00B5s", millis, micros)
+	} else {
+		content = fmt.Sprintf("%d\u00B5s", ns/microseconds)
+	}
+
+	return []pwl.Segment{{
+		Name:       "duration",
+		Content:    content,
+		Foreground: p.theme.DurationFg,
+		Background: p.theme.DurationBg,
+	}}
 }

@@ -1,26 +1,27 @@
 package main
 
 import (
-	pwl "github.com/justjanne/powerline-go/powerline"
 	"os"
+
+	pwl "github.com/justjanne/powerline-go/powerline"
 )
 
 func segmentSSH(p *powerline) []pwl.Segment {
 	sshClient, _ := os.LookupEnv("SSH_CLIENT")
+	if sshClient == "" {
+		return []pwl.Segment{}
+	}
 	var networkIcon string
-	if *p.args.SshAlternateIcon {
-		networkIcon = p.symbolTemplates.NetworkAlternate
+	if p.cfg.SshAlternateIcon {
+		networkIcon = p.symbols.NetworkAlternate
 	} else {
-		networkIcon = p.symbolTemplates.Network
+		networkIcon = p.symbols.Network
 	}
 
-	if sshClient != "" {
-		return []pwl.Segment{{
-			Name:       "ssh",
-			Content:    networkIcon,
-			Foreground: p.theme.SSHFg,
-			Background: p.theme.SSHBg,
-		}}
-	}
-	return []pwl.Segment{}
+	return []pwl.Segment{{
+		Name:       "ssh",
+		Content:    networkIcon,
+		Foreground: p.theme.SSHFg,
+		Background: p.theme.SSHBg,
+	}}
 }

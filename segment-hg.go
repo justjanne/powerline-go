@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	pwl "github.com/justjanne/powerline-go/powerline"
 	"os/exec"
 	"strings"
+
+	pwl "github.com/justjanne/powerline-go/powerline"
 )
 
 func getHgStatus() (bool, bool, bool) {
@@ -33,40 +34,40 @@ func getHgStatus() (bool, bool, bool) {
 func segmentHg(p *powerline) []pwl.Segment {
 	out, _ := exec.Command("hg", "branch").Output()
 	output := strings.SplitN(string(out), "\n", 2)
-	if len(output) > 0 && output[0] != "" {
-		branch := output[0]
-		hasModifiedFiles, hasUntrackedFiles, hasMissingFiles := getHgStatus()
+	if !(len(output) > 0 && output[0] != "") {
+		return []pwl.Segment{}
+	}
+	branch := output[0]
+	hasModifiedFiles, hasUntrackedFiles, hasMissingFiles := getHgStatus()
 
-		var foreground, background uint8
-		var content string
-		if hasModifiedFiles || hasUntrackedFiles || hasMissingFiles {
-			foreground = p.theme.RepoDirtyFg
-			background = p.theme.RepoDirtyBg
+	var foreground, background uint8
+	var content string
+	if hasModifiedFiles || hasUntrackedFiles || hasMissingFiles {
+		foreground = p.theme.RepoDirtyFg
+		background = p.theme.RepoDirtyBg
 
-			extra := ""
+		extra := ""
 
-			if hasUntrackedFiles {
-				extra += "+"
-			}
-
-			if hasMissingFiles {
-				extra += "!"
-			}
-
-			content = fmt.Sprintf("%s %s", branch, extra)
-		} else {
-			foreground = p.theme.RepoCleanFg
-			background = p.theme.RepoCleanBg
-
-			content = fmt.Sprintf(branch)
+		if hasUntrackedFiles {
+			extra += "+"
 		}
 
-		return []pwl.Segment{{
-			Name:       "hg",
-			Content:    content,
-			Foreground: foreground,
-			Background: background,
-		}}
+		if hasMissingFiles {
+			extra += "!"
+		}
+
+		content = fmt.Sprintf("%s %s", branch, extra)
+	} else {
+		foreground = p.theme.RepoCleanFg
+		background = p.theme.RepoCleanBg
+
+		content = branch
 	}
-	return []pwl.Segment{}
+
+	return []pwl.Segment{{
+		Name:       "hg",
+		Content:    content,
+		Foreground: foreground,
+		Background: background,
+	}}
 }

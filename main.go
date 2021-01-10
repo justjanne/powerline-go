@@ -29,39 +29,11 @@ const (
 	MinInteger = ^MaxInteger
 )
 
-type args struct {
-	CwdMode                *string
-	CwdMaxDepth            *int
-	CwdMaxDirSize          *int
-	ColorizeHostname       *bool
-	HostnameOnlyIfSSH      *bool
-	SshAlternateIcon       *bool
-	EastAsianWidth         *bool
-	PromptOnNewLine        *bool
-	StaticPromptIndicator  *bool
-	GitAssumeUnchangedSize *int64
-	Mode                   *string
-	Theme                  *string
-	Shell                  *string
-	Modules                *string
-	ModulesRight           *string
-	Priority               *string
-	MaxWidthPercentage     *int
-	TruncateSegmentWidth   *int
-	PrevError              *int
-	NumericExitCodes       *bool
-	IgnoreRepos            *string
-	ShortenGKENames        *bool
-	ShortenEKSNames        *bool
-	ShellVar               *string
-	PathAliases            *string
-	Duration               *string
-	DurationMin            *string
-	Eval                   *bool
-	Condensed              *bool
-}
-
 func warn(msg string) {
+	if *args.IgnoreWarnings {
+		return
+	}
+
 	print("[powerline-go]", msg)
 }
 
@@ -106,6 +78,7 @@ var modules = map[string]func(*powerline) []pwl.Segment{
 	"gcp":                 segmentGCP,
 	"git":                 segmentGit,
 	"gitlite":             segmentGitLite,
+	"goenv":               segmentGoenv,
 	"hg":                  segmentHg,
 	"svn":                 segmentSubversion,
 	"host":                segmentHost,
@@ -116,6 +89,7 @@ var modules = map[string]func(*powerline) []pwl.Segment{
 	"perlbrew":            segmentPerlbrew,
 	"plenv":               segmentPlEnv,
 	"perms":               segmentPerms,
+	"rbenv":               segmentRbenv,
 	"root":                segmentRoot,
 	"shell-var":           segmentShellVar,
 	"shenv":               segmentShEnv,
@@ -127,6 +101,7 @@ var modules = map[string]func(*powerline) []pwl.Segment{
 	"user":                segmentUser,
 	"venv":                segmentVirtualEnv,
 	"vgo":                 segmentVirtualGo,
+	"wsl":                 segmentWSL,
 	"nix-shell":           segmentNixShell,
 }
 
@@ -139,172 +114,125 @@ func commentsWithDefaults(lines ...string) string {
 }
 
 func main() {
-	args := args{
-		CwdMode: flag.String(
-			"cwd-mode",
-			"fancy",
-			commentsWithDefaults("How to display the current directory",
-				"(valid choices: fancy, plain, dironly)")),
-		CwdMaxDepth: flag.Int(
-			"cwd-max-depth",
-			5,
-			commentsWithDefaults("Maximum number of directories to show in path")),
-		CwdMaxDirSize: flag.Int(
-			"cwd-max-dir-size",
-			-1,
-			commentsWithDefaults("Maximum number of letters displayed for each directory in the path")),
-		ColorizeHostname: flag.Bool(
-			"colorize-hostname",
-			false,
-			comments("Colorize the hostname based on a hash of itself, or use the PLGO_HOSTNAMEFG and/or PLGO_HOSTNAMEBG env vars.")),
-		HostnameOnlyIfSSH: flag.Bool(
-			"hostname-only-if-ssh",
-			false,
-			comments("Show hostname only for SSH connections")),
-		SshAlternateIcon: flag.Bool(
-			"alternate-ssh-icon",
-			false,
-			comments("Show the older, original icon for SSH connections")),
-		EastAsianWidth: flag.Bool(
-			"east-asian-width",
-			false,
-			comments("Use East Asian Ambiguous Widths")),
-		PromptOnNewLine: flag.Bool(
-			"newline",
-			false,
-			comments("Show the prompt on a new line")),
-		StaticPromptIndicator: flag.Bool(
-			"static-prompt-indicator",
-			false,
-			comments("Always show the prompt indicator with the default color, never with the error color")),
-		GitAssumeUnchangedSize: flag.Int64(
-			"git-assume-unchanged-size",
-			2048,
-			comments("Disable checking for changed/edited files in git repositories where the index is larger than this size (in KB), improves performance")),
-		Mode: flag.String(
-			"mode",
-			"patched",
-			commentsWithDefaults("The characters used to make separators between segments.",
-				"(valid choices: patched, compatible, flat)")),
-		Theme: flag.String(
-			"theme",
-			"default",
-			commentsWithDefaults("Set this to the theme you want to use",
-				"(valid choices: default, low-contrast)")),
-		Shell: flag.String(
-			"shell",
-			"bash",
-			commentsWithDefaults("Set this to your shell type",
-				"(valid choices: bare, bash, zsh)")),
-		Modules: flag.String(
-			"modules",
-			"venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root",
-			commentsWithDefaults("The list of modules to load, separated by ','",
-				"(valid choices: aws, cwd, docker, docker-context, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
-		ModulesRight: flag.String(
-			"modules-right",
-			"",
-			comments("The list of modules to load anchored to the right, for shells that support it, separated by ','",
-				"(valid choices: aws, cwd, docker, docker-context, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
-		Priority: flag.String(
-			"priority",
-			"root,cwd,user,host,ssh,perms,git-branch,git-status,hg,jobs,exit,cwd-path",
-			commentsWithDefaults("Segments sorted by priority, if not enough space exists, the least priorized segments are removed first. Separate with ','",
-				"(valid choices: aws, cwd, docker, docker-context, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
-		MaxWidthPercentage: flag.Int(
-			"max-width",
-			0,
-			comments("Maximum width of the shell that the prompt may use, in percent. Setting this to 0 disables the shrinking subsystem.")),
-		TruncateSegmentWidth: flag.Int(
-			"truncate-segment-width",
-			16,
-			commentsWithDefaults("Minimum width of a segment, segments longer than this will be shortened if space is limited. Setting this to 0 disables it.")),
-		PrevError: flag.Int(
-			"error",
-			0,
-			comments("Exit code of previously executed command")),
-		NumericExitCodes: flag.Bool(
-			"numeric-exit-codes",
-			false,
-			comments("Shows numeric exit codes for errors.")),
-		IgnoreRepos: flag.String(
-			"ignore-repos",
-			"",
-			comments("A list of git repos to ignore. Separate with ','.",
-				"Repos are identified by their root directory.")),
-		ShortenGKENames: flag.Bool(
-			"shorten-gke-names",
-			false,
-			comments("Shortens names for GKE Kube clusters.")),
-		ShortenEKSNames: flag.Bool(
-			"shorten-eks-names",
-			false,
-			comments("Shortens names for EKS Kube clusters.")),
-		ShellVar: flag.String(
-			"shell-var",
-			"",
-			comments("A shell variable to add to the segments.")),
-		PathAliases: flag.String(
-			"path-aliases",
-			"",
-			comments("One or more aliases from a path to a short name. Separate with ','.",
-				"An alias maps a path like foo/bar/baz to a short name like FBB.",
-				"Specify these as key/value pairs like foo/bar/baz=FBB.",
-				"Use '~' for your home dir. You may need to escape this character to avoid shell substitution.")),
-		Duration: flag.String(
-			"duration",
-			"",
-			comments("The elapsed clock-time of the previous command")),
-		DurationMin: flag.String(
-			"duration-min",
-			"0",
-			comments("The minimal time a command has to take before the duration segment is shown")),
-		Eval: flag.Bool(
-			"eval",
-			false,
-			comments("Output prompt in 'eval' format.")),
-		Condensed: flag.Bool(
-			"condensed",
-			false,
-			comments("Remove spacing between segments")),
-	}
 	flag.Parse()
-	if strings.HasSuffix(*args.Theme, ".json") {
-		jsonTheme := themes["default"]
 
-		file, err := ioutil.ReadFile(*args.Theme)
+	cfg := defaults
+	err := cfg.Load()
+	if err != nil {
+		println("Error loading config")
+		println(err.Error())
+	}
+
+	flag.Visit(func(f *flag.Flag) {
+		switch f.Name {
+		case "cwd-mode":
+			cfg.CwdMode = *args.CwdMode
+		case "cwd-max-depth":
+			cfg.CwdMaxDepth = *args.CwdMaxDepth
+		case "cwd-max-dir-size":
+			cfg.CwdMaxDirSize = *args.CwdMaxDirSize
+		case "colorize-hostname":
+			cfg.ColorizeHostname = *args.ColorizeHostname
+		case "hostname-only-if-ssh":
+			cfg.HostnameOnlyIfSSH = *args.HostnameOnlyIfSSH
+		case "alternate-ssh-icon":
+			cfg.SshAlternateIcon = *args.SshAlternateIcon
+		case "east-asian-width":
+			cfg.EastAsianWidth = *args.EastAsianWidth
+		case "newline":
+			cfg.PromptOnNewLine = *args.PromptOnNewLine
+		case "static-prompt-indicator":
+			cfg.StaticPromptIndicator = *args.StaticPromptIndicator
+		case "venv-name-size-limit":
+			cfg.VenvNameSizeLimit = *args.VenvNameSizeLimit
+		case "jobs":
+			cfg.Jobs = *args.Jobs
+		case "git-assume-unchanged-size":
+			cfg.GitAssumeUnchangedSize = *args.GitAssumeUnchangedSize
+		case "git-disable-stats":
+			cfg.GitDisableStats = strings.Split(*args.GitDisableStats, ",")
+		case "git-mode":
+			cfg.GitMode = *args.GitMode
+		case "mode":
+			cfg.Mode = *args.Mode
+		case "theme":
+			cfg.Theme = *args.Theme
+		case "shell":
+			cfg.Shell = *args.Shell
+		case "modules":
+			cfg.Modules = strings.Split(*args.Modules, ",")
+		case "modules-right":
+			cfg.ModulesRight = strings.Split(*args.ModulesRight, ",")
+		case "priority":
+			cfg.Priority = strings.Split(*args.Priority, ",")
+		case "max-width-percentage":
+			cfg.MaxWidthPercentage = *args.MaxWidthPercentage
+		case "truncate-segment-width":
+			cfg.TruncateSegmentWidth = *args.TruncateSegmentWidth
+		case "error":
+			cfg.PrevError = *args.PrevError
+		case "numeric-exit-codes":
+			cfg.NumericExitCodes = *args.NumericExitCodes
+		case "ignore-repos":
+			cfg.IgnoreRepos = strings.Split(*args.IgnoreRepos, ",")
+		case "shorten-gke-names":
+			cfg.ShortenGKENames = *args.ShortenGKENames
+		case "shorten-eks-names":
+			cfg.ShortenEKSNames = *args.ShortenEKSNames
+		case "shell-var":
+			cfg.ShellVar = *args.ShellVar
+		case "shell-var-no-warn-empty":
+			cfg.ShellVarNoWarnEmpty = *args.ShellVarNoWarnEmpty
+		case "trim-ad-domain":
+			cfg.TrimADDomain = *args.TrimADDomain
+		case "path-aliases":
+			for _, pair := range strings.Split(*args.PathAliases, ",") {
+				kv := strings.SplitN(pair, "=", 2)
+				cfg.PathAliases[kv[0]] = kv[1]
+			}
+		case "duration":
+			cfg.Duration = *args.Duration
+		case "duration-min":
+			cfg.DurationMin = *args.DurationMin
+		case "eval":
+			cfg.Eval = *args.Eval
+		case "condensed":
+			cfg.Condensed = *args.Condensed
+		case "ignore-warnings":
+			cfg.IgnoreWarnings = *args.IgnoreWarnings
+		}
+	})
+
+	if strings.HasSuffix(cfg.Theme, ".json") {
+		file, err := ioutil.ReadFile(cfg.Theme)
 		if err == nil {
-			err = json.Unmarshal(file, &jsonTheme)
+			theme := cfg.Themes[defaults.Theme]
+			err = json.Unmarshal(file, &theme)
 			if err == nil {
-				themes[*args.Theme] = jsonTheme
+				cfg.Themes[cfg.Theme] = theme
 			} else {
 				println("Error reading theme")
 				println(err.Error())
 			}
 		}
 	}
-	if strings.HasSuffix(*args.Mode, ".json") {
-		modeTheme := symbolTemplates["compatible"]
 
-		file, err := ioutil.ReadFile(*args.Mode)
+	if strings.HasSuffix(cfg.Mode, ".json") {
+		file, err := ioutil.ReadFile(cfg.Mode)
 		if err == nil {
-			err = json.Unmarshal(file, &modeTheme)
+			symbols := cfg.Modes[defaults.Mode]
+			err = json.Unmarshal(file, &symbols)
 			if err == nil {
-				symbolTemplates[*args.Mode] = modeTheme
+				cfg.Modes[cfg.Mode] = symbols
 			} else {
 				println("Error reading mode")
 				println(err.Error())
 			}
 		}
 	}
-	priorities := map[string]int{}
-	priorityList := strings.Split(*args.Priority, ",")
-	for idx, priority := range priorityList {
-		priorities[priority] = len(priorityList) - idx
-	}
 
-	p := newPowerline(args, getValidCwd(), priorities, alignLeft)
-	if p.supportsRightModules() && p.hasRightModules() && !*args.Eval {
+	p := newPowerline(cfg, getValidCwd(), alignLeft)
+	if p.supportsRightModules() && p.hasRightModules() && !cfg.Eval {
 		panic("Flag '-modules-right' requires '-eval' mode.")
 	}
 

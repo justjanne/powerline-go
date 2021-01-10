@@ -1,24 +1,20 @@
 package main
 
 import (
-	pwl "github.com/justjanne/powerline-go/powerline"
 	"os"
-	"path"
+
+	pwl "github.com/justjanne/powerline-go/powerline"
 )
 
 func segmentPlEnv(p *powerline) []pwl.Segment {
-	var env string
+	env, _ := os.LookupEnv("PLENV_VERSION")
 	if env == "" {
-		env, _ = os.LookupEnv("PLENV_VERSION")
+		return []pwl.Segment{}
 	}
-	if env != "" {
-		envName := path.Base(env)
-		return []pwl.Segment{{
-			Name:       "plenv",
-			Content:    envName,
-			Foreground: p.theme.PlEnvFg,
-			Background: p.theme.PlEnvBg,
-		}}
-	}
-	return []pwl.Segment{}
+	return []pwl.Segment{{
+		Name:       "plenv",
+		Content:    env,
+		Foreground: p.theme.PlEnvFg,
+		Background: p.theme.PlEnvBg,
+	}}
 }

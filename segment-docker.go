@@ -21,13 +21,13 @@ func segmentDocker(p *powerline) []pwl.Segment {
 		}
 	}
 
-	if docker != "" {
-		return []pwl.Segment{{
-			Name:       "docker",
-			Content:    docker,
-			Foreground: p.theme.DockerMachineFg,
-			Background: p.theme.DockerMachineBg,
-		}}
+	if docker == "" {
+		return []pwl.Segment{}
 	}
-	return []pwl.Segment{}
+	return []pwl.Segment{{
+		Name:       "docker",
+		Content:    docker,
+		Foreground: p.theme.DockerMachineFg,
+		Background: p.theme.DockerMachineBg,
+	}}
 }
