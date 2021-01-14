@@ -67,12 +67,14 @@ func getValidCwd() string {
 
 var modules = map[string]func(*powerline) []pwl.Segment{
 	"aws":                 segmentAWS,
+	"bzr":                 segmentBzr,
 	"cwd":                 segmentCwd,
 	"docker":              segmentDocker,
 	"docker-context":      segmentDockerContext,
 	"dotenv":              segmentDotEnv,
 	"duration":            segmentDuration,
 	"exit":                segmentExitCode,
+	"fossil":              segmentFossil,
 	"gcp":                 segmentGCP,
 	"git":                 segmentGit,
 	"gitlite":             segmentGitLite,
