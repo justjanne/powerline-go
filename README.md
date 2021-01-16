@@ -199,7 +199,7 @@ Usage of powerline-go:
   -alternate-ssh-icon
          Show the older, original icon for SSH connections
   -colorize-hostname
-         Colorize the hostname based on a hash of itself, or use the PLGO_HOSTNAMEFG and/or PLGO_HOSTNAMEBG env vars.
+         Colorize the hostname based on a hash of itself, or use the PLGO_HOSTNAMEFG and PLGO_HOSTNAMEBG env vars (both need to be set).
   -condensed
          Remove spacing between segments
   -cwd-max-depth int
