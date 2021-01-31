@@ -294,6 +294,8 @@ Usage of powerline-go:
          (default 16)
   -venv-name-size-limit int
          Show indicator instead of virtualenv name if name is longer than this limit (defaults to 0, which is unlimited)
+  -forceright
+         Force right mode inconditionaly. Useful for fish right prompt
 ```
 
 ### Eval
