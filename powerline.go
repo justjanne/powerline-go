@@ -458,6 +458,10 @@ func (p *powerline) supportsRightModules() bool {
 }
 
 func (p *powerline) isRightPrompt() bool {
+    if p.cfg.ForceRight {
+        return true
+    } else {
 	return p.align == alignRight && p.supportsRightModules()
+  }
 }
 

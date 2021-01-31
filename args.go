@@ -42,6 +42,7 @@ type arguments struct {
 	Eval                   *bool
 	Condensed              *bool
 	IgnoreWarnings         *bool
+	ForceRight             *bool
 }
 
 var args = arguments{
@@ -204,4 +205,8 @@ var args = arguments{
 		"ignore-warnings",
 		defaults.IgnoreWarnings,
 		comments("Ignores all warnings regarding unset or broken variables")),
+    ForceRight: flag.Bool(
+        "forceright",
+        false,
+        comments("Force right mode")),
 }

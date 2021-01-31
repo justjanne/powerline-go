@@ -200,6 +200,8 @@ func main() {
 			cfg.Condensed = *args.Condensed
 		case "ignore-warnings":
 			cfg.IgnoreWarnings = *args.IgnoreWarnings
+		case "forceright":
+			cfg.ForceRight = *args.ForceRight
 		}
 	})
 
