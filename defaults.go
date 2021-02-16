@@ -233,6 +233,9 @@ var defaults = Config{
 			VirtualEnvFg: 00,
 			VirtualEnvBg: 35, // a mid-tone green
 
+			ScreenFg: 15, // white
+			ScreenBg: 26, // blue
+
 			VirtualGoFg: 220, // approx. Secondary Yellow
 			VirtualGoBg: 38,  // approx. Gopher Blue
 
