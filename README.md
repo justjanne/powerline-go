@@ -285,7 +285,7 @@ Usage of powerline-go:
          Always show the prompt indicator with the default color, never with the error color
   -theme string
          Set this to the theme you want to use
-         (valid choices: default, low-contrast)
+         (valid choices: default, low-contrast, gruvbox, solarized-dark16, solarized-light16)
          (default "default")
   -trim-ad-domain
          Trim the Domainname from the AD username.
