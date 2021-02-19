@@ -165,7 +165,7 @@ func main() {
 			cfg.ModulesRight = strings.Split(*args.ModulesRight, ",")
 		case "priority":
 			cfg.Priority = strings.Split(*args.Priority, ",")
-		case "max-width-percentage":
+		case "max-width":
 			cfg.MaxWidthPercentage = *args.MaxWidthPercentage
 		case "truncate-segment-width":
 			cfg.TruncateSegmentWidth = *args.TruncateSegmentWidth
