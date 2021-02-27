@@ -225,11 +225,6 @@ func segmentGit(p *powerline) []pwl.Segment {
 		background = p.theme.RepoCleanBg
 	}
 
-	out, err = runGitCommand("git", "rev-list", "-g", "refs/stash")
-	if err == nil && len(out) > 0 {
-		stats.stashed = strings.Count(out, "\n")
-	}
-
 	segments := []pwl.Segment{{
 		Name:       "git-branch",
 		Content:    branch,
@@ -237,6 +232,7 @@ func segmentGit(p *powerline) []pwl.Segment {
 		Background: background,
 	}}
 
+	stashEnabled := true
 	for _, stat := range p.cfg.GitDisableStats {
 		// "ahead, behind, staged, notStaged, untracked, conflicted, stashed"
 		switch stat {
@@ -254,6 +250,14 @@ func segmentGit(p *powerline) []pwl.Segment {
 			stats.conflicted = 0
 		case "stashed":
 			stats.stashed = 0
+			stashEnabled = false
+		}
+	}
+
+	if stashEnabled {
+		out, err = runGitCommand("git", "rev-list", "-g", "refs/stash")
+		if err == nil {
+			stats.stashed = strings.Count(out, "\n")
 		}
 	}
 
