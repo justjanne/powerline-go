@@ -47,9 +47,13 @@ func pathExists(path string) bool {
 func getValidCwd() string {
 	cwd, err := os.Getwd()
 	if err != nil {
-		warn("Your current directory is invalid.")
-		print("> ")
-		os.Exit(1)
+		var exists bool
+		cwd, exists = os.LookupEnv("PWD")
+		if !exists {
+			warn("Your current directory is invalid.")
+			print("> ")
+			os.Exit(1)
+		}
 	}
 
 	parts := strings.Split(cwd, string(os.PathSeparator))
