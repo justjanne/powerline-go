@@ -88,14 +88,15 @@ func groupDict(pattern *regexp.Regexp, haystack string) map[string]string {
 }
 
 var gitProcessEnv = func() []string {
-	home, _ := os.LookupEnv("HOME")
+	homeEnv := homeEnvName()
+	home, _ := os.LookupEnv(homeEnv)
 	path, _ := os.LookupEnv("PATH")
 	env := map[string]string{
-		"LANG": "C",
-		"HOME": home,
-		"PATH": path,
+		"LANG":  "C",
+		homeEnv: home,
+		"PATH":  path,
 	}
-	result := make([]string, len(env))
+	result := make([]string, 0)
 	for key, value := range env {
 		result = append(result, fmt.Sprintf("%s=%s", key, value))
 	}

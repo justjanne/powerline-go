@@ -8,7 +8,6 @@ import (
 	"path"
 	"path/filepath"
 	"regexp"
-	"runtime"
 	"strings"
 
 	"gopkg.in/yaml.v2"
@@ -31,11 +30,7 @@ type KubeConfig struct {
 }
 
 func homePath() string {
-	env := "HOME"
-	if runtime.GOOS == "windows" {
-		env = "USERPROFILE"
-	}
-	return os.Getenv(env)
+	return os.Getenv(homeEnvName())
 }
 
 func readKubeConfig(config *KubeConfig, path string) (err error) {
