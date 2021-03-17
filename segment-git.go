@@ -53,22 +53,28 @@ func (r repoStats) GitSegments(p *powerline) (segments []pwl.Segment) {
 	return
 }
 
-func addRepoStatsSymbol(nChanges int, symbol string) string {
+func addRepoStatsSymbol(nChanges int, symbol string, GitMode string) string {
 	if nChanges > 0 {
-		return symbol
+		if GitMode == "simple" {
+			return symbol
+		} else if GitMode == "compact" {
+			return fmt.Sprintf(" %d%s", nChanges, symbol )
+		} else {
+			return symbol
+		}
 	}
 	return ""
 }
 
 func (r repoStats) GitSymbols(p *powerline) string {
 	var info string
-	info += addRepoStatsSymbol(r.ahead, p.symbols.RepoAhead)
-	info += addRepoStatsSymbol(r.behind, p.symbols.RepoBehind)
-	info += addRepoStatsSymbol(r.staged, p.symbols.RepoStaged)
-	info += addRepoStatsSymbol(r.notStaged, p.symbols.RepoNotStaged)
-	info += addRepoStatsSymbol(r.untracked, p.symbols.RepoUntracked)
-	info += addRepoStatsSymbol(r.conflicted, p.symbols.RepoConflicted)
-	info += addRepoStatsSymbol(r.stashed, p.symbols.RepoStashed)
+	info += addRepoStatsSymbol(r.ahead, p.symbols.RepoAhead, p.cfg.GitMode)
+	info += addRepoStatsSymbol(r.behind, p.symbols.RepoBehind, p.cfg.GitMode)
+	info += addRepoStatsSymbol(r.staged, p.symbols.RepoStaged, p.cfg.GitMode)
+	info += addRepoStatsSymbol(r.notStaged, p.symbols.RepoNotStaged, p.cfg.GitMode)
+	info += addRepoStatsSymbol(r.untracked, p.symbols.RepoUntracked, p.cfg.GitMode)
+	info += addRepoStatsSymbol(r.conflicted, p.symbols.RepoConflicted, p.cfg.GitMode)
+	info += addRepoStatsSymbol(r.stashed, p.symbols.RepoStashed, p.cfg.GitMode)
 	return info
 }
 
@@ -265,6 +271,10 @@ func segmentGit(p *powerline) []pwl.Segment {
 	if p.cfg.GitMode == "simple" {
 		if stats.any() {
 			segments[0].Content += " " + stats.GitSymbols(p)
+		}
+	} else if p.cfg.GitMode == "compact" {
+		if stats.any() {
+			segments[0].Content += stats.GitSymbols(p)
 		}
 	} else { // fancy
 		segments = append(segments, stats.GitSegments(p)...)
