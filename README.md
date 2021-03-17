@@ -227,10 +227,9 @@ Usage of powerline-go:
   -git-disable-stats string
          Comma-separated list to disable individual git statuses
          (valid choices: ahead, behind, staged, notStaged, untracked, conflicted, stashed)
-        
   -git-mode string
          How to display git status
-         (valid choices: fancy, simple)
+         (valid choices: fancy, compact, simple)
          (default "fancy")
   -hostname-only-if-ssh
          Show hostname only for SSH connections

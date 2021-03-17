@@ -103,7 +103,7 @@ var args = arguments{
 		"git-mode",
 		defaults.GitMode,
 		commentsWithDefaults("How to display git status",
-			"(valid choices: fancy, simple)")),
+			"(valid choices: fancy, compact, simple)")),
 	Mode: flag.String(
 		"mode",
 		defaults.Mode,
