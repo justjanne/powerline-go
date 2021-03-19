@@ -114,6 +114,9 @@ type Theme struct {
 	VirtualEnvFg uint8
 	VirtualEnvBg uint8
 
+	ScreenFg uint8
+	ScreenBg uint8
+
 	VirtualGoFg uint8
 	VirtualGoBg uint8
 
