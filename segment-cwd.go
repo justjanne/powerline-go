@@ -169,7 +169,7 @@ func segmentCwd(p *powerline) (segments []pwl.Segment) {
 
 		segments = append(segments, pwl.Segment{
 			Name:       "cwd",
-			Content:    cwd,
+			Content:    escapeVariables(p, cwd),
 			Foreground: p.theme.CwdFg,
 			Background: p.theme.PathBg,
 		})
