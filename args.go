@@ -61,7 +61,7 @@ var args = arguments{
 	ColorizeHostname: flag.Bool(
 		"colorize-hostname",
 		defaults.ColorizeHostname,
-		comments("Colorize the hostname based on a hash of itself, or use the PLGO_HOSTNAMEFG and/or PLGO_HOSTNAMEBG env vars.")),
+		comments("Colorize the hostname based on a hash of itself, or use the PLGO_HOSTNAMEFG and PLGO_HOSTNAMEBG env vars (both need to be set).")),
 	HostnameOnlyIfSSH: flag.Bool(
 		"hostname-only-if-ssh",
 		defaults.HostnameOnlyIfSSH,
@@ -113,7 +113,7 @@ var args = arguments{
 		"theme",
 		defaults.Theme,
 		commentsWithDefaults("Set this to the theme you want to use",
-			"(valid choices: default, low-contrast)")),
+			"(valid choices: default, low-contrast, gruvbox, solarized-dark16, solarized-light16)")),
 	Shell: flag.String(
 		"shell",
 		defaults.Shell,
@@ -123,19 +123,19 @@ var args = arguments{
 		"modules",
 		strings.Join(defaults.Modules, ","),
 		commentsWithDefaults("The list of modules to load, separated by ','",
-			"(valid choices: aws, cwd, docker, docker-context, dotenv, duration, exit, git, gitlite, goenv, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)",
+			"(valid choices: aws, bzr, cwd, docker, docker-context, dotenv, duration, exit, fossil, gcp, git, gitlite, goenv, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, rbenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo, wsl)",
 			"Unrecognized modules will be invoked as 'powerline-go-MODULE' executable plugins and should output a (possibly empty) list of JSON objects that unmarshal to powerline-go's Segment structs.")),
 	ModulesRight: flag.String(
 		"modules-right",
 		strings.Join(defaults.ModulesRight, ","),
 		comments("The list of modules to load anchored to the right, for shells that support it, separated by ','",
-			"(valid choices: aws, cwd, docker, docker-context, dotenv, duration, exit, git, gitlite, goenv, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)",
+			"(valid choices: aws, bzr, cwd, docker, docker-context, dotenv, duration, exit, fossil, gcp, git, gitlite, goenv, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, rbenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo, wsl)",
 			"Unrecognized modules will be invoked as 'powerline-go-MODULE' executable plugins and should output a (possibly empty) list of JSON objects that unmarshal to powerline-go's Segment structs.")),
 	Priority: flag.String(
 		"priority",
 		strings.Join(defaults.Priority, ","),
 		commentsWithDefaults("Segments sorted by priority, if not enough space exists, the least priorized segments are removed first. Separate with ','",
-			"(valid choices: aws, cwd, docker, docker-context, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)")),
+			"(valid choices: aws, bzr, cwd, docker, docker-context, dotenv, duration, exit, fossil, gcp, git, gitlite, goenv, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, rbenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo, wsl)")),
 	MaxWidthPercentage: flag.Int(
 		"max-width",
 		defaults.MaxWidthPercentage,
