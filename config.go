@@ -46,6 +46,7 @@ type Config struct {
 	PathAliases            AliasMap  `json:"path-aliases"`
 	Duration               string    `json:"-"`
 	DurationMin            string    `json:"duration-min"`
+	DurationLowPrecision   bool      `json:"duration-low-precision"`
 	Eval                   bool      `json:"eval"`
 	Condensed              bool      `json:"condensed"`
 	IgnoreWarnings         bool      `json:"ignore-warnings"`

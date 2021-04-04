@@ -82,11 +82,15 @@ func segmentDuration(p *powerline) []pwl.Segment {
 		ns -= secs * seconds
 		millis := ns / milliseconds
 		content = fmt.Sprintf("%ds %dms", secs, millis)
-	} else if ns > milliseconds {
+	} else if ns > milliseconds || p.cfg.DurationLowPrecision {
 		millis := ns / milliseconds
 		ns -= millis * milliseconds
 		micros := ns / microseconds
-		content = fmt.Sprintf("%dms %d\u00B5s", millis, micros)
+		if p.cfg.DurationLowPrecision {
+			content = fmt.Sprintf("%dms", millis)
+		} else {
+			content = fmt.Sprintf("%dms %d\u00B5s", millis, micros)
+		}
 	} else {
 		content = fmt.Sprintf("%d\u00B5s", ns/microseconds)
 	}

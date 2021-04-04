@@ -59,6 +59,7 @@ var defaults = Config{
 	PathAliases:          AliasMap{},
 	Duration:             "",
 	DurationMin:          "0",
+	DurationLowPrecision: false,
 	Eval:                 false,
 	Condensed:            false,
 	IgnoreWarnings:       false,
