@@ -39,6 +39,7 @@ type arguments struct {
 	PathAliases            *string
 	Duration               *string
 	DurationMin            *string
+	DurationLowPrecision   *bool
 	Eval                   *bool
 	Condensed              *bool
 	IgnoreWarnings         *bool
@@ -192,6 +193,10 @@ var args = arguments{
 		"duration-min",
 		defaults.DurationMin,
 		comments("The minimal time a command has to take before the duration segment is shown")),
+	DurationLowPrecision: flag.Bool(
+		"duration-low-precision",
+		defaults.DurationLowPrecision,
+		comments("Use low precision timing for duration with milliseconds as maximum resolution")),
 	Eval: flag.Bool(
 		"eval",
 		defaults.Eval,

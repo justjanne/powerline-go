@@ -198,6 +198,8 @@ func main() {
 			cfg.Duration = *args.Duration
 		case "duration-min":
 			cfg.DurationMin = *args.DurationMin
+		case "duration-low-precision":
+			cfg.DurationLowPrecision = *args.DurationLowPrecision
 		case "eval":
 			cfg.Eval = *args.Eval
 		case "condensed":
