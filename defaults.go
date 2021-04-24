@@ -33,6 +33,7 @@ var defaults = Config{
 	},
 	ModulesRight: []string{},
 	Priority: []string{
+		"fib",
 		"root",
 		"cwd",
 		"user",
@@ -82,6 +83,7 @@ var defaults = Config{
 			RepoStashed:    "\u2691",
 
 			VenvIndicator: "\uE235",
+			FIBIndicator: "\u2446",
 		},
 		"patched": {
 			Lock:                 "\uE0A2",
@@ -103,6 +105,7 @@ var defaults = Config{
 			RepoStashed:    "\u2691",
 
 			VenvIndicator: "\uE235",
+			FIBIndicator: "\u2446",
 		},
 		"flat": {
 			RepoDetached:   "\u2693",
@@ -115,6 +118,7 @@ var defaults = Config{
 			RepoStashed:    "\u2691",
 
 			VenvIndicator: "\uE235",
+			FIBIndicator: "\u2446",
 		},
 	},
 	Shells: ShellMap{
