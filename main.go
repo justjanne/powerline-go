@@ -78,6 +78,7 @@ var modules = map[string]func(*powerline) []pwl.Segment{
 	"dotenv":              segmentDotEnv,
 	"duration":            segmentDuration,
 	"exit":                segmentExitCode,
+	"fib":                 segmentFIB,
 	"fossil":              segmentFossil,
 	"gcp":                 segmentGCP,
 	"git":                 segmentGit,
