@@ -69,7 +69,7 @@
   "LoadHighBg": 161,
   "LoadAvgValue": 5,
   "LoadThresholdBad": 1.0,
-  "NixShellFg": 0,
+  "NixShellFg": 15,
   "NixShellBg": 69,
   "DurationFg": 250,
   "DurationBg": 237,
