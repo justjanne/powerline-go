@@ -117,6 +117,22 @@ var defaults = Config{
 
 			VenvIndicator: "\uE235",
 		},
+		"flame": {
+			Lock:                 "\uE0A2",
+			Network:              "\uE0A2",
+			Separator:            "\uE0C0",
+			SeparatorThin:        "\uE0C1",
+			SeparatorReverse:     "\uE0C2",
+			SeparatorReverseThin: "\uE0C3",
+			RepoDetached:   "\u2693",
+			RepoAhead:      "\u2B06",
+			RepoBehind:     "\u2B07",
+			RepoStaged:     "\u2714",
+			RepoNotStaged:  "\u270E",
+			RepoUntracked:  "+",
+			RepoConflicted: "\u273C",
+			RepoStashed:    "\u2691",
+		},
 	},
 	Shells: ShellMap{
 		"bash": {
@@ -249,7 +265,7 @@ var defaults = Config{
 			TimeFg: 15,
 			TimeBg: 236,
 
-			ShellVarFg: 52,
+			ShellVarFg: 15,
 			ShellVarBg: 11,
 
 			ShEnvFg: 15,
@@ -920,7 +936,7 @@ var defaults = Config{
 			JobsFg:             4,
 			JobsBg:             0,
 			CmdPassedFg:        15,
-			CmdPassedBg:        0,
+			CmdPassedBg:        11,
 			CmdFailedFg:        15,
 			CmdFailedBg:        5,
 			SvnChangesFg:       2,
