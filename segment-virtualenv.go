@@ -31,7 +31,7 @@ func segmentVirtualEnv(p *powerline) []pwl.Segment {
 
 	return []pwl.Segment{{
 		Name:       "venv",
-		Content:    envName,
+		Content:    escapeVariables(p, envName),
 		Foreground: p.theme.VirtualEnvFg,
 		Background: p.theme.VirtualEnvBg,
 	}}
