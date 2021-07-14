@@ -264,7 +264,7 @@ var defaults = Config{
 			LoadAvgValue:     5,
 			LoadThresholdBad: 1.0,
 
-			NixShellFg: 00,
+			NixShellFg: 15,
 			NixShellBg: 69, // a light blue
 
 			DurationFg: 250,

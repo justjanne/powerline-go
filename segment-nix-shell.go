@@ -13,7 +13,7 @@ func segmentNixShell(p *powerline) []pwl.Segment {
 	}
 	return []pwl.Segment{{
 		Name:       "nix-shell",
-		Content:    nixShell,
+		Content:    "\uf313",
 		Foreground: p.theme.NixShellFg,
 		Background: p.theme.NixShellBg,
 	}}
