@@ -42,6 +42,7 @@ type arguments struct {
 	Eval                   *bool
 	Condensed              *bool
 	IgnoreWarnings         *bool
+	Time                   *string
 }
 
 var args = arguments{
@@ -187,6 +188,10 @@ var args = arguments{
 	Duration: flag.String(
 		"duration",
 		defaults.Duration,
+		comments("The elapsed clock-time of the previous command")),
+	Time: flag.String(
+		"time",
+		defaults.Time,
 		comments("The elapsed clock-time of the previous command")),
 	DurationMin: flag.String(
 		"duration-min",
