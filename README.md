@@ -214,6 +214,8 @@ Usage of powerline-go:
          (default "fancy")
   -duration string
          The elapsed clock-time of the previous command
+  -duration-low-precision
+         Use low precision timing for duration with milliseconds as maximum resolution
   -duration-min string
          The minimal time a command has to take before the duration segment is shown (default "0")
   -east-asian-width
@@ -280,6 +282,11 @@ Usage of powerline-go:
          Shortens names for EKS Kube clusters.
   -shorten-gke-names
          Shortens names for GKE Kube clusters.
+  -shorten-kube-names-regex-match string
+         Shortens names for Kube clusters matching a custom regex.
+  -shorten-kube-names-regex-template string
+         String template to use with -shorten-kube-names-regex-match.
+         (default "${1}")
   -static-prompt-indicator
          Always show the prompt indicator with the default color, never with the error color
   -theme string
