@@ -56,7 +56,7 @@ but you may have to set your $TERM to `xterm-256color` for it to work.
 If you want to use the "patched" mode (which is the default, and provides
 improved UI), you'll need to install a powerline font, either as fallback,
 or by patching the font you use for your terminal: see
-[powerline-fonts](https://github.com/Lokaltog/powerline-fonts).  
+[powerline-fonts](https://github.com/Lokaltog/powerline-fonts).
 Alternatively you can use "compatible" or "flat" mode.
 
 ### Precompiled Binaries
@@ -248,6 +248,10 @@ Usage of powerline-go:
     	 Shortens names for EKS Kube clusters.
   -shorten-gke-names
     	 Shortens names for GKE Kube clusters.
+  -shorten-kube-names-regex-match string
+    	 Shortens names for Kube clusters matching a custom regex.
+  -shorten-kube-names-regex-template string
+    	 String template to use with -shorten-kube-names-regex-match. (default "${1}")
   -static-prompt-indicator
     	 Always show the prompt indicator with the default color, never with the error color
   -theme string

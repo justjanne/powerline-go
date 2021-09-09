@@ -30,35 +30,37 @@ const (
 )
 
 type args struct {
-	CwdMode                *string
-	CwdMaxDepth            *int
-	CwdMaxDirSize          *int
-	ColorizeHostname       *bool
-	HostnameOnlyIfSSH      *bool
-	SshAlternateIcon       *bool
-	EastAsianWidth         *bool
-	PromptOnNewLine        *bool
-	StaticPromptIndicator  *bool
-	GitAssumeUnchangedSize *int64
-	Mode                   *string
-	Theme                  *string
-	Shell                  *string
-	Modules                *string
-	ModulesRight           *string
-	Priority               *string
-	MaxWidthPercentage     *int
-	TruncateSegmentWidth   *int
-	PrevError              *int
-	NumericExitCodes       *bool
-	IgnoreRepos            *string
-	ShortenGKENames        *bool
-	ShortenEKSNames        *bool
-	ShellVar               *string
-	PathAliases            *string
-	Duration               *string
-	DurationMin            *string
-	Eval                   *bool
-	Condensed              *bool
+	CwdMode                       *string
+	CwdMaxDepth                   *int
+	CwdMaxDirSize                 *int
+	ColorizeHostname              *bool
+	HostnameOnlyIfSSH             *bool
+	SshAlternateIcon              *bool
+	EastAsianWidth                *bool
+	PromptOnNewLine               *bool
+	StaticPromptIndicator         *bool
+	GitAssumeUnchangedSize        *int64
+	Mode                          *string
+	Theme                         *string
+	Shell                         *string
+	Modules                       *string
+	ModulesRight                  *string
+	Priority                      *string
+	MaxWidthPercentage            *int
+	TruncateSegmentWidth          *int
+	PrevError                     *int
+	NumericExitCodes              *bool
+	IgnoreRepos                   *string
+	ShortenGKENames               *bool
+	ShortenEKSNames               *bool
+	ShortenKubeNamesRegexMatch    *string
+	ShortenKubeNamesRegexTemplate *string
+	ShellVar                      *string
+	PathAliases                   *string
+	Duration                      *string
+	DurationMin                   *string
+	Eval                          *bool
+	Condensed                     *bool
 }
 
 func warn(msg string) {
@@ -238,6 +240,14 @@ func main() {
 			"shorten-eks-names",
 			false,
 			comments("Shortens names for EKS Kube clusters.")),
+		ShortenKubeNamesRegexMatch: flag.String(
+			"shorten-kube-names-regex-match",
+			"",
+			comments("Shortens names for Kube clusters matching a custom regex.")),
+		ShortenKubeNamesRegexTemplate: flag.String(
+			"shorten-kube-names-regex-template",
+			"${1}",
+			comments("String template to use with -shorten-kube-names-regex-match.")),
 		ShellVar: flag.String(
 			"shell-var",
 			"",
