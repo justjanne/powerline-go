@@ -192,7 +192,9 @@ var args = arguments{
 	Time: flag.String(
 		"time",
 		defaults.Time,
-		comments("The elapsed clock-time of the previous command")),
+		comments("The layout string how a reference time should be represented.",
+			"The reference time is predefined and not user choosen.",
+			"Consult the golang documentation for details: https://pkg.go.dev/time#example-Time.Format")),
 	DurationMin: flag.String(
 		"duration-min",
 		defaults.DurationMin,
