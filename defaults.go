@@ -255,8 +255,10 @@ var defaults = Config{
 			ShEnvFg: 15,
 			ShEnvBg: 130,
 
-			NodeFg: 15,
-			NodeBg: 40,
+			NodeFg:        15,
+			NodeBg:        40,
+			NodeVersionFg: 40,
+			NodeVersionBg: 15,
 
 			LoadFg:           15,
 			LoadBg:           22,
@@ -955,6 +957,8 @@ var defaults = Config{
 			ShEnvBg:            9,
 			NodeFg:             15,
 			NodeBg:             40,
+			NodeVersionFg:      40,
+			NodeVersionBg:      15,
 			LoadFg:             15,
 			LoadBg:             2,
 			LoadHighBg:         5,
@@ -1287,6 +1291,8 @@ var defaults = Config{
 			ShEnvBg:            9,
 			NodeFg:             15,
 			NodeBg:             40,
+			NodeVersionFg:      40,
+			NodeVersionBg:      15,
 			LoadFg:             15,
 			LoadBg:             2,
 			LoadHighBg:         5,
@@ -1618,6 +1624,8 @@ var defaults = Config{
 			ShellVarBg:         gruvbox_faded_purple, // match ssh-bg
 			NodeFg:             gruvbox_light0,       // match virtualenv
 			NodeBg:             gruvbox_faded_green,  // match virtualenv
+			NodeVersionFg:      gruvbox_faded_green,  // match virtualenv
+			NodeVersionBg:      gruvbox_light0,       // match virtualenv
 			LoadFg:             gruvbox_light0,
 			LoadBg:             gruvbox_faded_purple,
 			LoadHighBg:         gruvbox_neutral_red,
