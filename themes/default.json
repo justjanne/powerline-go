@@ -64,6 +64,8 @@
   "ShEnvBg": 130,
   "NodeFg": 15,
   "NodeBg": 40,
+  "NodeVersionFg": 40,
+  "NodeVersionBg": 15,
   "LoadFg": 15,
   "LoadBg": 22,
   "LoadHighBg": 161,
