@@ -119,7 +119,6 @@ func segmentGCP(p *powerline) []pwl.Segment {
 	project, err := getGCPProject()
 	if err != nil {
 		log.Fatal(err)
-		//return []pwl.Segment{}
 	}
 
 	if project == "" {
