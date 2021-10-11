@@ -12,6 +12,7 @@ import (
 
 	pwl "github.com/justjanne/powerline-go/powerline"
 	"github.com/mattn/go-runewidth"
+	"github.com/shirou/gopsutil/process"
 	"golang.org/x/crypto/ssh/terminal"
 	"golang.org/x/text/width"
 )
@@ -81,7 +82,15 @@ func newPowerline(cfg Config, cwd string, align alignment) *powerline {
 
 	p.theme = cfg.Themes[cfg.Theme]
 	if cfg.Shell == "autodetect" {
-		cfg.Shell = detectShell(os.Getenv("SHELL"))
+		var shellExe string
+		proc, err := process.NewProcess(int32(os.Getppid()))
+		if err == nil {
+			shellExe, _ = proc.Exe()
+		}
+		if shellExe == "" {
+			shellExe = os.Getenv("SHELL")
+		}
+		cfg.Shell = detectShell(shellExe)
 	}
 	p.shell = cfg.Shells[cfg.Shell]
 	p.reset = fmt.Sprintf(p.shell.ColorTemplate, "[0m")
@@ -117,12 +126,12 @@ func newPowerline(cfg Config, cwd string, align alignment) *powerline {
 	return p
 }
 
-func detectShell(envShell string) string {
+func detectShell(shellExe string) string {
 	var shell string
-	envShell = path.Base(envShell)
-	if strings.Contains(envShell, "bash") {
+	shellExe = path.Base(shellExe)
+	if strings.Contains(shellExe, "bash") {
 		shell = "bash"
-	} else if strings.Contains(envShell, "zsh") {
+	} else if strings.Contains(shellExe, "zsh") {
 		shell = "zsh"
 	} else {
 		shell = "bare"
@@ -460,4 +469,3 @@ func (p *powerline) supportsRightModules() bool {
 func (p *powerline) isRightPrompt() bool {
 	return p.align == alignRight && p.supportsRightModules()
 }
-
