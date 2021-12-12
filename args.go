@@ -45,6 +45,7 @@ type arguments struct {
 	Condensed              *bool
 	IgnoreWarnings         *bool
 	Time                   *string
+	ViMode                 *string
 }
 
 var args = arguments{
@@ -126,7 +127,7 @@ var args = arguments{
 		"modules",
 		strings.Join(defaults.Modules, ","),
 		commentsWithDefaults("The list of modules to load, separated by ','",
-			"(valid choices: aws, bzr, cwd, docker, docker-context, dotenv, duration, exit, fossil, gcp, git, gitlite, goenv, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, rbenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo, wsl)",
+			"(valid choices: aws, bzr, cwd, docker, docker-context, dotenv, duration, exit, fossil, gcp, git, gitlite, goenv, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, rbenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo, vi-mode, wsl)",
 			"Unrecognized modules will be invoked as 'powerline-go-MODULE' executable plugins and should output a (possibly empty) list of JSON objects that unmarshal to powerline-go's Segment structs.")),
 	ModulesRight: flag.String(
 		"modules-right",
@@ -138,7 +139,7 @@ var args = arguments{
 		"priority",
 		strings.Join(defaults.Priority, ","),
 		commentsWithDefaults("Segments sorted by priority, if not enough space exists, the least priorized segments are removed first. Separate with ','",
-			"(valid choices: aws, bzr, cwd, docker, docker-context, dotenv, duration, exit, fossil, gcp, git, gitlite, goenv, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, rbenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo, wsl)")),
+			"(valid choices: aws, bzr, cwd, docker, docker-context, dotenv, duration, exit, fossil, gcp, git, gitlite, goenv, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, rbenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo, vi-mode, wsl)")),
 	MaxWidthPercentage: flag.Int(
 		"max-width",
 		defaults.MaxWidthPercentage,
@@ -221,4 +222,8 @@ var args = arguments{
 		"ignore-warnings",
 		defaults.IgnoreWarnings,
 		comments("Ignores all warnings regarding unset or broken variables")),
+	ViMode: flag.String(
+		"vi-mode",
+		defaults.ViMode,
+		comments("The current vi-mode (eg. KEYMAP for zsh) for vi-module module")),
 }

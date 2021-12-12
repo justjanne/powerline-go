@@ -105,6 +105,7 @@ var modules = map[string]func(*powerline) []pwl.Segment{
 	"user":                segmentUser,
 	"venv":                segmentVirtualEnv,
 	"vgo":                 segmentVirtualGo,
+	"vi-mode":             segmentViMode,
 	"wsl":                 segmentWSL,
 	"nix-shell":           segmentNixShell,
 }
@@ -210,6 +211,8 @@ func main() {
 			cfg.IgnoreWarnings = *args.IgnoreWarnings
 		case "time":
 			cfg.Time = *args.Time
+		case "vi-mode":
+			cfg.ViMode = *args.ViMode
 		}
 	})
 
