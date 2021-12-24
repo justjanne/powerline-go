@@ -100,6 +100,7 @@ var modules = map[string]func(*powerline) []pwl.Segment{
 	"rvm":                 segmentRvm,
 	"shell-var":           segmentShellVar,
 	"shenv":               segmentShEnv,
+	"shlvl":               segmentShlvl,
 	"ssh":                 segmentSSH,
 	"termtitle":           segmentTermTitle,
 	"terraform-workspace": segmentTerraformWorkspace,

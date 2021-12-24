@@ -139,6 +139,9 @@ type Theme struct {
 	ShEnvFg uint8
 	ShEnvBg uint8
 
+	ShLvlFg uint8
+	ShLvlBg uint8
+
 	NodeFg        uint8
 	NodeBg        uint8
 	NodeVersionFg uint8

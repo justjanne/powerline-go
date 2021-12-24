@@ -262,6 +262,9 @@ var defaults = Config{
 			ShEnvFg: 15,
 			ShEnvBg: 130,
 
+			ShLvlFg: 231,
+			ShLvlBg: 55,
+
 			NodeFg:        15,
 			NodeBg:        40,
 			NodeVersionFg: 40,
