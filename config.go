@@ -40,6 +40,7 @@ type Config struct {
 	IgnoreRepos            []string  `json:"ignore-repos"`
 	ShortenGKENames        bool      `json:"shorten-gke-names"`
 	ShortenEKSNames        bool      `json:"shorten-eks-names"`
+	ShortenOpenshiftNames  bool      `json:"shorten-openshift-names"`
 	ShellVar               string    `json:"shell-var"`
 	ShellVarNoWarnEmpty    bool      `json:"shell-var-no-warn-empty"`
 	TrimADDomain           bool      `json:"trim-ad-domain"`
