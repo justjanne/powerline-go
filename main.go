@@ -183,6 +183,8 @@ func main() {
 			cfg.ShortenGKENames = *args.ShortenGKENames
 		case "shorten-eks-names":
 			cfg.ShortenEKSNames = *args.ShortenEKSNames
+		case "shorten-openshift-names":
+			cfg.ShortenOpenshiftNames = *args.ShortenOpenshiftNames
 		case "shell-var":
 			cfg.ShellVar = *args.ShellVar
 		case "shell-var-no-warn-empty":

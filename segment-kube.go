@@ -83,6 +83,21 @@ func segmentKube(p *powerline) []pwl.Segment {
 		}
 	}
 
+	// When you use openshift your clusters may look something like namespace/portal-url:port/user,
+	// instead I want it to read as `portal-url`.
+	// So we ensure there are three segments split by / and then choose the middle part,
+	// we also remove the port number from the result.
+	if p.cfg.ShortenOpenshiftNames {
+		segments := strings.Split(cluster, "/")
+		if len(segments) == 3 {
+			cluster = segments[1]
+			idx := strings.IndexByte(cluster, ':')
+			if idx != -1 {
+				cluster = cluster[0:idx]
+			}
+		}
+	}
+
 	// With AWS EKS, cluster names are ARNs; it makes more sense to shorten them
 	// so "eks-infra" instead of "arn:aws:eks:us-east-1:XXXXXXXXXXXX:cluster/eks-infra
 	const arnRegexString string = "^arn:aws:eks:[[:alnum:]-]+:[[:digit:]]+:cluster/(.*)$"

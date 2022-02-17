@@ -33,6 +33,7 @@ type arguments struct {
 	IgnoreRepos            *string
 	ShortenGKENames        *bool
 	ShortenEKSNames        *bool
+	ShortenOpenshiftNames  *bool
 	ShellVar               *string
 	ShellVarNoWarnEmpty    *bool
 	TrimADDomain           *bool
@@ -166,6 +167,10 @@ var args = arguments{
 		"shorten-eks-names",
 		defaults.ShortenEKSNames,
 		comments("Shortens names for EKS Kube clusters.")),
+	ShortenOpenshiftNames: flag.Bool(
+		"shorten-openshift-names",
+		defaults.ShortenOpenshiftNames,
+		comments("Shortens names for Openshift Kube clusters.")),
 	ShellVar: flag.String(
 		"shell-var",
 		defaults.ShellVar,
