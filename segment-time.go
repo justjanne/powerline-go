@@ -1,6 +1,7 @@
 package main
 
 import (
+	"strings"
 	pwl "github.com/justjanne/powerline-go/powerline"
 	"time"
 )
@@ -8,7 +9,7 @@ import (
 func segmentTime(p *powerline) []pwl.Segment {
 	return []pwl.Segment{{
 		Name:       "time",
-		Content:    time.Now().Format("15:04:05"),
+		Content:    time.Now().Format(strings.TrimSpace(p.cfg.Time)),
 		Foreground: p.theme.TimeFg,
 		Background: p.theme.TimeBg,
 	}}
