@@ -83,6 +83,7 @@ var defaults = Config{
 			RepoStashed:    "\u2691",
 
 			VenvIndicator: "\uE235",
+			NodeIndicator: "\u2B22",
 		},
 		"patched": {
 			Lock:                 "\uE0A2",
@@ -104,6 +105,7 @@ var defaults = Config{
 			RepoStashed:    "\u2691",
 
 			VenvIndicator: "\uE235",
+			NodeIndicator: "\u2B22",
 		},
 		"flat": {
 			RepoDetached:   "\u2693",
@@ -116,6 +118,7 @@ var defaults = Config{
 			RepoStashed:    "\u2691",
 
 			VenvIndicator: "\uE235",
+			NodeIndicator: "\u2B22",
 		},
 	},
 	Shells: ShellMap{

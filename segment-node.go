@@ -54,7 +54,7 @@ func segmentNode(p *powerline) []pwl.Segment {
 	if nodeVersion != "" {
 		segments = append(segments, pwl.Segment{
 			Name:       "node",
-			Content:    "\u2B22 " + nodeVersion,
+			Content:    p.symbols.NodeIndicator + " " + nodeVersion,
 			Foreground: p.theme.NodeVersionFg,
 			Background: p.theme.NodeVersionBg,
 		})
@@ -63,7 +63,7 @@ func segmentNode(p *powerline) []pwl.Segment {
 	if packageVersion != "" {
 		segments = append(segments, pwl.Segment{
 			Name:       "node-segment",
-			Content:    packageVersion + " \u2B22",
+			Content:    packageVersion + " " + p.symbols.NodeIndicator,
 			Foreground: p.theme.NodeFg,
 			Background: p.theme.NodeBg,
 		})
