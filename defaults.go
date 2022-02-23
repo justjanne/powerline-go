@@ -84,6 +84,7 @@ var defaults = Config{
 
 			VenvIndicator: "\uE235",
 			NodeIndicator: "\u2B22",
+			RvmIndicator:  "\uE92B",
 		},
 		"patched": {
 			Lock:                 "\uE0A2",
@@ -106,6 +107,7 @@ var defaults = Config{
 
 			VenvIndicator: "\uE235",
 			NodeIndicator: "\u2B22",
+			RvmIndicator:  "\uE92B",
 		},
 		"flat": {
 			RepoDetached:   "\u2693",
@@ -119,6 +121,7 @@ var defaults = Config{
 
 			VenvIndicator: "\uE235",
 			NodeIndicator: "\u2B22",
+			RvmIndicator:  "\uE92B",
 		},
 	},
 	Shells: ShellMap{
@@ -262,6 +265,9 @@ var defaults = Config{
 			NodeBg:        40,
 			NodeVersionFg: 40,
 			NodeVersionBg: 15,
+
+			RvmFg: 255,
+			RvmBg: 160,
 
 			LoadFg:           15,
 			LoadBg:           22,
@@ -637,6 +643,9 @@ var defaults = Config{
 			LoadAvgValue:     5,
 			LoadThresholdBad: 1.0,
 
+			RvmFg: 255,
+			RvmBg: 160,
+
 			NixShellFg: 69, // a light blue
 			NixShellBg: 254,
 
@@ -977,6 +986,8 @@ var defaults = Config{
 			LoadHighBg:         5,
 			LoadAvgValue:       5,
 			LoadThresholdBad:   1.0,
+			RvmFg:              8,
+			RvmBg:              6,
 			NixShellFg:         0,
 			NixShellBg:         4,
 			HostnameColorizedFgMap: map[uint8]uint8{
@@ -1316,6 +1327,8 @@ var defaults = Config{
 			LoadHighBg:         5,
 			LoadAvgValue:       5,
 			LoadThresholdBad:   1.0,
+			RvmFg:              8,
+			RvmBg:              6,
 			NixShellFg:         0,
 			NixShellBg:         7,
 			HostnameColorizedFgMap: map[uint8]uint8{
@@ -1649,6 +1662,8 @@ var defaults = Config{
 			NodeBg:             gruvbox_faded_green,  // match virtualenv
 			NodeVersionFg:      gruvbox_faded_green,  // match virtualenv
 			NodeVersionBg:      gruvbox_light0,       // match virtualenv
+			RvmFg:              gruvbox_light0,
+			RvmBg:              gruvbox_neutral_red,
 			LoadFg:             gruvbox_light0,
 			LoadBg:             gruvbox_faded_purple,
 			LoadHighBg:         gruvbox_neutral_red,

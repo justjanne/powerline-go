@@ -95,6 +95,7 @@ var modules = map[string]func(*powerline) []pwl.Segment{
 	"perms":               segmentPerms,
 	"rbenv":               segmentRbenv,
 	"root":                segmentRoot,
+	"rvm":                 segmentRvm,
 	"shell-var":           segmentShellVar,
 	"shenv":               segmentShEnv,
 	"ssh":                 segmentSSH,
