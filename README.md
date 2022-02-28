@@ -81,7 +81,7 @@ go install github.com/justjanne/powerline-go@latest
 
 ### Bash
 
-Add the following to your `.bashrc` (or `.profile` on Mac):
+Add the following to your `.bashrc`:
 
 ```bash
 function _update_ps1() {
@@ -301,7 +301,7 @@ If using `eval` and `-modules-right` is desired, the shell setup must be modifie
 
 ##### Bash
 
-Add the following to your `.bashrc` (or `.profile` on Mac):
+Add the following to your `.bashrc`:
 
 ```bash
 function _update_ps1() {
