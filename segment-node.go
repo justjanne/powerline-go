@@ -32,7 +32,7 @@ func getPackageVersion() string {
 	if stat.IsDir() {
 		return ""
 	}
-	pkg := packageJSON{"!"}
+	pkg := packageJSON{""}
 	raw, err := ioutil.ReadFile(pkgfile)
 	if err != nil {
 		return ""
