@@ -533,6 +533,11 @@ var defaults = Config{
 				254: 242,
 				255: 243,
 			},
+
+			ViModeCommandFg: 0,
+			ViModeCommandBg: 250,
+			ViModeInsertFg:  22,
+			ViModeInsertBg:  70,
 		},
 		"low-contrast": {
 			Reset: 0xFF,
@@ -893,6 +898,11 @@ var defaults = Config{
 				254: 242,
 				255: 243,
 			},
+
+			ViModeCommandFg: 0,
+			ViModeCommandBg: 250,
+			ViModeInsertFg:  22,
+			ViModeInsertBg:  70,
 		},
 		"solarized-dark16": {
 			Reset:              8,
@@ -1227,6 +1237,11 @@ var defaults = Config{
 				254: 242,
 				255: 243,
 			},
+
+			ViModeCommandFg: 0,
+			ViModeCommandBg: 250,
+			ViModeInsertFg:  22,
+			ViModeInsertBg:  70,
 		},
 		"solarized-light16": {
 			Reset:              0,
@@ -1561,6 +1576,11 @@ var defaults = Config{
 				254: 242,
 				255: 243,
 			},
+
+			ViModeCommandFg: 0,
+			ViModeCommandBg: 250,
+			ViModeInsertFg:  22,
+			ViModeInsertBg:  70,
 		},
 		"gruvbox": {
 			/* based on https://github.com/b-ryan/powerline-shell/blob/master/powerline_shell/themes/gruvbox.py */
@@ -1636,9 +1656,15 @@ var defaults = Config{
 			LoadThresholdBad:   1.0,
 			NixShellFg:         gruvbox_light0,
 			NixShellBg:         gruvbox_faded_purple,
+
+			ViModeCommandFg: 0,
+			ViModeCommandBg: 250,
+			ViModeInsertFg:  22,
+			ViModeInsertBg:  70,
 		},
 	},
-	Time:                 "15:04:05",
+	Time:   "15:04:05",
+	ViMode: "",
 }
 
 const (

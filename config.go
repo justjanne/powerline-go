@@ -55,6 +55,7 @@ type Config struct {
 	Shells                 ShellMap  `json:"shells"`
 	Themes                 ThemeMap  `json:"themes"`
 	Time                   string    `json:"-"`
+	ViMode                 string    `json:"vi-mode"`
 }
 
 func (mode *SymbolTemplate) UnmarshalJSON(data []byte) error {

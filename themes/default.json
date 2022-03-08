@@ -332,5 +332,9 @@
     "253": 240,
     "254": 242,
     "255": 243
-  }
+  },
+  "ViModeCommandFg": 0,
+  "ViModeCommandBg": 250,
+  "ViModeInsertFg": 22,
+  "ViModeInsertBg": 70
 }

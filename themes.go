@@ -152,4 +152,9 @@ type Theme struct {
 
 	DurationFg uint8
 	DurationBg uint8
+
+	ViModeCommandFg uint8
+	ViModeCommandBg uint8
+	ViModeInsertFg uint8
+	ViModeInsertBg uint8
 }
