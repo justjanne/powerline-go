@@ -22,6 +22,7 @@ type SymbolTemplate struct {
 
 	VenvIndicator string
 	NodeIndicator string
+	RvmIndicator  string
 }
 
 // Theme definitions
@@ -140,6 +141,9 @@ type Theme struct {
 	NodeBg        uint8
 	NodeVersionFg uint8
 	NodeVersionBg uint8
+
+	RvmFg        uint8
+	RvmBg        uint8
 
 	LoadFg           uint8
 	LoadBg           uint8

@@ -66,6 +66,8 @@
   "NodeBg": 40,
   "NodeVersionFg": 40,
   "NodeVersionBg": 15,
+  "RvmFg": 255,
+  "RvmBg": 160,
   "LoadFg": 15,
   "LoadBg": 22,
   "LoadHighBg": 161,
