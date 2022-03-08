@@ -21,6 +21,7 @@ type SymbolTemplate struct {
 	RepoStashed    string
 
 	VenvIndicator string
+	NodeIndicator string
 }
 
 // Theme definitions
