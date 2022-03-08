@@ -1,6 +1,6 @@
 module github.com/justjanne/powerline-go
 
-go 1.12
+go 1.15
 
 require (
 	github.com/mattn/go-runewidth v0.0.9
