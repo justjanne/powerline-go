@@ -13,7 +13,7 @@ import (
 	pwl "github.com/justjanne/powerline-go/powerline"
 	"github.com/mattn/go-runewidth"
 	"github.com/shirou/gopsutil/process"
-	"golang.org/x/crypto/ssh/terminal"
+	"golang.org/x/term"
 	"golang.org/x/text/width"
 )
 
@@ -224,7 +224,7 @@ func (p *powerline) newRow() {
 }
 
 func termWidth() int {
-	termWidth, _, err := terminal.GetSize(int(os.Stdin.Fd()))
+	termWidth, _, err := term.GetSize(int(os.Stdin.Fd()))
 	if err != nil {
 		shellMaxLengthStr, found := os.LookupEnv("COLUMNS")
 		if !found {

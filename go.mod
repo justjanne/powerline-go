@@ -7,8 +7,8 @@ require (
 	github.com/go-ole/go-ole v1.2.4 // indirect
 	github.com/mattn/go-runewidth v0.0.9
 	github.com/shirou/gopsutil v3.20.12+incompatible
-	golang.org/x/crypto v0.0.0-20201221181555-eec23a3978ad
 	golang.org/x/sys v0.0.0-20210105210732-16f7687f5001
+	golang.org/x/term v0.0.0-20201117132131-f5c789dd3221
 	golang.org/x/text v0.3.4
 	gopkg.in/yaml.v2 v2.4.0
 )
