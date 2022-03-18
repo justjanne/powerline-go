@@ -1,3 +1,4 @@
+//nolint:deadcode,varcheck
 package main
 
 var defaults = Config{
