@@ -25,8 +25,9 @@ const (
 	MaxUnsignedInteger = ^MinUnsignedInteger
 	// MaxInteger maximum integer
 	MaxInteger = int(MaxUnsignedInteger >> 1)
-	// MinInteger minimum integer
+	/* MinInteger minimum integer
 	MinInteger = ^MaxInteger
+	*/
 )
 
 func warn(msg string) {

@@ -78,7 +78,7 @@ func checkForGoenvOutput() (string, error) {
 }
 
 func segmentGoenv(p *powerline) []pwl.Segment {
-	global, err := checkForGoenvGlobalVersion()
+	global, _ := checkForGoenvGlobalVersion()
 
 	segment, err := checkEnvForGoenvVersion()
 	if err != nil || segment == global {

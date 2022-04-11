@@ -13,7 +13,7 @@ import (
 	pwl "github.com/justjanne/powerline-go/powerline"
 	"github.com/mattn/go-runewidth"
 	"github.com/shirou/gopsutil/process"
-	"golang.org/x/crypto/ssh/terminal"
+	"golang.org/x/term"
 	"golang.org/x/text/width"
 )
 
@@ -31,23 +31,22 @@ type ShellInfo struct {
 }
 
 type powerline struct {
-	cfg                    Config
-	cwd                    string
-	userInfo               user.User
-	userIsAdmin            bool
-	hostname               string
-	username               string
-	theme                  Theme
-	shell                  ShellInfo
-	reset                  string
-	symbols                SymbolTemplate
-	priorities             map[string]int
-	ignoreRepos            map[string]bool
-	Segments               [][]pwl.Segment
-	curSegment             int
-	align                  alignment
-	rightPowerline         *powerline
-	appendEastAsianPadding int
+	cfg            Config
+	cwd            string
+	userInfo       user.User
+	userIsAdmin    bool
+	hostname       string
+	username       string
+	theme          Theme
+	shell          ShellInfo
+	reset          string
+	symbols        SymbolTemplate
+	priorities     map[string]int
+	ignoreRepos    map[string]bool
+	Segments       [][]pwl.Segment
+	curSegment     int
+	align          alignment
+	rightPowerline *powerline
 }
 
 type prioritizedSegments struct {
@@ -208,8 +207,7 @@ func (p *powerline) appendSegment(origin string, segment pwl.Segment) {
 	if segment.SeparatorForeground == 0 {
 		segment.SeparatorForeground = segment.Background
 	}
-	priority, _ := p.priorities[origin]
-	segment.Priority += priority
+	segment.Priority += p.priorities[origin]
 	segment.Width = segment.ComputeWidth(p.cfg.Condensed)
 	if segment.NewLine {
 		p.newRow()
@@ -226,7 +224,7 @@ func (p *powerline) newRow() {
 }
 
 func termWidth() int {
-	termWidth, _, err := terminal.GetSize(int(os.Stdin.Fd()))
+	termWidth, _, err := term.GetSize(int(os.Stdin.Fd()))
 	if err != nil {
 		shellMaxLengthStr, found := os.LookupEnv("COLUMNS")
 		if !found {

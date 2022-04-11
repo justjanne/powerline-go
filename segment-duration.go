@@ -68,31 +68,31 @@ func segmentDuration(p *powerline) []pwl.Segment {
 		hrs := ns / hours
 		ns -= hrs * hours
 		mins := ns / minutes
-		content = fmt.Sprintf("%dh %dm", hrs, mins)
+		content = fmt.Sprintf("%d%c %d%c", hrs, hour, mins, minute)
 	} else if ns > minutes {
 		mins := ns / minutes
 		ns -= mins * minutes
 		secs := ns / seconds
-		content = fmt.Sprintf("%dm %ds", mins, secs)
+		content = fmt.Sprintf("%d%c %d%c", mins, minute, secs, second)
 	} else if !hasPrecision {
 		secs := ns / seconds
-		content = fmt.Sprintf("%ds", secs)
+		content = fmt.Sprintf("%d%c", secs, second)
 	} else if ns > seconds {
 		secs := ns / seconds
 		ns -= secs * seconds
 		millis := ns / milliseconds
-		content = fmt.Sprintf("%ds %dms", secs, millis)
+		content = fmt.Sprintf("%d%c %d%c%c", secs, second, millis, milli, second)
 	} else if ns > milliseconds || p.cfg.DurationLowPrecision {
 		millis := ns / milliseconds
 		ns -= millis * milliseconds
 		micros := ns / microseconds
 		if p.cfg.DurationLowPrecision {
-			content = fmt.Sprintf("%dms", millis)
+			content = fmt.Sprintf("%d%c%c", millis, milli, second)
 		} else {
-			content = fmt.Sprintf("%dms %d\u00B5s", millis, micros)
+			content = fmt.Sprintf("%d%c%c %d%c%c", millis, milli, second, micros, micro, second)
 		}
 	} else {
-		content = fmt.Sprintf("%d\u00B5s", ns/microseconds)
+		content = fmt.Sprintf("%d%c%c", ns/microseconds, micro, second)
 	}
 
 	return []pwl.Segment{{
