@@ -42,7 +42,7 @@ func segmentDockerContext(p *powerline) []pwl.Segment {
 
 	return []pwl.Segment{{
 		Name:       "docker-context",
-		Content:    context,
+		Content:    "🐳" + context,
 		Foreground: p.theme.PlEnvFg,
 		Background: p.theme.PlEnvBg,
 	}}
