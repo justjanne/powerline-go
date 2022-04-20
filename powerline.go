@@ -185,7 +185,7 @@ func (p *powerline) color(prefix string, code uint8) string {
 }
 
 func (p *powerline) fgColor(code uint8) string {
-	return p.color("38", code)
+	return p.color("1;38", code)
 }
 
 func (p *powerline) bgColor(code uint8) string {
