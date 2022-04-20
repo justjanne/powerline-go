@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
@@ -36,7 +37,7 @@ func getActiveGCloudConfig(configDir string) (string, error) {
 		return "", err
 	}
 
-	contents, err := os.ReadFile(activeConfigPath)
+	contents, err := ioutil.ReadFile(activeConfigPath)
 	if err != nil {
 		return "", err
 	}
@@ -77,7 +78,7 @@ func getGCPProjectFromFile() (string, error) {
 		return "", fmt.Errorf("%s is a directory", configPath)
 	}
 
-	b, err := os.ReadFile(configPath)
+	b, err := ioutil.ReadFile(configPath)
 	if err != nil {
 		return "", err
 	}
