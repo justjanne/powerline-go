@@ -4,7 +4,7 @@ A [Powerline](https://github.com/Lokaltog/vim-powerline) like prompt for Bash,
 ZSH and Fish. Based on [Powerline-Shell](https://github.com/banga/powerline-shell) by @banga.
 Ported to golang by @justjanne.
 
-![Solarized+Powerline](https://raw.github.com/justjanne/powerline-go/master/preview.png)
+![Solarized+Powerline](https://raw.github.com/justjanne/powerline-go/main/preview.png)
 
 - Shows some important details about the git/hg branch (see below)
 - Changes color if the last command exited with a failure code
