@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"os"
+	"os/exec"
+	"strings"
 
 	pwl "github.com/justjanne/powerline-go/powerline"
 )
@@ -14,27 +16,58 @@ type packageJSON struct {
 	Version string `json:"version"`
 }
 
-func segmentNode(p *powerline) []pwl.Segment {
+func getNodeVersion() string {
+	out, err := exec.Command("node", "--version").Output()
+	if err != nil {
+		return ""
+	}
+	return strings.TrimSuffix(string(out), "\n")
+}
+
+func getPackageVersion() string {
 	stat, err := os.Stat(pkgfile)
 	if err != nil {
-		return []pwl.Segment{}
+		return ""
 	}
 	if stat.IsDir() {
-		return []pwl.Segment{}
+		return ""
 	}
-	pkg := packageJSON{"!"}
+	pkg := packageJSON{""}
 	raw, err := ioutil.ReadFile(pkgfile)
 	if err != nil {
-		return []pwl.Segment{}
+		return ""
 	}
 	err = json.Unmarshal(raw, &pkg)
 	if err != nil {
-		return []pwl.Segment{}
+		return ""
 	}
-	return []pwl.Segment{{
-		Name:       "node-segment",
-		Content:    pkg.Version + " \u2B22",
-		Foreground: p.theme.NodeFg,
-		Background: p.theme.NodeBg,
-	}}
+
+	return strings.TrimSpace(pkg.Version)
+}
+
+func segmentNode(p *powerline) []pwl.Segment {
+	nodeVersion := getNodeVersion()
+	packageVersion := getPackageVersion()
+
+	segments := []pwl.Segment{}
+
+	if nodeVersion != "" {
+		segments = append(segments, pwl.Segment{
+			Name:       "node",
+			Content:    p.symbols.NodeIndicator + " " + nodeVersion,
+			Foreground: p.theme.NodeVersionFg,
+			Background: p.theme.NodeVersionBg,
+		})
+	}
+
+	if packageVersion != "" {
+		segments = append(segments, pwl.Segment{
+			Name:       "node-segment",
+			Content:    packageVersion + " " + p.symbols.NodeIndicator,
+			Foreground: p.theme.NodeFg,
+			Background: p.theme.NodeBg,
+		})
+	}
+
+	return segments
 }

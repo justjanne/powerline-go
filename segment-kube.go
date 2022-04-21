@@ -8,7 +8,6 @@ import (
 	"path"
 	"path/filepath"
 	"regexp"
-	"runtime"
 	"strings"
 
 	"gopkg.in/yaml.v2"
@@ -31,11 +30,7 @@ type KubeConfig struct {
 }
 
 func homePath() string {
-	env := "HOME"
-	if runtime.GOOS == "windows" {
-		env = "USERPROFILE"
-	}
-	return os.Getenv(env)
+	return os.Getenv(homeEnvName())
 }
 
 func readKubeConfig(config *KubeConfig, path string) (err error) {
@@ -85,6 +80,21 @@ func segmentKube(p *powerline) []pwl.Segment {
 		segments := strings.Split(cluster, "_")
 		if len(segments) > 3 {
 			cluster = strings.Join(segments[3:], "_")
+		}
+	}
+
+	// When you use openshift your clusters may look something like namespace/portal-url:port/user,
+	// instead I want it to read as `portal-url`.
+	// So we ensure there are three segments split by / and then choose the middle part,
+	// we also remove the port number from the result.
+	if p.cfg.ShortenOpenshiftNames {
+		segments := strings.Split(cluster, "/")
+		if len(segments) == 3 {
+			cluster = segments[1]
+			idx := strings.IndexByte(cluster, ':')
+			if idx != -1 {
+				cluster = cluster[0:idx]
+			}
 		}
 	}
 

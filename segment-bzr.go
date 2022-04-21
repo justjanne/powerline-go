@@ -62,11 +62,11 @@ func segmentBzr(p *powerline) []pwl.Segment {
 			foreground = p.theme.RepoCleanFg
 			background = p.theme.RepoCleanBg
 
-			content = fmt.Sprintf(branch)
+			content = branch
 		}
 
 		return []pwl.Segment{{
-            Name:       "bzr",
+			Name:       "bzr",
 			Content:    content,
 			Foreground: foreground,
 			Background: background,

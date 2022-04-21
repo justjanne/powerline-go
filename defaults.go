@@ -1,3 +1,4 @@
+//nolint:deadcode,varcheck
 package main
 
 var defaults = Config{
@@ -59,6 +60,7 @@ var defaults = Config{
 	PathAliases:          AliasMap{},
 	Duration:             "",
 	DurationMin:          "0",
+	DurationLowPrecision: false,
 	Eval:                 false,
 	Condensed:            false,
 	IgnoreWarnings:       false,
@@ -82,6 +84,8 @@ var defaults = Config{
 			RepoStashed:    "\u2691",
 
 			VenvIndicator: "\uE235",
+			NodeIndicator: "\u2B22",
+			RvmIndicator:  "\uE92B",
 		},
 		"patched": {
 			Lock:                 "\uE0A2",
@@ -103,6 +107,8 @@ var defaults = Config{
 			RepoStashed:    "\u2691",
 
 			VenvIndicator: "\uE235",
+			NodeIndicator: "\u2B22",
+			RvmIndicator:  "\uE92B",
 		},
 		"flat": {
 			RepoDetached:   "\u2693",
@@ -115,6 +121,8 @@ var defaults = Config{
 			RepoStashed:    "\u2691",
 
 			VenvIndicator: "\uE235",
+			NodeIndicator: "\u2B22",
+			RvmIndicator:  "\uE92B",
 		},
 	},
 	Shells: ShellMap{
@@ -254,8 +262,13 @@ var defaults = Config{
 			ShEnvFg: 15,
 			ShEnvBg: 130,
 
-			NodeFg: 15,
-			NodeBg: 40,
+			NodeFg:        15,
+			NodeBg:        40,
+			NodeVersionFg: 40,
+			NodeVersionBg: 15,
+
+			RvmFg: 255,
+			RvmBg: 160,
 
 			LoadFg:           15,
 			LoadBg:           22,
@@ -263,7 +276,7 @@ var defaults = Config{
 			LoadAvgValue:     5,
 			LoadThresholdBad: 1.0,
 
-			NixShellFg: 00,
+			NixShellFg: 15,
 			NixShellBg: 69, // a light blue
 
 			DurationFg: 250,
@@ -527,6 +540,11 @@ var defaults = Config{
 				254: 242,
 				255: 243,
 			},
+
+			ViModeCommandFg: 0,
+			ViModeCommandBg: 250,
+			ViModeInsertFg:  22,
+			ViModeInsertBg:  70,
 		},
 		"low-contrast": {
 			Reset: 0xFF,
@@ -625,6 +643,9 @@ var defaults = Config{
 			LoadHighBg:       161,
 			LoadAvgValue:     5,
 			LoadThresholdBad: 1.0,
+
+			RvmFg: 255,
+			RvmBg: 160,
 
 			NixShellFg: 69, // a light blue
 			NixShellBg: 254,
@@ -887,6 +908,11 @@ var defaults = Config{
 				254: 242,
 				255: 243,
 			},
+
+			ViModeCommandFg: 0,
+			ViModeCommandBg: 250,
+			ViModeInsertFg:  22,
+			ViModeInsertBg:  70,
 		},
 		"solarized-dark16": {
 			Reset:              8,
@@ -954,11 +980,15 @@ var defaults = Config{
 			ShEnvBg:            9,
 			NodeFg:             15,
 			NodeBg:             40,
+			NodeVersionFg:      40,
+			NodeVersionBg:      15,
 			LoadFg:             15,
 			LoadBg:             2,
 			LoadHighBg:         5,
 			LoadAvgValue:       5,
 			LoadThresholdBad:   1.0,
+			RvmFg:              8,
+			RvmBg:              6,
 			NixShellFg:         0,
 			NixShellBg:         4,
 			HostnameColorizedFgMap: map[uint8]uint8{
@@ -1219,6 +1249,11 @@ var defaults = Config{
 				254: 242,
 				255: 243,
 			},
+
+			ViModeCommandFg: 0,
+			ViModeCommandBg: 250,
+			ViModeInsertFg:  22,
+			ViModeInsertBg:  70,
 		},
 		"solarized-light16": {
 			Reset:              0,
@@ -1286,11 +1321,15 @@ var defaults = Config{
 			ShEnvBg:            9,
 			NodeFg:             15,
 			NodeBg:             40,
+			NodeVersionFg:      40,
+			NodeVersionBg:      15,
 			LoadFg:             15,
 			LoadBg:             2,
 			LoadHighBg:         5,
 			LoadAvgValue:       5,
 			LoadThresholdBad:   1.0,
+			RvmFg:              8,
+			RvmBg:              6,
 			NixShellFg:         0,
 			NixShellBg:         7,
 			HostnameColorizedFgMap: map[uint8]uint8{
@@ -1551,6 +1590,11 @@ var defaults = Config{
 				254: 242,
 				255: 243,
 			},
+
+			ViModeCommandFg: 0,
+			ViModeCommandBg: 250,
+			ViModeInsertFg:  22,
+			ViModeInsertBg:  70,
 		},
 		"gruvbox": {
 			/* based on https://github.com/b-ryan/powerline-shell/blob/master/powerline_shell/themes/gruvbox.py */
@@ -1617,6 +1661,10 @@ var defaults = Config{
 			ShellVarBg:         gruvbox_faded_purple, // match ssh-bg
 			NodeFg:             gruvbox_light0,       // match virtualenv
 			NodeBg:             gruvbox_faded_green,  // match virtualenv
+			NodeVersionFg:      gruvbox_faded_green,  // match virtualenv
+			NodeVersionBg:      gruvbox_light0,       // match virtualenv
+			RvmFg:              gruvbox_light0,
+			RvmBg:              gruvbox_neutral_red,
 			LoadFg:             gruvbox_light0,
 			LoadBg:             gruvbox_faded_purple,
 			LoadHighBg:         gruvbox_neutral_red,
@@ -1624,8 +1672,15 @@ var defaults = Config{
 			LoadThresholdBad:   1.0,
 			NixShellFg:         gruvbox_light0,
 			NixShellBg:         gruvbox_faded_purple,
+
+			ViModeCommandFg: 0,
+			ViModeCommandBg: 250,
+			ViModeInsertFg:  22,
+			ViModeInsertBg:  70,
 		},
 	},
+	Time:   "15:04:05",
+	ViMode: "",
 }
 
 const (

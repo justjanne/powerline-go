@@ -64,12 +64,16 @@
   "ShEnvBg": 130,
   "NodeFg": 15,
   "NodeBg": 40,
+  "NodeVersionFg": 40,
+  "NodeVersionBg": 15,
+  "RvmFg": 255,
+  "RvmBg": 160,
   "LoadFg": 15,
   "LoadBg": 22,
   "LoadHighBg": 161,
   "LoadAvgValue": 5,
   "LoadThresholdBad": 1.0,
-  "NixShellFg": 0,
+  "NixShellFg": 15,
   "NixShellBg": 69,
   "DurationFg": 250,
   "DurationBg": 237,
@@ -330,5 +334,9 @@
     "253": 240,
     "254": 242,
     "255": 243
-  }
+  },
+  "ViModeCommandFg": 0,
+  "ViModeCommandBg": 250,
+  "ViModeInsertFg": 22,
+  "ViModeInsertBg": 70
 }

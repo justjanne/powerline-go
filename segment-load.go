@@ -5,7 +5,7 @@ import (
 	pwl "github.com/justjanne/powerline-go/powerline"
 	"runtime"
 
-	"github.com/shirou/gopsutil/load"
+	"github.com/shirou/gopsutil/v3/load"
 )
 
 func segmentLoad(p *powerline) []pwl.Segment {

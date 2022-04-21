@@ -25,8 +25,9 @@ const (
 	MaxUnsignedInteger = ^MinUnsignedInteger
 	// MaxInteger maximum integer
 	MaxInteger = int(MaxUnsignedInteger >> 1)
-	// MinInteger minimum integer
+	/* MinInteger minimum integer
 	MinInteger = ^MaxInteger
+	*/
 )
 
 func warn(msg string) {
@@ -47,9 +48,13 @@ func pathExists(path string) bool {
 func getValidCwd() string {
 	cwd, err := os.Getwd()
 	if err != nil {
-		warn("Your current directory is invalid.")
-		print("> ")
-		os.Exit(1)
+		var exists bool
+		cwd, exists = os.LookupEnv("PWD")
+		if !exists {
+			warn("Your current directory is invalid.")
+			print("> ")
+			os.Exit(1)
+		}
 	}
 
 	parts := strings.Split(cwd, string(os.PathSeparator))
@@ -69,6 +74,7 @@ var modules = map[string]func(*powerline) []pwl.Segment{
 	"aws":                 segmentAWS,
 	"bzr":                 segmentBzr,
 	"cwd":                 segmentCwd,
+	"direnv":              segmentDirenv,
 	"docker":              segmentDocker,
 	"docker-context":      segmentDockerContext,
 	"dotenv":              segmentDotEnv,
@@ -91,6 +97,7 @@ var modules = map[string]func(*powerline) []pwl.Segment{
 	"perms":               segmentPerms,
 	"rbenv":               segmentRbenv,
 	"root":                segmentRoot,
+	"rvm":                 segmentRvm,
 	"shell-var":           segmentShellVar,
 	"shenv":               segmentShEnv,
 	"ssh":                 segmentSSH,
@@ -101,6 +108,7 @@ var modules = map[string]func(*powerline) []pwl.Segment{
 	"user":                segmentUser,
 	"venv":                segmentVirtualEnv,
 	"vgo":                 segmentVirtualGo,
+	"vi-mode":             segmentViMode,
 	"wsl":                 segmentWSL,
 	"nix-shell":           segmentNixShell,
 }
@@ -165,7 +173,7 @@ func main() {
 			cfg.ModulesRight = strings.Split(*args.ModulesRight, ",")
 		case "priority":
 			cfg.Priority = strings.Split(*args.Priority, ",")
-		case "max-width-percentage":
+		case "max-width":
 			cfg.MaxWidthPercentage = *args.MaxWidthPercentage
 		case "truncate-segment-width":
 			cfg.TruncateSegmentWidth = *args.TruncateSegmentWidth
@@ -179,6 +187,8 @@ func main() {
 			cfg.ShortenGKENames = *args.ShortenGKENames
 		case "shorten-eks-names":
 			cfg.ShortenEKSNames = *args.ShortenEKSNames
+		case "shorten-openshift-names":
+			cfg.ShortenOpenshiftNames = *args.ShortenOpenshiftNames
 		case "shell-var":
 			cfg.ShellVar = *args.ShellVar
 		case "shell-var-no-warn-empty":
@@ -194,12 +204,18 @@ func main() {
 			cfg.Duration = *args.Duration
 		case "duration-min":
 			cfg.DurationMin = *args.DurationMin
+		case "duration-low-precision":
+			cfg.DurationLowPrecision = *args.DurationLowPrecision
 		case "eval":
 			cfg.Eval = *args.Eval
 		case "condensed":
 			cfg.Condensed = *args.Condensed
 		case "ignore-warnings":
 			cfg.IgnoreWarnings = *args.IgnoreWarnings
+		case "time":
+			cfg.Time = *args.Time
+		case "vi-mode":
+			cfg.ViMode = *args.ViMode
 		}
 	})
 

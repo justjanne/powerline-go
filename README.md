@@ -4,13 +4,13 @@ A [Powerline](https://github.com/Lokaltog/vim-powerline) like prompt for Bash,
 ZSH and Fish. Based on [Powerline-Shell](https://github.com/banga/powerline-shell) by @banga.
 Ported to golang by @justjanne.
 
-![Solarized+Powerline](https://raw.github.com/justjanne/powerline-go/master/preview.png)
+![Solarized+Powerline](https://raw.github.com/justjanne/powerline-go/main/preview.png)
 
 - Shows some important details about the git/hg branch (see below)
 - Changes color if the last command exited with a failure code
 - If you're too deep into a directory tree, shortens the displayed path with an ellipsis
 - Shows the current Python [virtualenv](http://www.virtualenv.org/) environment
-- Shows the current Ruby version using [rbenv](https://github.com/rbenv/rbenv)
+- Shows the current Ruby version using [rbenv](https://github.com/rbenv/rbenv) or [rvm](https://rvm.io/)
 - Shows if you are in a [nix](https://nixos.org/) shell
 - It's easy to customize and extend. See below for details.
 
@@ -51,7 +51,7 @@ Each of these will have a number next to it if more than one file matches.
 
 ## Installation
 
-Requires Go 1.12+
+Requires Go 1.15+
 
 `powerline-go` uses ANSI color codes, these should nowadays work everywhere,
 but you may have to set your $TERM to `xterm-256color` for it to work.
@@ -59,7 +59,7 @@ but you may have to set your $TERM to `xterm-256color` for it to work.
 If you want to use the "patched" mode (which is the default, and provides
 improved UI), you'll need to install a powerline font, either as fallback,
 or by patching the font you use for your terminal: see
-[powerline-fonts](https://github.com/Lokaltog/powerline-fonts).  
+[powerline-fonts](https://github.com/Lokaltog/powerline-fonts).
 Alternatively you can use "compatible" or "flat" mode.
 
 ### Precompiled Binaries
@@ -72,7 +72,7 @@ I provide precompiled binaries for x64 Linux and macOS in the
 - Install (and update) the package with
 
 ```bash
-go get -u github.com/justjanne/powerline-go
+go install github.com/justjanne/powerline-go@latest
 ```
 
 - By default it will be in `$GOPATH/bin`, if you want to change that, you can set
@@ -81,7 +81,7 @@ go get -u github.com/justjanne/powerline-go
 
 ### Bash
 
-Add the following to your `.bashrc` (or `.profile` on Mac):
+Add the following to your `.bashrc`:
 
 ```bash
 function _update_ps1() {
@@ -91,7 +91,7 @@ function _update_ps1() {
     # them once. This not only clears the error for powerline-go, but also for
     # everything else you run in that shell. Don't enable this if you're not
     # sure this is what you want.
-    
+
     #set "?"
 }
 
@@ -114,7 +114,7 @@ function powerline_precmd() {
     # them once. This not only clears the error for powerline-go, but also for
     # everything else you run in that shell. Don't enable this if you're not
     # sure this is what you want.
-    
+
     #set "?"
 }
 
@@ -138,7 +138,7 @@ Redefine `fish_prompt` in `~/.config/fish/config.fish`:
 
 ```bash
 function fish_prompt
-    eval $GOPATH/bin/powerline-go -error $status -jobs $(jobs -p | wc -l)
+    eval $GOPATH/bin/powerline-go -error $status -jobs (count (jobs -p))
 end
 ```
 ### Nix
@@ -227,10 +227,9 @@ Usage of powerline-go:
   -git-disable-stats string
          Comma-separated list to disable individual git statuses
          (valid choices: ahead, behind, staged, notStaged, untracked, conflicted, stashed)
-        
   -git-mode string
          How to display git status
-         (valid choices: fancy, simple)
+         (valid choices: fancy, compact, simple)
          (default "fancy")
   -hostname-only-if-ssh
          Show hostname only for SSH connections
@@ -249,12 +248,12 @@ Usage of powerline-go:
          (default "patched")
   -modules string
          The list of modules to load, separated by ','
-         (valid choices: aws, bzr, cwd, docker, docker-context, dotenv, duration, exit, fossil, git, gitlite, goenv, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)
+         (valid choices: aws, bzr, cwd, direnv, docker, docker-context, dotenv, duration, exit, fossil, gcp, git, gitlite, goenv, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, rbenv, root, rvm, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo, vi-mode, wsl)
          Unrecognized modules will be invoked as 'powerline-go-MODULE' executable plugins and should output a (possibly empty) list of JSON objects that unmarshal to powerline-go's Segment structs.
          (default "venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root")
   -modules-right string
          The list of modules to load anchored to the right, for shells that support it, separated by ','
-         (valid choices: aws, bzr, cwd, docker, docker-context, dotenv, duration, exit, fossil, git, gitlite, goenv, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)
+         (valid choices: aws, bzr, cwd, direnv, docker, docker-context, dotenv, duration, exit, fossil, gcp, git, gitlite, goenv, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, rbenv, root, rvm, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo, wsl)
          Unrecognized modules will be invoked as 'powerline-go-MODULE' executable plugins and should output a (possibly empty) list of JSON objects that unmarshal to powerline-go's Segment structs.
   -newline
          Show the prompt on a new line
@@ -267,7 +266,7 @@ Usage of powerline-go:
          Use '~' for your home dir. You may need to escape this character to avoid shell substitution.
   -priority string
          Segments sorted by priority, if not enough space exists, the least priorized segments are removed first. Separate with ','
-         (valid choices: aws, bzr, cwd, docker, docker-context, dotenv, duration, exit, fossil, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)
+         (valid choices: aws, bzr, cwd, direnv, docker, docker-context, dotenv, duration, exit, fossil, gcp, git, gitlite, goenv, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, rbenv, root, rvm, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo, vi-mode, wsl)
          (default "root,cwd,user,host,ssh,perms,git-branch,git-status,hg,jobs,exit,cwd-path")
   -shell string
          Set this to your shell type
@@ -285,7 +284,7 @@ Usage of powerline-go:
          Always show the prompt indicator with the default color, never with the error color
   -theme string
          Set this to the theme you want to use
-         (valid choices: default, low-contrast)
+         (valid choices: default, low-contrast, gruvbox, solarized-dark16, solarized-light16)
          (default "default")
   -trim-ad-domain
          Trim the Domainname from the AD username.
@@ -294,6 +293,8 @@ Usage of powerline-go:
          (default 16)
   -venv-name-size-limit int
          Show indicator instead of virtualenv name if name is longer than this limit (defaults to 0, which is unlimited)
+  -vi-mode string
+         The current vi-mode (eg. KEYMAP for zsh) for vi-module module
 ```
 
 ### Eval
@@ -302,7 +303,7 @@ If using `eval` and `-modules-right` is desired, the shell setup must be modifie
 
 ##### Bash
 
-Add the following to your `.bashrc` (or `.profile` on Mac):
+Add the following to your `.bashrc`:
 
 ```bash
 function _update_ps1() {
@@ -358,7 +359,7 @@ Aliases are defined as comma-separated key value pairs, like this:
 ```bash
 powerline-go ... -path-aliases \$GOPATH/src/github.com=@GOPATH-GH,\~/work/projects/foo=@FOO,\~/work/projects/bar=@BAR
 ```
-    
+
 Note that you should use `~` instead of `/home/username` when specifying the
 path. Also make sure to escape the `~` character. Otherwise your shell will
 perform interpolation on it before `powerline-go` can see it!
@@ -435,6 +436,8 @@ end
 
 ## License
 
-> This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.  
-> This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.  
-> You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.  
+> This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+> 
+> This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+> 
+> You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.

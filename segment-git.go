@@ -53,22 +53,28 @@ func (r repoStats) GitSegments(p *powerline) (segments []pwl.Segment) {
 	return
 }
 
-func addRepoStatsSymbol(nChanges int, symbol string) string {
+func addRepoStatsSymbol(nChanges int, symbol string, GitMode string) string {
 	if nChanges > 0 {
-		return symbol
+		if GitMode == "simple" {
+			return symbol
+		} else if GitMode == "compact" {
+			return fmt.Sprintf(" %d%s", nChanges, symbol )
+		} else {
+			return symbol
+		}
 	}
 	return ""
 }
 
 func (r repoStats) GitSymbols(p *powerline) string {
 	var info string
-	info += addRepoStatsSymbol(r.ahead, p.symbols.RepoAhead)
-	info += addRepoStatsSymbol(r.behind, p.symbols.RepoBehind)
-	info += addRepoStatsSymbol(r.staged, p.symbols.RepoStaged)
-	info += addRepoStatsSymbol(r.notStaged, p.symbols.RepoNotStaged)
-	info += addRepoStatsSymbol(r.untracked, p.symbols.RepoUntracked)
-	info += addRepoStatsSymbol(r.conflicted, p.symbols.RepoConflicted)
-	info += addRepoStatsSymbol(r.stashed, p.symbols.RepoStashed)
+	info += addRepoStatsSymbol(r.ahead, p.symbols.RepoAhead, p.cfg.GitMode)
+	info += addRepoStatsSymbol(r.behind, p.symbols.RepoBehind, p.cfg.GitMode)
+	info += addRepoStatsSymbol(r.staged, p.symbols.RepoStaged, p.cfg.GitMode)
+	info += addRepoStatsSymbol(r.notStaged, p.symbols.RepoNotStaged, p.cfg.GitMode)
+	info += addRepoStatsSymbol(r.untracked, p.symbols.RepoUntracked, p.cfg.GitMode)
+	info += addRepoStatsSymbol(r.conflicted, p.symbols.RepoConflicted, p.cfg.GitMode)
+	info += addRepoStatsSymbol(r.stashed, p.symbols.RepoStashed, p.cfg.GitMode)
 	return info
 }
 
@@ -88,14 +94,15 @@ func groupDict(pattern *regexp.Regexp, haystack string) map[string]string {
 }
 
 var gitProcessEnv = func() []string {
-	home, _ := os.LookupEnv("HOME")
+	homeEnv := homeEnvName()
+	home, _ := os.LookupEnv(homeEnv)
 	path, _ := os.LookupEnv("PATH")
 	env := map[string]string{
-		"LANG": "C",
-		"HOME": home,
-		"PATH": path,
+		"LANG":  "C",
+		homeEnv: home,
+		"PATH":  path,
 	}
-	result := make([]string, len(env))
+	result := make([]string, 0)
 	for key, value := range env {
 		result = append(result, fmt.Sprintf("%s=%s", key, value))
 	}
@@ -225,11 +232,6 @@ func segmentGit(p *powerline) []pwl.Segment {
 		background = p.theme.RepoCleanBg
 	}
 
-	out, err = runGitCommand("git", "rev-list", "-g", "refs/stash")
-	if err == nil && len(out) > 0 {
-		stats.stashed = strings.Count(out, "\n")
-	}
-
 	segments := []pwl.Segment{{
 		Name:       "git-branch",
 		Content:    branch,
@@ -237,6 +239,7 @@ func segmentGit(p *powerline) []pwl.Segment {
 		Background: background,
 	}}
 
+	stashEnabled := true
 	for _, stat := range p.cfg.GitDisableStats {
 		// "ahead, behind, staged, notStaged, untracked, conflicted, stashed"
 		switch stat {
@@ -254,12 +257,24 @@ func segmentGit(p *powerline) []pwl.Segment {
 			stats.conflicted = 0
 		case "stashed":
 			stats.stashed = 0
+			stashEnabled = false
+		}
+	}
+
+	if stashEnabled {
+		out, err = runGitCommand("git", "rev-list", "-g", "refs/stash")
+		if err == nil {
+			stats.stashed = strings.Count(out, "\n")
 		}
 	}
 
 	if p.cfg.GitMode == "simple" {
 		if stats.any() {
 			segments[0].Content += " " + stats.GitSymbols(p)
+		}
+	} else if p.cfg.GitMode == "compact" {
+		if stats.any() {
+			segments[0].Content += stats.GitSymbols(p)
 		}
 	} else { // fancy
 		segments = append(segments, stats.GitSegments(p)...)

@@ -40,18 +40,22 @@ type Config struct {
 	IgnoreRepos            []string  `json:"ignore-repos"`
 	ShortenGKENames        bool      `json:"shorten-gke-names"`
 	ShortenEKSNames        bool      `json:"shorten-eks-names"`
+	ShortenOpenshiftNames  bool      `json:"shorten-openshift-names"`
 	ShellVar               string    `json:"shell-var"`
 	ShellVarNoWarnEmpty    bool      `json:"shell-var-no-warn-empty"`
 	TrimADDomain           bool      `json:"trim-ad-domain"`
 	PathAliases            AliasMap  `json:"path-aliases"`
 	Duration               string    `json:"-"`
 	DurationMin            string    `json:"duration-min"`
+	DurationLowPrecision   bool      `json:"duration-low-precision"`
 	Eval                   bool      `json:"eval"`
 	Condensed              bool      `json:"condensed"`
 	IgnoreWarnings         bool      `json:"ignore-warnings"`
 	Modes                  SymbolMap `json:"modes"`
 	Shells                 ShellMap  `json:"shells"`
 	Themes                 ThemeMap  `json:"themes"`
+	Time                   string    `json:"-"`
+	ViMode                 string    `json:"vi-mode"`
 }
 
 func (mode *SymbolTemplate) UnmarshalJSON(data []byte) error {

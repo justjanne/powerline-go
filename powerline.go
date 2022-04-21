@@ -12,7 +12,8 @@ import (
 
 	pwl "github.com/justjanne/powerline-go/powerline"
 	"github.com/mattn/go-runewidth"
-	"golang.org/x/crypto/ssh/terminal"
+	"github.com/shirou/gopsutil/v3/process"
+	"golang.org/x/term"
 	"golang.org/x/text/width"
 )
 
@@ -30,23 +31,22 @@ type ShellInfo struct {
 }
 
 type powerline struct {
-	cfg                    Config
-	cwd                    string
-	userInfo               user.User
-	userIsAdmin            bool
-	hostname               string
-	username               string
-	theme                  Theme
-	shell                  ShellInfo
-	reset                  string
-	symbols                SymbolTemplate
-	priorities             map[string]int
-	ignoreRepos            map[string]bool
-	Segments               [][]pwl.Segment
-	curSegment             int
-	align                  alignment
-	rightPowerline         *powerline
-	appendEastAsianPadding int
+	cfg            Config
+	cwd            string
+	userInfo       user.User
+	userIsAdmin    bool
+	hostname       string
+	username       string
+	theme          Theme
+	shell          ShellInfo
+	reset          string
+	symbols        SymbolTemplate
+	priorities     map[string]int
+	ignoreRepos    map[string]bool
+	Segments       [][]pwl.Segment
+	curSegment     int
+	align          alignment
+	rightPowerline *powerline
 }
 
 type prioritizedSegments struct {
@@ -81,7 +81,15 @@ func newPowerline(cfg Config, cwd string, align alignment) *powerline {
 
 	p.theme = cfg.Themes[cfg.Theme]
 	if cfg.Shell == "autodetect" {
-		cfg.Shell = detectShell(os.Getenv("SHELL"))
+		var shellExe string
+		proc, err := process.NewProcess(int32(os.Getppid()))
+		if err == nil {
+			shellExe, _ = proc.Exe()
+		}
+		if shellExe == "" {
+			shellExe = os.Getenv("SHELL")
+		}
+		cfg.Shell = detectShell(shellExe)
 	}
 	p.shell = cfg.Shells[cfg.Shell]
 	p.reset = fmt.Sprintf(p.shell.ColorTemplate, "[0m")
@@ -117,12 +125,12 @@ func newPowerline(cfg Config, cwd string, align alignment) *powerline {
 	return p
 }
 
-func detectShell(envShell string) string {
+func detectShell(shellExe string) string {
 	var shell string
-	envShell = path.Base(envShell)
-	if strings.Contains(envShell, "bash") {
+	shellExe = path.Base(shellExe)
+	if strings.Contains(shellExe, "bash") {
 		shell = "bash"
-	} else if strings.Contains(envShell, "zsh") {
+	} else if strings.Contains(shellExe, "zsh") {
 		shell = "zsh"
 	} else {
 		shell = "bare"
@@ -177,7 +185,7 @@ func (p *powerline) color(prefix string, code uint8) string {
 }
 
 func (p *powerline) fgColor(code uint8) string {
-	return p.color("38", code)
+	return p.color("1;38", code)
 }
 
 func (p *powerline) bgColor(code uint8) string {
@@ -199,8 +207,7 @@ func (p *powerline) appendSegment(origin string, segment pwl.Segment) {
 	if segment.SeparatorForeground == 0 {
 		segment.SeparatorForeground = segment.Background
 	}
-	priority, _ := p.priorities[origin]
-	segment.Priority += priority
+	segment.Priority += p.priorities[origin]
 	segment.Width = segment.ComputeWidth(p.cfg.Condensed)
 	if segment.NewLine {
 		p.newRow()
@@ -217,7 +224,7 @@ func (p *powerline) newRow() {
 }
 
 func termWidth() int {
-	termWidth, _, err := terminal.GetSize(int(os.Stdin.Fd()))
+	termWidth, _, err := term.GetSize(int(os.Stdin.Fd()))
 	if err != nil {
 		shellMaxLengthStr, found := os.LookupEnv("COLUMNS")
 		if !found {
@@ -460,4 +467,3 @@ func (p *powerline) supportsRightModules() bool {
 func (p *powerline) isRightPrompt() bool {
 	return p.align == alignRight && p.supportsRightModules()
 }
-
