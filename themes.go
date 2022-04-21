@@ -27,6 +27,8 @@ type SymbolTemplate struct {
 
 // Theme definitions
 type Theme struct {
+	BoldForeground bool
+
 	Reset uint8
 
 	DefaultFg uint8
