@@ -1,40 +1,50 @@
 package main
 
 import (
-	"strings"
+    "fmt"
+    "strings"
+	"github.com/go-git/go-git/v5"
 
 	pwl "github.com/justjanne/powerline-go/powerline"
 )
 
-func segmentGitLite(p *powerline) []pwl.Segment {
-	if len(p.ignoreRepos) > 0 {
-		out, err := runGitCommand("git", "rev-parse", "--show-toplevel")
-		if err != nil {
-			return []pwl.Segment{}
-		}
-		out = strings.TrimSpace(out)
-		if p.ignoreRepos[out] {
-			return []pwl.Segment{}
-		}
-	}
+// Get the root of a repository.
+func getRepoRoot(repo *git.Repository) string {
+	tree, _ := repo.Worktree()
+	return strings.TrimSpace(tree.Filesystem.Root())
+}
 
-	out, err := runGitCommand("git", "rev-parse", "--abbrev-ref", "HEAD")
+func repoBranch(repo *git.Repository) string {
+	ref, err := repo.Head()
+	if err != nil {
+		return ""
+	}
+	if ref.Name().IsBranch() {
+		return ref.Name().Short()
+	} else {
+		return ref.Hash().String()[:7]
+	}
+}
+
+func segmentGitLite(p *powerline) []pwl.Segment {
+	repo, err := git.PlainOpenWithOptions(p.cwd, &git.PlainOpenOptions{
+		DetectDotGit:          true,
+		EnableDotGitCommonDir: true,
+	})
 	if err != nil {
 		return []pwl.Segment{}
 	}
-
-	status := strings.TrimSpace(out)
-	var branch string
-
-	if status == "HEAD" {
-		branch = getGitDetachedBranch(p)
-	} else {
-		branch = status
+	if len(p.ignoreRepos) > 0 {
+		root := getRepoRoot(repo)
+		if p.ignoreRepos[root] {
+			return []pwl.Segment{}
+		}
 	}
 
+	branch := repoBranch(repo)
 	return []pwl.Segment{{
 		Name:       "git-branch",
-		Content:    branch,
+        Content: fmt.Sprintf("%s %s", p.symbols.RepoBranch, branch),
 		Foreground: p.theme.RepoCleanFg,
 		Background: p.theme.RepoCleanBg,
 	}}
