@@ -4,6 +4,8 @@ import (
 	"os"
 	"path"
 
+	"gopkg.in/ini.v1"
+
 	pwl "github.com/justjanne/powerline-go/powerline"
 )
 
@@ -11,6 +13,12 @@ func segmentVirtualEnv(p *powerline) []pwl.Segment {
 	var env string
 	if env == "" {
 		env, _ = os.LookupEnv("VIRTUAL_ENV")
+		if env != "" {
+			cfg, err := ini.Load(path.Join(env, "pyvenv.cfg"))
+			if err == nil {
+				env = cfg.Section("").Key("prompt").String()
+			}
+		}
 	}
 	if env == "" {
 		env, _ = os.LookupEnv("CONDA_ENV_PATH")

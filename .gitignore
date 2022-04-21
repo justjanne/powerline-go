@@ -15,4 +15,5 @@ powerline-go
 .glide/
 
 /.idea/
-~
+
+.vscode/
