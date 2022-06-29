@@ -109,7 +109,16 @@ var gitProcessEnv = func() []string {
 	return result
 }()
 
+func isWinDir() bool {
+	pwd, _ := os.Getwd()
+	r := regexp.MustCompile(`^/mnt/`)
+	return r.MatchString(pwd)
+}
+
 func runGitCommand(cmd string, args ...string) (string, error) {
+	if cmd == "git" && isWinDir() {
+		cmd = "git.exe"
+	}
 	command := exec.Command(cmd, args...)
 	command.Env = gitProcessEnv
 	out, err := command.Output()
