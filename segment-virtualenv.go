@@ -2,7 +2,9 @@ package main
 
 import (
 	"os"
+	"os/exec"
 	"path"
+	"strings"
 
 	"gopkg.in/ini.v1"
 
@@ -28,6 +30,11 @@ func segmentVirtualEnv(p *powerline) []pwl.Segment {
 	}
 	if env == "" {
 		env, _ = os.LookupEnv("PYENV_VERSION")
+	}
+	if env == "" && os.Getenv("PYENV_ROOT") != "" {
+		if out, err := exec.Command("pyenv", "version-name").Output(); err == nil {
+			env = strings.SplitN(strings.TrimSpace(string(out)), ":", 2)[0]
+		}
 	}
 	if env == "" {
 		return []pwl.Segment{}
