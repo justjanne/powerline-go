@@ -91,6 +91,7 @@ var modules = map[string]func(*powerline) []pwl.Segment{
 	"jobs":                segmentJobs,
 	"kube":                segmentKube,
 	"load":                segmentLoad,
+	"netns":               segmentNetns,
 	"newline":             segmentNewline,
 	"perlbrew":            segmentPerlbrew,
 	"plenv":               segmentPlEnv,
