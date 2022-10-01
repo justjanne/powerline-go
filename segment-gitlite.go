@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"strings"
 
 	pwl "github.com/justjanne/powerline-go/powerline"
@@ -30,6 +31,10 @@ func segmentGitLite(p *powerline) []pwl.Segment {
 		branch = getGitDetachedBranch(p)
 	} else {
 		branch = status
+	}
+
+	if p.cfg.GitMode != "compact" && len(p.symbols.RepoBranch) > 0 {
+		branch = fmt.Sprintf("%s %s", p.symbols.RepoBranch, branch)
 	}
 
 	return []pwl.Segment{{
