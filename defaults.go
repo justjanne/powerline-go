@@ -147,7 +147,7 @@ var defaults = Config{
 			EvalPromptRightSuffix: `"`,
 		},
 		"bare": {
-			ColorTemplate: "%s",
+			ColorTemplate:    "%s",
 			RootIndicator:    "$",
 			EscapedBackslash: `\`,
 			EscapedBacktick:  "`",
@@ -202,9 +202,9 @@ var defaults = Config{
 			AWSBg: 172, // AWS orange
 
 			RepoCleanFg: 0,   // black
-			RepoCleanBg: 148, // a light green color
-			RepoDirtyFg: 15,  // white
-			RepoDirtyBg: 161, // pink/red
+			RepoCleanBg: 70,  // green
+			RepoDirtyFg: 0,   // black
+			RepoDirtyBg: 220, // yellow/orange
 
 			JobsFg: 39,
 			JobsBg: 238,
