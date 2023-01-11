@@ -248,9 +248,6 @@ func main() {
 	}
 
 	p := newPowerline(cfg, getValidCwd(), alignLeft)
-	if p.supportsRightModules() && p.hasRightModules() && !cfg.Eval {
-		panic("Flag '-modules-right' requires '-eval' mode.")
-	}
 
 	fmt.Print(p.draw())
 }
