@@ -121,9 +121,9 @@ func parseGitBranchInfo(status []string) map[string]string {
 }
 
 func getGitDetachedBranch(p *powerline) string {
-	out, err := runGitCommand("git", "rev-parse", "--short", "HEAD")
+	out, err := runGitCommand("git", "--no-optional-locks", "rev-parse", "--short", "HEAD")
 	if err != nil {
-		out, err := runGitCommand("git", "symbolic-ref", "--short", "HEAD")
+		out, err := runGitCommand("git", "--no-optional-locks", "symbolic-ref", "--short", "HEAD")
 		if err != nil {
 			return "Error"
 		}
@@ -160,7 +160,7 @@ func parseGitStats(status []string) repoStats {
 }
 
 func repoRoot(path string) (string, error) {
-	out, err := runGitCommand("git", "rev-parse", "--show-toplevel")
+	out, err := runGitCommand("git", "--no-optional-locks", "rev-parse", "--show-toplevel")
 	if err != nil {
 		return "", err
 	}
@@ -187,7 +187,7 @@ func segmentGit(p *powerline) []pwl.Segment {
 	}
 
 	args := []string{
-		"status", "--porcelain", "-b", "--ignore-submodules",
+		"--no-optional-locks", "status", "--porcelain", "-b", "--ignore-submodules",
 	}
 
 	if p.cfg.GitAssumeUnchangedSize > 0 {
@@ -262,7 +262,7 @@ func segmentGit(p *powerline) []pwl.Segment {
 	}
 
 	if stashEnabled {
-		out, err = runGitCommand("git", "rev-list", "-g", "refs/stash")
+		out, err = runGitCommand("git", "--no-optional-locks", "rev-list", "-g", "refs/stash")
 		if err == nil {
 			stats.stashed = strings.Count(out, "\n")
 		}

@@ -8,7 +8,7 @@ import (
 
 func segmentGitLite(p *powerline) []pwl.Segment {
 	if len(p.ignoreRepos) > 0 {
-		out, err := runGitCommand("git", "rev-parse", "--show-toplevel")
+		out, err := runGitCommand("git", "--no-optional-locks", "rev-parse", "--show-toplevel")
 		if err != nil {
 			return []pwl.Segment{}
 		}
@@ -18,7 +18,7 @@ func segmentGitLite(p *powerline) []pwl.Segment {
 		}
 	}
 
-	out, err := runGitCommand("git", "rev-parse", "--abbrev-ref", "HEAD")
+	out, err := runGitCommand("git", "--no-optional-locks", "rev-parse", "--abbrev-ref", "HEAD")
 	if err != nil {
 		return []pwl.Segment{}
 	}
