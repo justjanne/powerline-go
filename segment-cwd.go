@@ -105,7 +105,13 @@ func cwdToPathSegments(p *powerline, cwd string) []pathSegment {
 	pathSeparator := string(os.PathSeparator)
 	pathSegments := make([]pathSegment, 0)
 
-	if strings.HasPrefix(cwd, p.userInfo.HomeDir) {
+	if cwd == p.userInfo.HomeDir {
+		pathSegments = append(pathSegments, pathSegment{
+			path: "~",
+			home: true,
+		})
+		cwd = ""
+	} else if strings.HasPrefix(cwd, p.userInfo.HomeDir+pathSeparator) {
 		pathSegments = append(pathSegments, pathSegment{
 			path: "~",
 			home: true,
