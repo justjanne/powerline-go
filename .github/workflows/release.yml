@@ -28,7 +28,7 @@ jobs:
       - run: go build -o release/powerline-go-$GOOS-$GOARCH
         env:
           CGO_ENABLED: 0
-          GOOS: linux
+          GOOS: ${{ matrix.os }}
           GOARCH: ${{ matrix.arch }}
       - name: Upload the artifacts
         uses: skx/github-action-publish-binaries@master
