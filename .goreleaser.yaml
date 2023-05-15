@@ -1,7 +1,9 @@
 project_name: powerline-go
+
 before:
   hooks:
     - go mod download
+
 builds:
   - binary: powerline-go
     env:
@@ -35,3 +37,6 @@ archives:
 
 checksum:
   name_template: checksums.txt
+
+changelog:
+  use: github
