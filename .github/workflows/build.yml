@@ -12,7 +12,7 @@ jobs:
       matrix:
         os: [ linux, darwin, windows, freebsd, netbsd, openbsd ]
         arch: [ amd64, arm64 ]
-        go-version: [ 1.20 ]
+        go-version: [ '1.20' ]
         include:
           - os: linux
             arch: arm
