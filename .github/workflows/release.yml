@@ -3,100 +3,29 @@ on:
   release:
     types: [created]
 jobs:
-  release-linux:
+  release:
     name: Build release binaries for linux
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        arch: [ 'amd64', 'arm64', 'arm' ]
+        os: [ 'linux', 'darwin', 'windows', 'freebsd', 'netbsd', 'openbsd' ]
+        arch: [ 'amd64', 'arm64' ]
+        go-version: [ '1.20' ]
+        include:
+          - os: [ 'linux', 'freebsd', 'netbsd' ]
+          - arch: arm
     steps:
       - name: Checkout the repository
         uses: actions/checkout@master
       - name: Setup Golang
         uses: actions/setup-go@v1
         with:
-          go-version: '1.15'
+          go-version: '1.20'
       - run: go build -o release/powerline-go-$GOOS-$GOARCH
         env:
           CGO_ENABLED: 0
           GOOS: linux
           GOARCH: ${{ matrix.arch }}
-      - name: Upload the artifacts
-        uses: skx/github-action-publish-binaries@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          args: 'release/powerline-go-*'
-  release-macos:
-    name: Build release binaries for macOS
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        arch: [ 'amd64' ]
-        # arm64 for darwin is disabled as it's not currently supported by the go
-        # compiler for our use case
-    steps:
-      - name: Checkout the repository
-        uses: actions/checkout@master
-      - name: Setup Golang
-        uses: actions/setup-go@v1
-        with:
-          go-version: '1.15'
-      - run: go build -o release/powerline-go-$GOOS-$GOARCH
-        env:
-          CGO_ENABLED: 0
-          GOOS: darwin
-          GOARCH: ${{ matrix.arch }}
-      - name: Upload the artifacts
-        uses: skx/github-action-publish-binaries@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          args: 'release/powerline-go-*'
-  release-windows:
-    name: Build release binaries for windows
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        arch: [ 'amd64' ]
-        # arm64 for windows is disabled as it's not currently supported by the
-        # go compiler for our use case
-    steps:
-      - name: Checkout the repository
-        uses: actions/checkout@master
-      - name: Setup Golang
-        uses: actions/setup-go@v1
-        with:
-          go-version: '1.15'
-      - run: go build -o release/powerline-go-$GOOS-$GOARCH
-        env:
-          CGO_ENABLED: 0
-          GOOS: windows
-          GOARCH: ${{ matrix.arch }}
-      - name: Upload the artifacts
-        uses: skx/github-action-publish-binaries@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          args: 'release/powerline-go-*'
-  release-bsd:
-    name: Build release binaries for BSD
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        os: [ 'freebsd', 'netbsd', 'openbsd' ]
-    steps:
-      - name: Checkout the repository
-        uses: actions/checkout@master
-      - name: Setup Golang
-        uses: actions/setup-go@v1
-        with:
-          go-version: '1.15'
-      - run: go build -o release/powerline-go-$GOOS-$GOARCH
-        env:
-          CGO_ENABLED: 0
-          GOOS: ${{ matrix.os }}
-          GOARCH: amd64
       - name: Upload the artifacts
         uses: skx/github-action-publish-binaries@master
         env:
