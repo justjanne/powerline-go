@@ -1,0 +1,42 @@
+project_name: powerline-go
+
+before:
+  hooks:
+    - go mod download
+
+builds:
+  - binary: powerline-go
+    env:
+      - CGO_ENABLED=0
+    goarch:
+      - amd64
+      - arm
+      - arm64
+      - "386"
+    goos:
+      - darwin
+      - linux
+      - windows
+      - freebsd
+      - netbsd
+      - openbsd
+    ignore:
+      - goos: darwin
+        goarch: "386"
+      - goos: openbsd
+        goarch: arm
+    flags:
+      - -trimpath
+    ldflags:
+      - -s
+      - -w
+
+archives:
+  - name_template: "{{ .ProjectName }}-{{ .Os }}-{{ .Arch }}"
+    format: binary
+
+checksum:
+  name_template: checksums.txt
+
+changelog:
+  use: github

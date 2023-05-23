@@ -5,42 +5,20 @@ on:
         types: [checks_requested]
     push: {}
 jobs:
-  release:
-    name: Build release binaries
+  build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        os: [ 'darwin', 'windows', 'freebsd', 'netbsd', 'openbsd' ]
-        arch: [ 'amd64' ]
-        go-version: [ '1.15', '1.16', '1.17' ]
+    name: Build binaries
     steps:
-      - name: Checkout the repository
-        uses: actions/checkout@master
-      - name: Setup Golang
-        uses: actions/setup-go@v1
+      - uses: actions/checkout@v3
         with:
-          go-version: ${{ matrix.go-version }}
-      - run: go build -o release/powerline-go-$GOOS-$GOARCH
-        env:
-          CGO_ENABLED: 0
-          GOOS: ${{ matrix.os }}
-          GOARCH: ${{ matrix.arch }}
-  release-linux:
-    name: Build release binaries for linux
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        arch: [ 'amd64', 'arm64', 'arm' ]
-        go-version: [ '1.15', '1.16', '1.17' ]
-    steps:
-      - name: Checkout the repository
-        uses: actions/checkout@master
-      - name: Setup Golang
-        uses: actions/setup-go@v1
+          fetch-depth: 0
+      - run: git fetch --force --tags
+      - uses: actions/setup-go@v4
         with:
-          go-version: ${{ matrix.go-version }}
-      - run: go build -o release/powerline-go-$GOOS-$GOARCH
-        env:
-          CGO_ENABLED: 0
-          GOOS: linux
-          GOARCH: ${{ matrix.arch }}
+          go-version: "1.20"
+      - uses: goreleaser/goreleaser-action@v4
+        with:
+          distribution: goreleaser
+          version: latest
+          args: build --clean --snapshot
+      - run: dist/powerline-go_linux_amd64_v1/powerline-go --help
