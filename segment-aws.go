@@ -10,7 +10,10 @@ func segmentAWS(p *powerline) []pwl.Segment {
 	profile := os.Getenv("AWS_PROFILE")
 	region := os.Getenv("AWS_DEFAULT_REGION")
 	if profile == "" {
-		return []pwl.Segment{}
+		profile = os.Getenv("AWS_VAULT")
+		if profile == "" {
+			return []pwl.Segment{}	
+		}
 	}
 	var r string
 	if region != "" {
