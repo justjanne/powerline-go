@@ -545,6 +545,9 @@ var defaults = Config{
 			ViModeCommandBg: 250,
 			ViModeInsertFg:  22,
 			ViModeInsertBg:  70,
+
+			NetnsFg: 208, // approx. netfilter.org logo "fg"
+			NetnsBg: 4,   // approx. netfilter.org logo "bg"
 		},
 		"low-contrast": {
 			Reset: 0xFF,
