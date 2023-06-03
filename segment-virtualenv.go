@@ -2,7 +2,9 @@ package main
 
 import (
 	"os"
+	"os/exec"
 	"path"
+	"strings"
 
 	"gopkg.in/ini.v1"
 
@@ -26,11 +28,26 @@ func segmentVirtualEnv(p *powerline) []pwl.Segment {
 	if env == "" {
 		env, _ = os.LookupEnv("CONDA_DEFAULT_ENV")
 	}
+	pyenv := false
 	if env == "" {
 		env, _ = os.LookupEnv("PYENV_VERSION")
+		pyenv = true
+	}
+	if env == "" && os.Getenv("PYENV_ROOT") != "" {
+		if out, err := exec.Command("pyenv", "version-name").Output(); err == nil {
+			env = strings.SplitN(strings.TrimSpace(string(out)), ":", 2)[0]
+			pyenv = true
+		}
 	}
 	if env == "" {
 		return []pwl.Segment{}
+	}
+	if pyenv {
+		if out, err := exec.Command("pyenv", "global").Output(); err == nil {
+			if env == strings.SplitN(strings.TrimSpace(string(out)), ":", 2)[0] {
+				return []pwl.Segment{}
+			}
+		}
 	}
 	envName := path.Base(env)
 	if p.cfg.VenvNameSizeLimit > 0 && len(envName) > p.cfg.VenvNameSizeLimit {
