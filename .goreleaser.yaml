@@ -12,7 +12,7 @@ builds:
       - amd64
       - arm
       - arm64
-      - "386"
+      - '386'
     goos:
       - darwin
       - linux
@@ -22,7 +22,7 @@ builds:
       - openbsd
     ignore:
       - goos: darwin
-        goarch: "386"
+        goarch: '386'
       - goos: openbsd
         goarch: arm
     flags:
@@ -30,9 +30,10 @@ builds:
     ldflags:
       - -s
       - -w
+      - -X github.com/justjanne/powerline-go/powerline.Version={{ .Version }}
 
 archives:
-  - name_template: "{{ .ProjectName }}-{{ .Os }}-{{ .Arch }}"
+  - name_template: '{{ .ProjectName }}-{{ .Os }}-{{ .Arch }}'
     format: binary
 
 checksum:
