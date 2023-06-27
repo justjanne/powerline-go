@@ -16,7 +16,14 @@ func segmentVirtualEnv(p *powerline) []pwl.Segment {
 		if env != "" {
 			cfg, err := ini.Load(path.Join(env, "pyvenv.cfg"))
 			if err == nil {
-				env = cfg.Section("").Key("prompt").String()
+				// python >= 3.6 the venv module will not insert a prompt
+				// key unless the `--prompt` flag is passed to the module
+				// or if calling with the prompt arg EnvBuilder
+				// otherwise env evaluates to an empty string, per return
+				// of ini.File.Section.Key
+				if pyEnv := cfg.Section("").Key("prompt").String(); len(pyEnv) > 0 {
+					env = pyEnv
+				}
 			}
 		}
 	}
