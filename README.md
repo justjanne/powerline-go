@@ -171,7 +171,7 @@ function global:prompt {
     $startInfo = New-Object System.Diagnostics.ProcessStartInfo
     $startInfo.FileName = "powerline-go"
     $startInfo.Arguments = "-shell bare"
-    $startInfo.Environment["TERM"] = "xterm-256color"
+    $startInfo.ronment["TERM"] = "xterm-256color"
     $startInfo.CreateNoWindow = $true
     $startInfo.StandardOutputEncoding = [System.Text.Encoding]::UTF8
     $startInfo.RedirectStandardOutput = $true
@@ -186,7 +186,7 @@ function global:prompt {
 }
 ```
 
-Use `ProcessStartInfo` is needed to allow fill the enviromnet variables required by powerline-go.
+Use `ProcessStartInfo` is needed to allow fill the enviroment variables required by powerline-go.
 
 ## Customization
 
