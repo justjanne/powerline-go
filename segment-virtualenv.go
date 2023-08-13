@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"path"
+	"strings"
 
 	"gopkg.in/ini.v1"
 
@@ -10,13 +11,19 @@ import (
 )
 
 func segmentVirtualEnv(p *powerline) []pwl.Segment {
-	var env string
+	env := os.Getenv("VIRTUAL_ENV_PROMPT")
+	if strings.HasPrefix(env, "(") && strings.HasSuffix(env, ") ") {
+		env = env[1 : len(env)-2]
+	}
 	if env == "" {
-		env, _ = os.LookupEnv("VIRTUAL_ENV")
-		if env != "" {
-			cfg, err := ini.Load(path.Join(env, "pyvenv.cfg"))
+		venv, _ := os.LookupEnv("VIRTUAL_ENV")
+		if venv != "" {
+			cfg, err := ini.Load(path.Join(venv, "pyvenv.cfg"))
 			if err == nil {
 				env = cfg.Section("").Key("prompt").String()
+			}
+			if env == "" {
+				env = venv
 			}
 		}
 	}
