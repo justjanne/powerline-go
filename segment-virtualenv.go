@@ -17,11 +17,14 @@ func segmentVirtualEnv(p *powerline) []pwl.Segment {
 		env = strings.TrimSuffix(env, ") ")
 	}
 	if env == "" {
-		env, _ = os.LookupEnv("VIRTUAL_ENV")
-		if env != "" {
-			cfg, err := ini.Load(path.Join(env, "pyvenv.cfg"))
+		venv, _ := os.LookupEnv("VIRTUAL_ENV")
+		if venv != "" {
+			cfg, err := ini.Load(path.Join(venv, "pyvenv.cfg"))
 			if err == nil {
 				env = cfg.Section("").Key("prompt").String()
+			}
+			if env == "" {
+				env = venv
 			}
 		}
 	}
