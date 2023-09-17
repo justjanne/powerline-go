@@ -6,46 +6,48 @@ import (
 )
 
 type arguments struct {
-	CwdMode                *string
-	CwdMaxDepth            *int
-	CwdMaxDirSize          *int
-	ColorizeHostname       *bool
-	HostnameOnlyIfSSH      *bool
-	SshAlternateIcon       *bool
-	EastAsianWidth         *bool
-	PromptOnNewLine        *bool
-	StaticPromptIndicator  *bool
-	VenvNameSizeLimit      *int
-	GitAssumeUnchangedSize *int64
-	GitDisableStats        *string
-	GitMode                *string
-	Jobs                   *int
-	Mode                   *string
-	Theme                  *string
-	Shell                  *string
-	Modules                *string
-	ModulesRight           *string
-	Priority               *string
-	MaxWidthPercentage     *int
-	TruncateSegmentWidth   *int
-	PrevError              *int
-	NumericExitCodes       *bool
-	IgnoreRepos            *string
-	ShortenGKENames        *bool
-	ShortenEKSNames        *bool
-	ShortenOpenshiftNames  *bool
-	ShellVar               *string
-	ShellVarNoWarnEmpty    *bool
-	TrimADDomain           *bool
-	PathAliases            *string
-	Duration               *string
-	DurationMin            *string
-	DurationLowPrecision   *bool
-	Eval                   *bool
-	Condensed              *bool
-	IgnoreWarnings         *bool
-	Time                   *string
-	ViMode                 *string
+	CwdMode                       *string
+	CwdMaxDepth                   *int
+	CwdMaxDirSize                 *int
+	ColorizeHostname              *bool
+	HostnameOnlyIfSSH             *bool
+	SshAlternateIcon              *bool
+	EastAsianWidth                *bool
+	PromptOnNewLine               *bool
+	StaticPromptIndicator         *bool
+	VenvNameSizeLimit             *int
+	GitAssumeUnchangedSize        *int64
+	GitDisableStats               *string
+	GitMode                       *string
+	Jobs                          *int
+	Mode                          *string
+	Theme                         *string
+	Shell                         *string
+	Modules                       *string
+	ModulesRight                  *string
+	Priority                      *string
+	MaxWidthPercentage            *int
+	TruncateSegmentWidth          *int
+	PrevError                     *int
+	NumericExitCodes              *bool
+	IgnoreRepos                   *string
+	ShortenGKENames               *bool
+	ShortenEKSNames               *bool
+	ShortenKubeNamesRegexMatch    *string
+	ShortenKubeNamesRegexTemplate *string
+	ShortenOpenshiftNames         *bool
+	ShellVar                      *string
+	ShellVarNoWarnEmpty           *bool
+	TrimADDomain                  *bool
+	PathAliases                   *string
+	Duration                      *string
+	DurationMin                   *string
+	DurationLowPrecision          *bool
+	Eval                          *bool
+	Condensed                     *bool
+	IgnoreWarnings                *bool
+	Time                          *string
+	ViMode                        *string
 }
 
 var args = arguments{
@@ -173,6 +175,14 @@ var args = arguments{
 		"shorten-openshift-names",
 		defaults.ShortenOpenshiftNames,
 		comments("Shortens names for Openshift Kube clusters.")),
+	ShortenKubeNamesRegexMatch: flag.String(
+		"shorten-kube-names-regex-match",
+		"",
+		comments("Shortens names for Kube clusters matching a custom regex.")),
+	ShortenKubeNamesRegexTemplate: flag.String(
+		"shorten-kube-names-regex-template",
+		defaults.ShortenKubeNamesRegexTemplate,
+		commentsWithDefaults("String template to use with -shorten-kube-names-regex-match.")),
 	ShellVar: flag.String(
 		"shell-var",
 		defaults.ShellVar,

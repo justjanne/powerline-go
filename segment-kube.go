@@ -2,13 +2,14 @@ package main
 
 import (
 	"fmt"
-	pwl "github.com/justjanne/powerline-go/powerline"
 	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
 	"regexp"
 	"strings"
+
+	pwl "github.com/justjanne/powerline-go/powerline"
 
 	"gopkg.in/yaml.v2"
 )
@@ -106,6 +107,13 @@ func segmentKube(p *powerline) []pwl.Segment {
 	if arnMatches := arnRe.FindStringSubmatch(cluster); arnMatches != nil && p.cfg.ShortenEKSNames {
 		cluster = arnMatches[1]
 	}
+
+	// Shorten Kubernetes cluster names using a custom regex and optionally a custom string template
+	if p.cfg.ShortenKubeNamesRegexMatch != "" {
+		nameRe := regexp.MustCompile(p.cfg.ShortenKubeNamesRegexMatch)
+		cluster = nameRe.ReplaceAllString(cluster, p.cfg.ShortenKubeNamesRegexTemplate)
+	}
+
 	segments := []pwl.Segment{}
 	// Only draw the icon once
 	kubeIconHasBeenDrawnYet := false
