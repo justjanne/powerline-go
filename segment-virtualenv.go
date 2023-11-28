@@ -21,7 +21,7 @@ func segmentVirtualEnv(p *powerline) []pwl.Segment {
 				// or if calling with the prompt arg EnvBuilder
 				// otherwise env evaluates to an empty string, per return
 				// of ini.File.Section.Key
-				if pyEnv := cfg.Section("").Key("prompt").String(); len(pyEnv) > 0 {
+				if pyEnv := cfg.Section("").Key("prompt").String(); pyEnv != "" {
 					env = pyEnv
 				}
 			}
