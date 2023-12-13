@@ -12,10 +12,17 @@ import (
 func segmentVirtualEnv(p *powerline) []pwl.Segment {
 	var env string
 	if env == "" {
+		// honor the $VIRTUAL_ENV_PATH first
+		env, _ = os.LookupEnv("VIRTUAL_ENV_PATH")
+	}
+	if env == "" {
 		env, _ = os.LookupEnv("VIRTUAL_ENV")
 		if env != "" {
 			cfg, err := ini.Load(path.Join(env, "pyvenv.cfg"))
-			if err == nil {
+			// in the case of a "prompt" value not being set in cfg,
+			// Key() will create an empty value and return it. this
+			// obliterates the env derived from VIRTUAL_ENV
+			if err == nil && cfg.Section("").HasKey("prompt") {
 				env = cfg.Section("").Key("prompt").String()
 			}
 		}
