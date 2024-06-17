@@ -189,6 +189,10 @@ func main() {
 			cfg.ShortenEKSNames = *args.ShortenEKSNames
 		case "shorten-openshift-names":
 			cfg.ShortenOpenshiftNames = *args.ShortenOpenshiftNames
+		case "shorten-kube-names-regex-match":
+			cfg.ShortenKubeNamesRegexMatch = *args.ShortenKubeNamesRegexMatch
+		case "shorten-kube-names-regex-template":
+			cfg.ShortenKubeNamesRegexTemplate = *args.ShortenKubeNamesRegexTemplate
 		case "shell-var":
 			cfg.ShellVar = *args.ShellVar
 		case "shell-var-no-warn-empty":
