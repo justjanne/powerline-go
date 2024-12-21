@@ -21,7 +21,7 @@ func segmentDotEnv(p *powerline) []pwl.Segment {
 	}
 	return []pwl.Segment{{
 		Name:       "dotenv",
-		Content:    "\u2235",
+		Content:    p.symbols.DotEnvIndicator,
 		Foreground: p.theme.DotEnvFg,
 		Background: p.theme.DotEnvBg,
 	}}

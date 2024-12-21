@@ -83,6 +83,7 @@ var defaults = Config{
 			RepoConflicted: "\u273C",
 			RepoStashed:    "\u2691",
 
+			DotEnvIndicator:    "\u2235",
 			KubeIndicator:      "\u2388",
 			NixShellIndicator:  "\uF313",
 			NodeIndicator:      "\u2B22",
@@ -108,6 +109,7 @@ var defaults = Config{
 			RepoConflicted: "\u273C",
 			RepoStashed:    "\u2691",
 
+			DotEnvIndicator:    "\u2235",
 			KubeIndicator:      "\u2388",
 			NixShellIndicator:  "\uF313",
 			NodeIndicator:      "\u2B22",
@@ -124,6 +126,7 @@ var defaults = Config{
 			RepoConflicted: "\u273C",
 			RepoStashed:    "\u2691",
 
+			DotEnvIndicator:    "\u2235",
 			KubeIndicator:      "\u2388",
 			NixShellIndicator:  "\uF313",
 			NodeIndicator:      "\u2B22",
