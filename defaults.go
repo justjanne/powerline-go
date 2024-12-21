@@ -83,6 +83,7 @@ var defaults = Config{
 			RepoConflicted: "\u273C",
 			RepoStashed:    "\u2691",
 
+			KubeIndicator:      "\u2388",
 			NixShellIndicator:  "\uF313",
 			NodeIndicator:      "\u2B22",
 			RvmIndicator:       "\uE92B",
@@ -107,6 +108,7 @@ var defaults = Config{
 			RepoConflicted: "\u273C",
 			RepoStashed:    "\u2691",
 
+			KubeIndicator:      "\u2388",
 			NixShellIndicator:  "\uF313",
 			NodeIndicator:      "\u2B22",
 			RvmIndicator:       "\uE92B",
@@ -122,6 +124,7 @@ var defaults = Config{
 			RepoConflicted: "\u273C",
 			RepoStashed:    "\u2691",
 
+			KubeIndicator:      "\u2388",
 			NixShellIndicator:  "\uF313",
 			NodeIndicator:      "\u2B22",
 			RvmIndicator:       "\uE92B",

@@ -20,6 +20,7 @@ type SymbolTemplate struct {
 	RepoConflicted string
 	RepoStashed    string
 
+	KubeIndicator     string
 	NixShellIndicator string
 	NodeIndicator     string
 	RvmIndicator      string
