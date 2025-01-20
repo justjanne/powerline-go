@@ -200,7 +200,7 @@ var args = arguments{
 		"time",
 		defaults.Time,
 		comments("The layout string how a reference time should be represented.",
-			"The reference time is predefined and not user choosen.",
+			"The reference time is predefined and not user chosen.",
 			"Consult the golang documentation for details: https://pkg.go.dev/time#example-Time.Format")),
 	DurationMin: flag.String(
 		"duration-min",
