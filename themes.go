@@ -20,9 +20,12 @@ type SymbolTemplate struct {
 	RepoConflicted string
 	RepoStashed    string
 
-	VenvIndicator string
-	NodeIndicator string
-	RvmIndicator  string
+	DotEnvIndicator   string
+	KubeIndicator     string
+	NixShellIndicator string
+	NodeIndicator     string
+	RvmIndicator      string
+	VenvIndicator     string
 }
 
 // Theme definitions

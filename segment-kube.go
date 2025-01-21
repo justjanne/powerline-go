@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	pwl "github.com/justjanne/powerline-go/powerline"
 	"io/ioutil"
 	"os"
@@ -113,7 +112,7 @@ func segmentKube(p *powerline) []pwl.Segment {
 		kubeIconHasBeenDrawnYet = true
 		segments = append(segments, pwl.Segment{
 			Name:       "kube-cluster",
-			Content:    fmt.Sprintf("⎈ %s", cluster),
+			Content:    p.symbols.KubeIndicator + " " + cluster,
 			Foreground: p.theme.KubeClusterFg,
 			Background: p.theme.KubeClusterBg,
 		})
@@ -122,7 +121,7 @@ func segmentKube(p *powerline) []pwl.Segment {
 	if namespace != "" {
 		content := namespace
 		if !kubeIconHasBeenDrawnYet {
-			content = fmt.Sprintf("⎈ %s", content)
+			content = p.symbols.KubeIndicator + " " + content
 		}
 		segments = append(segments, pwl.Segment{
 			Name:       "kube-namespace",
