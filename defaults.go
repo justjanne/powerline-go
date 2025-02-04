@@ -147,7 +147,7 @@ var defaults = Config{
 			EvalPromptRightSuffix: `"`,
 		},
 		"bare": {
-			ColorTemplate: "%s",
+			ColorTemplate:    "%s",
 			RootIndicator:    "$",
 			EscapedBackslash: `\`,
 			EscapedBacktick:  "`",
