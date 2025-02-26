@@ -10,6 +10,7 @@ type arguments struct {
 	CwdMaxDepth            *int
 	CwdMaxDirSize          *int
 	ColorizeHostname       *bool
+	FqdnHostname           *bool
 	HostnameOnlyIfSSH      *bool
 	SshAlternateIcon       *bool
 	EastAsianWidth         *bool
@@ -69,7 +70,7 @@ var args = arguments{
 	FqdnHostname: flag.Bool(
 		"fqdn-hostname",
 		defaults.FqdnHostname,
-		comments("Display the fully qualified domain name as ")),
+		comments("Use the longer fully qualified domain name as the hostname")),
 	HostnameOnlyIfSSH: flag.Bool(
 		"hostname-only-if-ssh",
 		defaults.HostnameOnlyIfSSH,
