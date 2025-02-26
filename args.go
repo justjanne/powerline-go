@@ -66,6 +66,10 @@ var args = arguments{
 		"colorize-hostname",
 		defaults.ColorizeHostname,
 		comments("Colorize the hostname based on a hash of itself, or use the PLGO_HOSTNAMEFG and PLGO_HOSTNAMEBG env vars (both need to be set).")),
+	FqdnHostname: flag.Bool(
+		"fqdn-hostname",
+		defaults.FqdnHostname,
+		comments("Display the fully qualified domain name as ")),
 	HostnameOnlyIfSSH: flag.Bool(
 		"hostname-only-if-ssh",
 		defaults.HostnameOnlyIfSSH,
