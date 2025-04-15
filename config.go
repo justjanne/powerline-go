@@ -17,6 +17,7 @@ type Config struct {
 	CwdMaxDepth            int       `json:"cwd-max-depth"`
 	CwdMaxDirSize          int       `json:"cwd-max-dir-size"`
 	ColorizeHostname       bool      `json:"colorize-hostname"`
+	FqdnHostname           bool      `json:"fqdn-hostname"`
 	HostnameOnlyIfSSH      bool      `json:"hostname-only-if-ssh"`
 	SshAlternateIcon       bool      `json:"alternate-ssh-icon"`
 	EastAsianWidth         bool      `json:"east-asian-width"`

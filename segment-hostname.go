@@ -8,7 +8,10 @@ import (
 	"strings"
 )
 
-func getHostName(fullyQualifiedDomainName string) string {
+func getHostName(fullyQualifiedDomainName string, keepFqdnHostname bool) string {
+	if keepFqdnHostname {
+		return fullyQualifiedDomainName
+	}
 	return strings.SplitN(fullyQualifiedDomainName, ".", 2)[0]
 }
 
@@ -30,7 +33,7 @@ func segmentHost(p *powerline) []pwl.Segment {
 	}
 
 	if p.cfg.ColorizeHostname {
-		hostName := getHostName(p.hostname)
+		hostName := getHostName(p.hostname, p.cfg.FqdnHostname)
 		hostPrompt = hostName
 
 		foregroundEnv, foregroundEnvErr := strconv.ParseUint(os.Getenv("PLGO_HOSTNAMEFG"), 0, 8)
@@ -49,7 +52,7 @@ func segmentHost(p *powerline) []pwl.Segment {
 		} else if p.cfg.Shell == "zsh" {
 			hostPrompt = "%m"
 		} else {
-			hostPrompt = getHostName(p.hostname)
+			hostPrompt = getHostName(p.hostname, p.cfg.FqdnHostname)
 		}
 
 		foreground = p.theme.HostnameFg

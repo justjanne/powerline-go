@@ -6,6 +6,7 @@ var defaults = Config{
 	CwdMaxDepth:            5,
 	CwdMaxDirSize:          -1,
 	ColorizeHostname:       false,
+	FqdnHostname:           false,
 	HostnameOnlyIfSSH:      false,
 	SshAlternateIcon:       false,
 	EastAsianWidth:         false,
@@ -147,7 +148,7 @@ var defaults = Config{
 			EvalPromptRightSuffix: `"`,
 		},
 		"bare": {
-			ColorTemplate: "%s",
+			ColorTemplate:    "%s",
 			RootIndicator:    "$",
 			EscapedBackslash: `\`,
 			EscapedBacktick:  "`",
