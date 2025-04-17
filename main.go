@@ -142,6 +142,8 @@ func main() {
 			cfg.CwdMaxDirSize = *args.CwdMaxDirSize
 		case "colorize-hostname":
 			cfg.ColorizeHostname = *args.ColorizeHostname
+		case "fqdn-hostname":
+			cfg.FqdnHostname = *args.FqdnHostname
 		case "hostname-only-if-ssh":
 			cfg.HostnameOnlyIfSSH = *args.HostnameOnlyIfSSH
 		case "alternate-ssh-icon":

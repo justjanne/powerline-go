@@ -10,6 +10,7 @@ type arguments struct {
 	CwdMaxDepth            *int
 	CwdMaxDirSize          *int
 	ColorizeHostname       *bool
+	FqdnHostname           *bool
 	HostnameOnlyIfSSH      *bool
 	SshAlternateIcon       *bool
 	EastAsianWidth         *bool
@@ -66,6 +67,10 @@ var args = arguments{
 		"colorize-hostname",
 		defaults.ColorizeHostname,
 		comments("Colorize the hostname based on a hash of itself, or use the PLGO_HOSTNAMEFG and PLGO_HOSTNAMEBG env vars (both need to be set).")),
+	FqdnHostname: flag.Bool(
+		"fqdn-hostname",
+		defaults.FqdnHostname,
+		comments("Use the longer fully qualified domain name as the hostname")),
 	HostnameOnlyIfSSH: flag.Bool(
 		"hostname-only-if-ssh",
 		defaults.HostnameOnlyIfSSH,
@@ -200,7 +205,7 @@ var args = arguments{
 		"time",
 		defaults.Time,
 		comments("The layout string how a reference time should be represented.",
-			"The reference time is predefined and not user choosen.",
+			"The reference time is predefined and not user chosen.",
 			"Consult the golang documentation for details: https://pkg.go.dev/time#example-Time.Format")),
 	DurationMin: flag.String(
 		"duration-min",
