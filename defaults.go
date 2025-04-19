@@ -84,9 +84,12 @@ var defaults = Config{
 			RepoConflicted: "\u273C",
 			RepoStashed:    "\u2691",
 
-			VenvIndicator: "\uE235",
-			NodeIndicator: "\u2B22",
-			RvmIndicator:  "\uE92B",
+			DotEnvIndicator:    "\u2235",
+			KubeIndicator:      "\u2388",
+			NixShellIndicator:  "\uF313",
+			NodeIndicator:      "\u2B22",
+			RvmIndicator:       "\uE92B",
+			VenvIndicator:      "\uE235",
 		},
 		"patched": {
 			Lock:                 "\uE0A2",
@@ -107,9 +110,12 @@ var defaults = Config{
 			RepoConflicted: "\u273C",
 			RepoStashed:    "\u2691",
 
-			VenvIndicator: "\uE235",
-			NodeIndicator: "\u2B22",
-			RvmIndicator:  "\uE92B",
+			DotEnvIndicator:    "\u2235",
+			KubeIndicator:      "\u2388",
+			NixShellIndicator:  "\uF313",
+			NodeIndicator:      "\u2B22",
+			RvmIndicator:       "\uE92B",
+			VenvIndicator:      "\uE235",
 		},
 		"flat": {
 			RepoDetached:   "\u2693",
@@ -121,9 +127,12 @@ var defaults = Config{
 			RepoConflicted: "\u273C",
 			RepoStashed:    "\u2691",
 
-			VenvIndicator: "\uE235",
-			NodeIndicator: "\u2B22",
-			RvmIndicator:  "\uE92B",
+			DotEnvIndicator:    "\u2235",
+			KubeIndicator:      "\u2388",
+			NixShellIndicator:  "\uF313",
+			NodeIndicator:      "\u2B22",
+			RvmIndicator:       "\uE92B",
+			VenvIndicator:      "\uE235",
 		},
 	},
 	Shells: ShellMap{
