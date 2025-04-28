@@ -2,10 +2,10 @@ package main
 
 import (
 	"encoding/json"
-	pwl "github.com/justjanne/powerline-go/powerline"
-	"io/ioutil"
 	"os"
 	"path/filepath"
+
+	pwl "github.com/justjanne/powerline-go/powerline"
 )
 
 type DockerContextConfig struct {
@@ -15,8 +15,14 @@ type DockerContextConfig struct {
 func segmentDockerContext(p *powerline) []pwl.Segment {
 	context := "default"
 	home, _ := os.LookupEnv("HOME")
-	contextFolder := filepath.Join(home, ".docker", "contexts")
-	configFile := filepath.Join(home, ".docker", "config.json")
+
+	configDir, ok := os.LookupEnv("DOCKER_CONFIG")
+	if !ok {
+		configDir = filepath.Join(home, ".docker")
+	}
+
+	contextFolder := filepath.Join(configDir, "contexts")
+	configFile := filepath.Join(configDir, "config.json")
 	contextEnvVar := os.Getenv("DOCKER_CONTEXT")
 
 	if contextEnvVar != "" {
@@ -24,7 +30,7 @@ func segmentDockerContext(p *powerline) []pwl.Segment {
 	} else {
 		stat, err := os.Stat(contextFolder)
 		if err == nil && stat.IsDir() {
-			dockerConfigFile, err := ioutil.ReadFile(configFile)
+			dockerConfigFile, err := os.ReadFile(configFile)
 			if err == nil {
 				var dockerConfig DockerContextConfig
 				err = json.Unmarshal(dockerConfigFile, &dockerConfig)
