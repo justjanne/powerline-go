@@ -130,6 +130,9 @@ type Theme struct {
 	PlEnvFg uint8
 	PlEnvBg uint8
 
+	PulumiStackFg uint8
+	PulumiStackBg uint8
+
 	TFWsFg uint8
 	TFWsBg uint8
 
