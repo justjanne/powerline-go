@@ -1,3 +1,4 @@
+version: 2
 project_name: powerline-go
 
 before:
@@ -33,7 +34,7 @@ builds:
 
 archives:
   - name_template: "{{ .ProjectName }}-{{ .Os }}-{{ .Arch }}"
-    format: binary
+    formats: ['binary']
 
 checksum:
   name_template: checksums.txt
