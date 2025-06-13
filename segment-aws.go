@@ -9,19 +9,31 @@ import (
 func segmentAWS(p *powerline) []pwl.Segment {
 	profile := os.Getenv("AWS_PROFILE")
 	region := os.Getenv("AWS_DEFAULT_REGION")
-	if profile == "" {
+	var content string = ""
+
+	if len(profile) == 0 {
 		profile = os.Getenv("AWS_VAULT")
-		if profile == "" {
-			return []pwl.Segment{}	
-		}
 	}
-	var r string
-	if region != "" {
-		r = " (" + region + ")"
+
+	if len(region) == 0 {
+		region = os.Getenv("AWS_REGION")
 	}
+
+	if len(region) > 0 {
+		content = "(" + region + ")"
+	}
+
+	if len(profile) > 0 {
+		content = profile +" "+ content
+	}
+
+	if len(content) == 0 {
+		return []pwl.Segment{}
+	}
+
 	return []pwl.Segment{{
 		Name:       "aws",
-		Content:    profile + r,
+		Content:    content,
 		Foreground: p.theme.AWSFg,
 		Background: p.theme.AWSBg,
 	}}
