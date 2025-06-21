@@ -68,8 +68,8 @@ func checkForRbenvOutput() (string, error) {
 	if err != nil {
 		return "", errors.New("Not found in rbenv output")
 	}
-	items := strings.Split(out, " ")
-	if len(items) <= 0 {
+	items := strings.SplitN(out, " ", 2)
+	if len(items) == 0 {
 		return "", errors.New("Not found in rbenv output")
 	}
 
