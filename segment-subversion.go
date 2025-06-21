@@ -49,7 +49,7 @@ func parseSvnURL() (map[string]string, error) {
 	infos := strings.Split(info, "\n")
 	if len(infos) > 1 {
 		for _, line := range infos[:] {
-			items := strings.Split(line, ": ")
+			items := strings.SplitN(line, ": ", 3)
 			if len(items) >= 2 {
 				svnInfo[items[0]] = items[1]
 			}

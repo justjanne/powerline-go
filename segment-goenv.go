@@ -68,7 +68,7 @@ func checkForGoenvOutput() (string, error) {
 	// spawn goenv and print out version
 	out, err := runGoenvCommand("goenv", "version")
 	if err == nil {
-		items := strings.Split(out, " ")
+		items := strings.SplitN(out, " ", 2)
 		if len(items) > 1 {
 			return items[0], nil
 		}
