@@ -37,7 +37,7 @@ func maybeAliasPathSegments(p *powerline, pathSegments []pathSegment) []pathSegm
 		return pathSegments
 	}
 
-	keys := make([]string, len(p.cfg.PathAliases))
+	keys := make([]string, 0, len(p.cfg.PathAliases))
 	for k := range p.cfg.PathAliases {
 		keys = append(keys, k)
 	}
