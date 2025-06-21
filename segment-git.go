@@ -182,7 +182,7 @@ func segmentGit(p *powerline) []pwl.Segment {
 		return []pwl.Segment{}
 	}
 
-	if len(p.ignoreRepos) > 0 && p.ignoreRepos[repoRoot] {
+	if p.ignoreRepos[repoRoot] {
 		return []pwl.Segment{}
 	}
 

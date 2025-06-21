@@ -122,10 +122,8 @@ func segmentSubversion(p *powerline) []pwl.Segment {
 		return []pwl.Segment{}
 	}
 
-	if len(p.ignoreRepos) > 0 {
-		if p.ignoreRepos[svnInfo["URL"]] || p.ignoreRepos[svnInfo["Relative URL"]] {
-			return []pwl.Segment{}
-		}
+	if p.ignoreRepos[svnInfo["URL"]] || p.ignoreRepos[svnInfo["Relative URL"]] {
+		return []pwl.Segment{}
 	}
 
 	svnStats := parseSvnStatus()
