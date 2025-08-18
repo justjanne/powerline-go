@@ -166,4 +166,7 @@ type Theme struct {
 	ViModeCommandBg uint8
 	ViModeInsertFg uint8
 	ViModeInsertBg uint8
+
+	NetnsFg uint8
+	NetnsBg uint8
 }
