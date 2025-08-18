@@ -260,6 +260,9 @@ var defaults = Config{
 			PlEnvFg: 00,
 			PlEnvBg: 32,
 
+			PulumiStackFg: 00, // black
+			PulumiStackBg: 230, // yellow
+
 			TFWsFg: 15, // white
 			TFWsBg: 26, // blue
 
