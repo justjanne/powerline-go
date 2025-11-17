@@ -21,6 +21,7 @@ type SymbolTemplate struct {
 	RepoStashed    string
 
 	DotEnvIndicator   string
+	MiseIndicator     string
 	KubeIndicator     string
 	NixShellIndicator string
 	NodeIndicator     string
@@ -155,6 +156,9 @@ type Theme struct {
 	LoadHighBg       uint8
 	LoadAvgValue     byte
 	LoadThresholdBad float64
+
+	MiseFg uint8
+	MiseBg uint8
 
 	NixShellFg uint8
 	NixShellBg uint8
