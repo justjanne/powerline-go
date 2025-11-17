@@ -84,12 +84,13 @@ var defaults = Config{
 			RepoConflicted: "\u273C",
 			RepoStashed:    "\u2691",
 
-			DotEnvIndicator:    "\u2235",
-			KubeIndicator:      "\u2388",
-			NixShellIndicator:  "\uF313",
-			NodeIndicator:      "\u2B22",
-			RvmIndicator:       "\uE92B",
-			VenvIndicator:      "\uE235",
+			DotEnvIndicator:   "\u2235",
+			KubeIndicator:     "\u2388",
+			MiseIndicator:     "\u2A78",
+			NixShellIndicator: "\uF313",
+			NodeIndicator:     "\u2B22",
+			RvmIndicator:      "\uE92B",
+			VenvIndicator:     "\uE235",
 		},
 		"patched": {
 			Lock:                 "\uE0A2",
@@ -110,12 +111,13 @@ var defaults = Config{
 			RepoConflicted: "\u273C",
 			RepoStashed:    "\u2691",
 
-			DotEnvIndicator:    "\u2235",
-			KubeIndicator:      "\u2388",
-			NixShellIndicator:  "\uF313",
-			NodeIndicator:      "\u2B22",
-			RvmIndicator:       "\uE92B",
-			VenvIndicator:      "\uE235",
+			DotEnvIndicator:   "\u2235",
+			KubeIndicator:     "\u2388",
+			MiseIndicator:     "\u2A78",
+			NixShellIndicator: "\uF313",
+			NodeIndicator:     "\u2B22",
+			RvmIndicator:      "\uE92B",
+			VenvIndicator:     "\uE235",
 		},
 		"flat": {
 			RepoDetached:   "\u2693",
@@ -127,12 +129,13 @@ var defaults = Config{
 			RepoConflicted: "\u273C",
 			RepoStashed:    "\u2691",
 
-			DotEnvIndicator:    "\u2235",
-			KubeIndicator:      "\u2388",
-			NixShellIndicator:  "\uF313",
-			NodeIndicator:      "\u2B22",
-			RvmIndicator:       "\uE92B",
-			VenvIndicator:      "\uE235",
+			DotEnvIndicator:   "\u2235",
+			KubeIndicator:     "\u2388",
+			MiseIndicator:     "\u2A78",
+			NixShellIndicator: "\uF313",
+			NodeIndicator:     "\u2B22",
+			RvmIndicator:      "\uE92B",
+			VenvIndicator:     "\uE235",
 		},
 	},
 	Shells: ShellMap{
@@ -285,6 +288,9 @@ var defaults = Config{
 			LoadHighBg:       161,
 			LoadAvgValue:     5,
 			LoadThresholdBad: 1.0,
+
+			MiseFg: 0,
+			MiseBg: 43,
 
 			NixShellFg: 15,
 			NixShellBg: 69, // a light blue
@@ -657,6 +663,9 @@ var defaults = Config{
 			RvmFg: 255,
 			RvmBg: 160,
 
+			MiseFg: 43,
+			MiseBg: 254,
+
 			NixShellFg: 69, // a light blue
 			NixShellBg: 254,
 
@@ -999,6 +1008,8 @@ var defaults = Config{
 			LoadThresholdBad:   1.0,
 			RvmFg:              8,
 			RvmBg:              6,
+			MiseFg:             0,
+			MiseBg:             14,
 			NixShellFg:         0,
 			NixShellBg:         4,
 			HostnameColorizedFgMap: map[uint8]uint8{
@@ -1340,6 +1351,8 @@ var defaults = Config{
 			LoadThresholdBad:   1.0,
 			RvmFg:              8,
 			RvmBg:              6,
+			MiseFg:             8,
+			MiseBg:             14,
 			NixShellFg:         0,
 			NixShellBg:         7,
 			HostnameColorizedFgMap: map[uint8]uint8{
@@ -1680,6 +1693,8 @@ var defaults = Config{
 			LoadHighBg:         gruvbox_neutral_red,
 			LoadAvgValue:       gruvbox_light0,
 			LoadThresholdBad:   1.0,
+			MiseFg:             gruvbox_light0,
+			MiseBg:             gruvbox_faded_green,
 			NixShellFg:         gruvbox_light0,
 			NixShellBg:         gruvbox_faded_purple,
 
