@@ -234,6 +234,14 @@ func main() {
 			}
 		}
 	}
+	if args.DumpTheme != nil && *args.DumpTheme {
+		if data, err := json.MarshalIndent(cfg.Themes[cfg.Theme], "", "  "); err != nil {
+			panic(err)
+		} else {
+			fmt.Println(string(data))
+			return
+		}
+	}
 
 	if strings.HasSuffix(cfg.Mode, ".json") {
 		file, err := ioutil.ReadFile(cfg.Mode)
@@ -246,6 +254,14 @@ func main() {
 				println("Error reading mode")
 				println(err.Error())
 			}
+		}
+	}
+	if args.DumpMode != nil && *args.DumpMode {
+		if data, err := json.MarshalIndent(cfg.Modes[cfg.Mode], "", "  "); err != nil {
+			panic(err)
+		} else {
+			fmt.Println(string(data))
+			return
 		}
 	}
 
