@@ -117,12 +117,12 @@ var args = arguments{
 		"mode",
 		defaults.Mode,
 		commentsWithDefaults("The characters used to make separators between segments.",
-			"(valid choices: patched, compatible, flat)")),
+			"(valid choices: patched, compatible, flat, or path to a .json file to load from)")),
 	Theme: flag.String(
 		"theme",
 		defaults.Theme,
 		commentsWithDefaults("Set this to the theme you want to use",
-			"(valid choices: default, low-contrast, gruvbox, solarized-dark16, solarized-light16)")),
+			"(valid choices: default, low-contrast, gruvbox, solarized-dark16, solarized-light16, or path to a .json file to load from)")),
 	Shell: flag.String(
 		"shell",
 		defaults.Shell,

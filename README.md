@@ -246,7 +246,7 @@ Usage of powerline-go:
          Maximum width of the shell that the prompt may use, in percent. Setting this to 0 disables the shrinking subsystem.
   -mode string
          The characters used to make separators between segments.
-         (valid choices: patched, compatible, flat)
+         (valid choices: patched, compatible, flat, or path to a .json file to load from)
          (default "patched")
   -modules string
          The list of modules to load, separated by ','
@@ -286,7 +286,7 @@ Usage of powerline-go:
          Always show the prompt indicator with the default color, never with the error color
   -theme string
          Set this to the theme you want to use
-         (valid choices: default, low-contrast, gruvbox, solarized-dark16, solarized-light16)
+         (valid choices: default, low-contrast, gruvbox, solarized-dark16, solarized-light16, or path to a .json file to load from)
          (default "default")
   -trim-ad-domain
          Trim the Domainname from the AD username.
