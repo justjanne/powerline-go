@@ -208,6 +208,9 @@ var defaults = Config{
 			DotEnvFg: 15, // white
 			DotEnvBg: 55, // purple
 
+			AzureFg: 15, // white
+			AzureBg: 26, // Azure blue
+
 			AWSFg: 15,  // white
 			AWSBg: 172, // AWS orange
 
