@@ -47,6 +47,8 @@ type arguments struct {
 	IgnoreWarnings         *bool
 	Time                   *string
 	ViMode                 *string
+	DumpMode               *bool
+	DumpTheme              *bool
 }
 
 var args = arguments{
@@ -231,4 +233,12 @@ var args = arguments{
 		"vi-mode",
 		defaults.ViMode,
 		comments("The current vi-mode (eg. KEYMAP for zsh) for vi-module module")),
+	DumpMode: flag.Bool(
+		"dump-mode",
+		false,
+		comments("Dump loaded mode mapping as JSON to stdout and exit")),
+	DumpTheme: flag.Bool(
+		"dump-theme",
+		false,
+		comments("Dump loaded theme as JSON to stdout and exit")),
 }
