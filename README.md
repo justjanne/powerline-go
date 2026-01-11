@@ -19,6 +19,7 @@ Ported to golang by @justjanne.
 - [Version Control](#version-control)
 - [Installation](#installation)
   - [Precompiled Binaries](#precompiled-binaries)
+  - [Using mise-en-place](#using-mise-en-place)
   - [Other Platforms](#other-platforms)
   - [Bash](#bash)
   - [ZSH](#zsh)
@@ -66,6 +67,14 @@ Alternatively you can use "compatible" or "flat" mode.
 
 I provide precompiled binaries for x64 Linux and macOS in the
 [releases tab](https://github.com/justjanne/powerline-go/releases)
+
+### Using mise-en-place
+
+You can install precompiled binaries from github easily using [mise](https://mise.jdx.dev) using a command like:
+
+```shell
+mise use -g powerline-go@latest
+```
 
 ### Other Platforms
 
