@@ -79,6 +79,7 @@ var modules = map[string]func(*powerline) []pwl.Segment{
 	"docker-context":      segmentDockerContext,
 	"dotenv":              segmentDotEnv,
 	"azure":               segmentAzure,
+	"nats":                segmentNats,
 	"duration":            segmentDuration,
 	"exit":                segmentExitCode,
 	"fossil":              segmentFossil,

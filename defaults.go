@@ -211,6 +211,9 @@ var defaults = Config{
 			AzureFg: 15, // white
 			AzureBg: 26, // Azure blue
 
+			NatsFg: 15, // white
+			NatsBg: 39, // bright cyan
+
 			AWSFg: 15,  // white
 			AWSBg: 172, // AWS orange
 
