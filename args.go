@@ -47,6 +47,7 @@ type arguments struct {
 	IgnoreWarnings         *bool
 	Time                   *string
 	ViMode                 *string
+	Version                *bool
 }
 
 var args = arguments{
@@ -231,4 +232,8 @@ var args = arguments{
 		"vi-mode",
 		defaults.ViMode,
 		comments("The current vi-mode (eg. KEYMAP for zsh) for vi-module module")),
+	Version: flag.Bool(
+		"version",
+		false,
+		comments("Print the current version and exit")),
 }
