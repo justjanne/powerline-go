@@ -126,6 +126,11 @@ func commentsWithDefaults(lines ...string) string {
 func main() {
 	flag.Parse()
 
+	if *args.Version {
+		fmt.Println(pwl.Version)
+		return
+	}
+
 	cfg := defaults
 	err := cfg.Load()
 	if err != nil {
