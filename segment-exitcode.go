@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"strconv"
 
 	"github.com/justjanne/powerline-go/exitcode"
@@ -46,7 +45,7 @@ func getMeaningFromExitCode(exitCode int) string {
 		}
 	}
 
-	return fmt.Sprintf("%d", exitCode)
+	return strconv.Itoa(exitCode)
 }
 
 func segmentExitCode(p *powerline) []pwl.Segment {

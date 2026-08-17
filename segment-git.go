@@ -78,7 +78,7 @@ func (r repoStats) GitSymbols(p *powerline) string {
 	return info
 }
 
-var branchRegex = regexp.MustCompile(`^## (?P<local>\S+?)(\.{3}(?P<remote>\S+?)( \[(ahead (?P<ahead>\d+)(, )?)?(behind (?P<behind>\d+))?])?)?$`)
+var branchRegex = regexp.MustCompile(`^## (?P<local>\S+?)(?:\.{3}(?P<remote>\S+?)(?: \[(?:ahead (?P<ahead>\d+)(?:, )?)?(?:behind (?P<behind>\d+))?])?)?$`)
 
 func groupDict(pattern *regexp.Regexp, haystack string) map[string]string {
 	match := pattern.FindStringSubmatch(haystack)
@@ -182,7 +182,7 @@ func segmentGit(p *powerline) []pwl.Segment {
 		return []pwl.Segment{}
 	}
 
-	if len(p.ignoreRepos) > 0 && p.ignoreRepos[repoRoot] {
+	if p.ignoreRepos[repoRoot] {
 		return []pwl.Segment{}
 	}
 

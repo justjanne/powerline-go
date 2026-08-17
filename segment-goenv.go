@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	pwl "github.com/justjanne/powerline-go/powerline"
 	"io/ioutil"
@@ -74,7 +75,7 @@ func checkForGoenvOutput() (string, error) {
 		}
 	}
 
-	return "", fmt.Errorf("Not found in goenv object")
+	return "", errors.New("Not found in goenv object")
 }
 
 func segmentGoenv(p *powerline) []pwl.Segment {

@@ -94,12 +94,12 @@ func newPowerline(cfg Config, cwd string, align alignment) *powerline {
 	p.shell = cfg.Shells[cfg.Shell]
 	p.reset = fmt.Sprintf(p.shell.ColorTemplate, "[0m")
 	p.symbols = cfg.Modes[cfg.Mode]
-	p.priorities = make(map[string]int)
+	p.priorities = make(map[string]int, len(cfg.Priority))
 	for idx, priority := range cfg.Priority {
 		p.priorities[priority] = len(cfg.Priority) - idx
 	}
 	p.align = align
-	p.ignoreRepos = make(map[string]bool)
+	p.ignoreRepos = make(map[string]bool, len(cfg.IgnoreRepos))
 	for _, r := range cfg.IgnoreRepos {
 		if r == "" {
 			continue
