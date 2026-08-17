@@ -87,7 +87,7 @@ func segmentKube(p *powerline) []pwl.Segment {
 	// So we ensure there are three segments split by / and then choose the middle part,
 	// we also remove the port number from the result.
 	if p.cfg.ShortenOpenshiftNames {
-		segments := strings.Split(cluster, "/")
+		segments := strings.SplitN(cluster, "/", 4)
 		if len(segments) == 3 {
 			cluster = segments[1]
 			idx := strings.IndexByte(cluster, ':')

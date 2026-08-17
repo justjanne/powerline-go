@@ -26,7 +26,7 @@ func checkEnvForRubyVersion() (string, error) {
 
 // check GEM_HOME variable for gemset information
 func checkEnvForRubyGemset() (string, error) {
-	gemHomeSegments := strings.Split(os.Getenv("GEM_HOME"), "@")
+	gemHomeSegments := strings.SplitN(os.Getenv("GEM_HOME"), "@", 3)
 
 	if len(gemHomeSegments) <= 1 {
 		return "", errors.New("Gemset not found in GEM_HOME")
@@ -42,8 +42,8 @@ func checkForRvmOutput() (string, error) {
 	if err != nil {
 		return "", errors.New("Not found in RVM output")
 	}
-	items := strings.Split(out, " ")
-	if len(items) <= 0 {
+	items := strings.SplitN(out, " ", 2)
+	if len(items) == 0 {
 		return "", errors.New("Not found in RVM output")
 	}
 
@@ -68,14 +68,13 @@ func segmentRvm(p *powerline) []pwl.Segment {
 	}
 
 	// Remove explicit "ruby-" prefix from segment because it's superfluous
-	segment_components := strings.Split(segment, "-")
+	segment_components := strings.SplitN(segment, "-", 3)
 	if len(segment_components) > 1 {
 		segment = segment_components[1]
 	}
 
 	// If gemset is missing from segment, get that info from the environment
-	segment_components = strings.Split(segment, "@")
-	if len(segment_components) < 2 {
+	if !strings.Contains(segment, "@") {
 		gemset, err := checkEnvForRubyGemset()
 		if err == nil && gemset != "" {
 			segment = segment + "@" + gemset
