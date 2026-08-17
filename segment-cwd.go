@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"path"
 	"sort"
 	"strings"
 
@@ -106,6 +107,7 @@ func cwdToPathSegments(p *powerline, cwd string) []pathSegment {
 	pathSeparator := string(os.PathSeparator)
 	networkRoot := fmt.Sprintf("%s%s", pathSeparator, pathSeparator)
 	pathSegments := make([]pathSegment, 0)
+	cwd = path.Clean(cwd)
 
 	if cwd == p.userInfo.HomeDir {
 		return append(pathSegments, pathSegment{
