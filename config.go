@@ -44,6 +44,7 @@ type Config struct {
 	ShortenOpenshiftNames  bool      `json:"shorten-openshift-names"`
 	ShellVar               string    `json:"shell-var"`
 	ShellVarNoWarnEmpty    bool      `json:"shell-var-no-warn-empty"`
+	SimpleTmux             bool      `json:"simple-tmux"`
 	TrimADDomain           bool      `json:"trim-ad-domain"`
 	PathAliases            AliasMap  `json:"path-aliases"`
 	Duration               string    `json:"-"`

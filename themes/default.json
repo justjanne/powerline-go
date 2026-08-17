@@ -59,6 +59,8 @@
   "PlEnvBg": 32,
   "TimeFg": 15,
   "TimeBg": 236,
+  "TmuxFg": 7,
+  "TmuxBg": 50,
   "ShellVarFg": 52,
   "ShellVarBg": 11,
   "ShEnvFg": 15,

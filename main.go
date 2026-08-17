@@ -105,6 +105,7 @@ var modules = map[string]func(*powerline) []pwl.Segment{
 	"termtitle":           segmentTermTitle,
 	"terraform-workspace": segmentTerraformWorkspace,
 	"time":                segmentTime,
+	"tmux":                segmentTmux,
 	"node":                segmentNode,
 	"user":                segmentUser,
 	"venv":                segmentVirtualEnv,

@@ -26,6 +26,10 @@ type SymbolTemplate struct {
 	NodeIndicator     string
 	RvmIndicator      string
 	VenvIndicator     string
+
+	TmuxIndicator     string
+	TmuxOff           string
+	TmuxOn            string
 }
 
 // Theme definitions
@@ -138,6 +142,9 @@ type Theme struct {
 
 	TimeFg uint8
 	TimeBg uint8
+
+	TmuxFg uint8
+	TmuxBg uint8
 
 	ShellVarFg uint8
 	ShellVarBg uint8

@@ -65,6 +65,7 @@ var defaults = Config{
 	Eval:                 false,
 	Condensed:            false,
 	IgnoreWarnings:       false,
+	SimpleTmux:           true,
 	Modes: SymbolMap{
 		"compatible": {
 			Lock:                 "RO",
@@ -90,6 +91,10 @@ var defaults = Config{
 			NodeIndicator:      "\u2B22",
 			RvmIndicator:       "\uE92B",
 			VenvIndicator:      "\uE235",
+
+			TmuxIndicator:      "TMUX",
+			TmuxOff:            "off",
+			TmuxOn:             "on",
 		},
 		"patched": {
 			Lock:                 "\uE0A2",
@@ -116,6 +121,10 @@ var defaults = Config{
 			NodeIndicator:      "\u2B22",
 			RvmIndicator:       "\uE92B",
 			VenvIndicator:      "\uE235",
+
+			TmuxIndicator:      "\u29C9",
+			TmuxOff:            "\u2B58",
+			TmuxOn:             "\u23FD",
 		},
 		"flat": {
 			RepoDetached:   "\u2693",
@@ -268,6 +277,9 @@ var defaults = Config{
 
 			TimeFg: 15,
 			TimeBg: 236,
+
+			TmuxFg: 7,
+			TmuxBg: 38,
 
 			ShellVarFg: 52,
 			ShellVarBg: 11,
@@ -648,6 +660,9 @@ var defaults = Config{
 			TimeFg: 236,
 			TimeBg: 15,
 
+			TmuxFg: 7,
+			TmuxBg: 38,
+
 			ShEnvFg: 130,
 			ShEnvBg: 15,
 
@@ -987,6 +1002,8 @@ var defaults = Config{
 			PlEnvBg:            4,
 			TimeFg:             15,
 			TimeBg:             0,
+			TmuxFg:             7,
+			TmuxBg:             38,
 			ShellVarFg:         1,
 			ShellVarBg:         11,
 			ShEnvFg:            15,
@@ -1328,6 +1345,8 @@ var defaults = Config{
 			PlEnvBg:            4,
 			TimeFg:             15,
 			TimeBg:             0,
+			TmuxFg:             7,
+			TmuxBg:             38,
 			ShellVarFg:         1,
 			ShellVarBg:         11,
 			ShEnvFg:            15,
@@ -1670,6 +1689,8 @@ var defaults = Config{
 			PlEnvBg:            gruvbox_faded_green, // match virtualenv
 			TimeFg:             gruvbox_light2,
 			TimeBg:             gruvbox_dark4,
+			TmuxFg:             gruvbox_light2,
+			TmuxBg:             gruvbox_neutral_aqua,
 			ShellVarFg:         gruvbox_light0,       // match ssh-fg
 			ShellVarBg:         gruvbox_faded_purple, // match ssh-bg
 			NodeFg:             gruvbox_light0,       // match virtualenv
