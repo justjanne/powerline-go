@@ -8,6 +8,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"io/ioutil"
 
 	pwl "github.com/justjanne/powerline-go/powerline"
 )
@@ -109,7 +110,29 @@ var gitProcessEnv = func() []string {
 	return result
 }()
 
+func isWinDir() bool {
+	pwd, _ := os.Getwd()
+	r := regexp.MustCompile(`^/mnt/`)
+	return r.MatchString(pwd)
+}
+
+func isWSL() bool {
+	f, err := os.Open("/proc/version")
+	if err != nil {
+		return false
+	}
+	defer f.Close()
+	b, err := ioutil.ReadAll(f)
+	if err != nil {
+		return false
+	}
+	return strings.Contains(string(b), "microsoft")
+}
+
 func runGitCommand(cmd string, args ...string) (string, error) {
+	if cmd == "git" && isWSL() && isWinDir() {
+		cmd = "git.exe"
+	}
 	command := exec.Command(cmd, args...)
 	command.Env = gitProcessEnv
 	out, err := command.Output()
