@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/user"
 	"path"
+	"regexp"
 	"strconv"
 	"strings"
 	"sync"
@@ -394,6 +395,65 @@ func (p *powerline) drawRow(rowNum int, buffer *bytes.Buffer) {
 	}
 }
 
+func (p *powerline) actualPromptLength(prompt string) int {
+	stripped := prompt
+
+	type replacements struct {
+		name  string
+		value string
+	}
+
+	for rowNum := range p.Segments {
+		row := p.Segments[rowNum]
+
+		// Some segments contain control characters for the shell that mess up
+		// the length calculation unless we replace them with something appropriate.
+		replaces := []replacements{
+			{"termtitle", ""},
+			{"user", p.username},
+			{"host", p.hostname},
+		}
+
+		for _, replacement := range replaces {
+			for _, segment := range row {
+				if segment.Name == replacement.name {
+					stripped = strings.ReplaceAll(stripped, segment.Content, replacement.value)
+				}
+			}
+		}
+	}
+
+	removeControlSequences := regexp.MustCompile(`\\\[[^]]*\]`)
+	stripped = removeControlSequences.ReplaceAllString(stripped, "")
+	s := []rune(stripped)
+	return len(s)
+}
+
+func (p *powerline) paddedRightPrompt(left string) string {
+	if !p.hasRightModules() {
+		return ""
+	}
+
+	var right = p.rightPowerline.draw()
+	if p.cfg.PromptOnNewLine {
+		var skipNewlinePrompt = regexp.MustCompile(`\n.*$`)
+		right = skipNewlinePrompt.ReplaceAllString(right, "")
+	}
+
+	if p.hasTerminalWidth() {
+		width := termWidth()
+		// Calculate padding for right aligned prompt (accounting for unicode characters).
+		pad := width - p.actualPromptLength(left) - p.rightPowerline.actualPromptLength(right)
+		if p.cfg.Eval {
+			pad = pad + len(p.shell.EvalPromptPrefix)
+		}
+		// Produce padded prompt.
+		padded := fmt.Sprintf("%*s%s", pad, "", right)
+		return padded
+	}
+	return right
+}
+
 func (p *powerline) draw() string {
 
 	var buffer bytes.Buffer
@@ -412,6 +472,10 @@ func (p *powerline) draw() string {
 		if rowNum < len(p.Segments)-1 {
 			buffer.WriteRune('\n')
 		}
+	}
+
+	if !p.supportsNativeRightModules() {
+		buffer.WriteString(p.paddedRightPrompt(buffer.String()))
 	}
 
 	if p.cfg.PromptOnNewLine {
@@ -447,12 +511,12 @@ func (p *powerline) draw() string {
 				}
 			}
 		case alignRight:
-			if p.supportsRightModules() {
+			if p.supportsNativeRightModules() {
 				buffer.Truncate(buffer.Len() - 1)
 				buffer.WriteString(p.shell.EvalPromptRightSuffix)
 			}
 		}
-		if p.hasRightModules() {
+		if p.supportsNativeRightModules() && p.hasRightModules() {
 			buffer.WriteString(p.rightPowerline.draw())
 		}
 	}
@@ -465,9 +529,22 @@ func (p *powerline) hasRightModules() bool {
 }
 
 func (p *powerline) supportsRightModules() bool {
-	return p.shell.EvalPromptRightPrefix != "" || p.shell.EvalPromptRightSuffix != ""
+	res := p.supportsNativeRightModules() || p.hasTerminalWidth()
+	return res
+}
+
+func (p *powerline) supportsNativeRightModules() bool {
+	if p.cfg.Eval {
+		return p.shell.EvalPromptRightPrefix != "" || p.shell.EvalPromptRightSuffix != ""
+	} else {
+		return false
+	}
 }
 
 func (p *powerline) isRightPrompt() bool {
 	return p.align == alignRight && p.supportsRightModules()
+}
+
+func (p *powerline) hasTerminalWidth() bool {
+	return termWidth() > 0
 }
