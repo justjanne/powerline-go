@@ -94,7 +94,7 @@ func getGCPProjectFromFile() (string, error) {
 		b = b[:coreEnd]
 	}
 
-	lines := bytes.Split(b[coreStart+len(gcloudCoreSectionHeader):], []byte("\n"))
+	lines := bytes.Split(b, []byte("\n"))
 	for _, line := range lines {
 		parts := bytes.Split(line, []byte("="))
 		if len(parts) == 2 {
