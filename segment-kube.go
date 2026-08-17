@@ -108,7 +108,7 @@ func segmentKube(p *powerline) []pwl.Segment {
 	segments := []pwl.Segment{}
 	// Only draw the icon once
 	kubeIconHasBeenDrawnYet := false
-	if cluster != "" {
+	if cluster != "" && !p.cfg.KubeNamespaceOnly {
 		kubeIconHasBeenDrawnYet = true
 		segments = append(segments, pwl.Segment{
 			Name:       "kube-cluster",

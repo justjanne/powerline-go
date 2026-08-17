@@ -120,7 +120,38 @@ func parseGitBranchInfo(status []string) map[string]string {
 	return groupDict(branchRegex, status[0])
 }
 
+func getGitTagAtHead() string {
+	// check reflog for what was checked out
+	reflog, err := runGitCommand("git", "--no-optional-locks", "reflog", "-1", "--format=%gs")
+	if err != nil {
+		return ""
+	}
+	reflog = strings.TrimSpace(reflog)
+	if !strings.HasPrefix(reflog, "checkout: moving from ") {
+		return ""
+	}
+	target := reflog[strings.LastIndex(reflog, " to ")+4:]
+
+	// verify it's a tag that points at HEAD
+	tags, err := runGitCommand("git", "--no-optional-locks", "tag", "--points-at", "HEAD")
+	if err != nil {
+		return ""
+	}
+	for _, line := range strings.Split(strings.TrimSpace(tags), "\n") {
+		if line == target {
+			return target
+		}
+	}
+	return ""
+}
+
 func getGitDetachedBranch(p *powerline) string {
+	if p.cfg.GitShowTag {
+		if tag := getGitTagAtHead(); tag != "" {
+			return fmt.Sprintf("%s %s", p.symbols.RepoDetached, tag)
+		}
+	}
+
 	out, err := runGitCommand("git", "--no-optional-locks", "rev-parse", "--short", "HEAD")
 	if err != nil {
 		out, err := runGitCommand("git", "--no-optional-locks", "symbolic-ref", "--short", "HEAD")

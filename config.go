@@ -42,6 +42,8 @@ type Config struct {
 	ShortenGKENames        bool      `json:"shorten-gke-names"`
 	ShortenEKSNames        bool      `json:"shorten-eks-names"`
 	ShortenOpenshiftNames  bool      `json:"shorten-openshift-names"`
+	KubeNamespaceOnly      bool      `json:"kube-namespace-only"`
+	GitShowTag             bool      `json:"git-show-tag"`
 	ShellVar               string    `json:"shell-var"`
 	ShellVarNoWarnEmpty    bool      `json:"shell-var-no-warn-empty"`
 	TrimADDomain           bool      `json:"trim-ad-domain"`
