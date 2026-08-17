@@ -81,6 +81,9 @@ type Theme struct {
 	AzureFg uint8
 	AzureBg uint8
 
+	NatsFg uint8
+	NatsBg uint8
+
 	AWSFg uint8
 	AWSBg uint8
 
