@@ -45,8 +45,8 @@ func segmentFossil(p *powerline) []pwl.Segment {
 
 			extra := ""
 
-			if hasUntrackedFiles {
-				extra += "+"
+			if hasModifiedFiles {
+				extra += p.symbols.RepoNotStaged
 			}
 
 			if hasMissingFiles {
@@ -54,7 +54,7 @@ func segmentFossil(p *powerline) []pwl.Segment {
 			}
 
 			if hasUntrackedFiles {
-				extra += "?"
+				extra += p.symbols.RepoUntracked
 			}
 
 			content = fmt.Sprintf("%s %s", branch, extra)
