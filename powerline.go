@@ -196,6 +196,12 @@ func (p *powerline) bgColor(code uint8) string {
 	return p.color("48", code)
 }
 
+// clearToEol returns the "erase from cursor to end of line" control sequence
+// (CSI K), wrapped in the shell's non-printing markers.
+func (p *powerline) clearToEol() string {
+	return fmt.Sprintf(p.shell.ColorTemplate, "[K")
+}
+
 func (p *powerline) appendSegment(origin string, segment pwl.Segment) {
 	if segment.Foreground == segment.Background && segment.Background == 0 {
 		segment.Background = p.theme.DefaultBg
@@ -394,6 +400,29 @@ func (p *powerline) drawRow(rowNum int, buffer *bytes.Buffer) {
 	}
 }
 
+// endRow terminates a prompt row that is followed by another line.
+//
+// A row wider than the terminal soft-wraps. When that wrap happens on the last
+// screen line, the terminal scrolls and fills the freshly exposed line with the
+// background colour that is active at that moment (the "background colour
+// erase" behaviour of xterm, VTE, Alacritty, ...), so the rest of the wrapped
+// line keeps the colour of whichever segment straddled the wrap, e.g. the red
+// exit-code segment. Colours have been reset by now, so erase from the cursor
+// to the end of the line before breaking it: the wrapped row then ends with the
+// terminal's default background.
+//
+// This must only ever be done on rows above the line the user types on. Bash's
+// readline redraws that last prompt line from column 0 on every keystroke and
+// skips over the already typed text with cursor movements, so an erase there
+// wipes the command being typed (Debian bug #1147718). The rows above it are
+// printed once and never redrawn.
+func (p *powerline) endRow(buffer *bytes.Buffer) {
+	if !p.isRightPrompt() {
+		buffer.WriteString(p.clearToEol())
+	}
+	buffer.WriteRune('\n')
+}
+
 func (p *powerline) draw() string {
 
 	var buffer bytes.Buffer
@@ -410,12 +439,12 @@ func (p *powerline) draw() string {
 		p.truncateRow(rowNum)
 		p.drawRow(rowNum, &buffer)
 		if rowNum < len(p.Segments)-1 {
-			buffer.WriteRune('\n')
+			p.endRow(&buffer)
 		}
 	}
 
 	if p.cfg.PromptOnNewLine {
-		buffer.WriteRune('\n')
+		p.endRow(&buffer)
 
 		var foreground, background uint8
 		if p.cfg.PrevError == 0 || p.cfg.StaticPromptIndicator {
