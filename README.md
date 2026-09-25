@@ -209,8 +209,6 @@ Usage of powerline-go:
          Show the older, original icon for SSH connections
   -colorize-hostname
          Colorize the hostname based on a hash of itself, or use the PLGO_HOSTNAMEFG and PLGO_HOSTNAMEBG env vars (both need to be set).
-  -fqdn-hostname
-         Use the longer fully qualified domain name as the hostname
   -condensed
          Remove spacing between segments
   -cwd-max-depth int
@@ -225,6 +223,8 @@ Usage of powerline-go:
          (default "fancy")
   -duration string
          The elapsed clock-time of the previous command
+  -duration-low-precision
+         Use low precision timing for duration with milliseconds as maximum resolution
   -duration-min string
          The minimal time a command has to take before the duration segment is shown (default "0")
   -east-asian-width
@@ -233,11 +233,14 @@ Usage of powerline-go:
          Exit code of previously executed command
   -eval
          Output prompt in 'eval' format.
+  -fqdn-hostname
+         Use the longer fully qualified domain name as the hostname
   -git-assume-unchanged-size int
          Disable checking for changed/edited files in git repositories where the index is larger than this size (in KB), improves performance (default 2048)
   -git-disable-stats string
          Comma-separated list to disable individual git statuses
          (valid choices: ahead, behind, staged, notStaged, untracked, conflicted, stashed)
+    
   -git-mode string
          How to display git status
          (valid choices: fancy, compact, simple)
@@ -291,12 +294,18 @@ Usage of powerline-go:
          Shortens names for EKS Kube clusters.
   -shorten-gke-names
          Shortens names for GKE Kube clusters.
+  -shorten-openshift-names
+         Shortens names for Openshift Kube clusters.
   -static-prompt-indicator
          Always show the prompt indicator with the default color, never with the error color
   -theme string
          Set this to the theme you want to use
          (valid choices: default, low-contrast, gruvbox, solarized-dark16, solarized-light16)
          (default "default")
+  -time string
+         The layout string how a reference time should be represented.
+         The reference time is predefined and not user chosen.
+         Consult the golang documentation for details: https://pkg.go.dev/time#example-Time.Format (default "15:04:05")
   -trim-ad-domain
          Trim the Domainname from the AD username.
   -truncate-segment-width int
@@ -304,6 +313,8 @@ Usage of powerline-go:
          (default 16)
   -venv-name-size-limit int
          Show indicator instead of virtualenv name if name is longer than this limit (defaults to 0, which is unlimited)
+  -version
+         Print the current version and exit
   -vi-mode string
          The current vi-mode (eg. KEYMAP for zsh) for vi-module module
 ```

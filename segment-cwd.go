@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"sort"
 	"strings"
@@ -103,32 +104,42 @@ Aliases:
 
 func cwdToPathSegments(p *powerline, cwd string) []pathSegment {
 	pathSeparator := string(os.PathSeparator)
+	networkRoot := fmt.Sprintf("%s%s", pathSeparator, pathSeparator)
 	pathSegments := make([]pathSegment, 0)
 
 	if cwd == p.userInfo.HomeDir {
-		pathSegments = append(pathSegments, pathSegment{
+		return append(pathSegments, pathSegment{
 			path: "~",
 			home: true,
 		})
-		cwd = ""
-	} else if strings.HasPrefix(cwd, p.userInfo.HomeDir+pathSeparator) {
-		pathSegments = append(pathSegments, pathSegment{
-			path: "~",
-			home: true,
+	} else if cwd == networkRoot {
+		return append(pathSegments, pathSegment{
+			path: networkRoot,
+			root: true,
 		})
-		cwd = cwd[len(p.userInfo.HomeDir):]
 	} else if cwd == pathSeparator {
-		pathSegments = append(pathSegments, pathSegment{
+		return append(pathSegments, pathSegment{
 			path: pathSeparator,
 			root: true,
 		})
 	}
 
+	if strings.HasPrefix(cwd, p.userInfo.HomeDir+pathSeparator) {
+		pathSegments = append(pathSegments, pathSegment{
+			path: "~",
+			home: true,
+		})
+		cwd = cwd[len(p.userInfo.HomeDir):]
+	} else if strings.HasPrefix(cwd, networkRoot) {
+		pathSegments = append(pathSegments, pathSegment{
+			path: networkRoot,
+			root: true,
+		})
+		cwd = cwd[len(networkRoot):]
+	}
+
 	cwd = strings.Trim(cwd, pathSeparator)
 	names := strings.Split(cwd, pathSeparator)
-	if names[0] == "" {
-		names = names[1:]
-	}
 
 	for _, name := range names {
 		pathSegments = append(pathSegments, pathSegment{
@@ -136,7 +147,7 @@ func cwdToPathSegments(p *powerline, cwd string) []pathSegment {
 		})
 	}
 
-	return maybeAliasPathSegments(p, pathSegments)
+	return pathSegments
 }
 
 func maybeShortenName(p *powerline, pathSegment string) string {
@@ -181,6 +192,7 @@ func segmentCwd(p *powerline) (segments []pwl.Segment) {
 		})
 	default:
 		pathSegments := cwdToPathSegments(p, cwd)
+		pathSegments = maybeAliasPathSegments(p, pathSegments)
 
 		if p.cfg.CwdMode == "dironly" {
 			pathSegments = pathSegments[len(pathSegments)-1:]
