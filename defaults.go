@@ -211,6 +211,9 @@ var defaults = Config{
 			AzureFg: 15, // white
 			AzureBg: 26, // Azure blue
 
+			GitHubFg: 15,  // white
+			GitHubBg: 238, // dark grey
+
 			AWSFg: 15,  // white
 			AWSBg: 172, // AWS orange
 
